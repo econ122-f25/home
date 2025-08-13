@@ -1,7 +1,7 @@
 Week 1, Day 1: In-Class Activity
 ================
 Your Name
-2025-08-04
+2025-08-13
 
 ### Introduction
 
@@ -44,9 +44,6 @@ name as a character string. - `is_student`: A logical value (`TRUE` or
 
 ``` r
 # Write your code to create the variables here
-my_age <- 10
-my_name <- 'hell'
-is_student <- 1
 ```
 
 **Task 1.3: Combining Variables** Use the `paste()` function to create a

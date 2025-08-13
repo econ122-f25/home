@@ -40,15 +40,15 @@ References:
     - Try to set up R, RStudio, Git, GitHub account (See [GitHub reference quick guide](https://github.com/econ122-f25/github-classroom-for-students) and See [GitHub reference full guide](https://happygitwithr.com/index.html))
 -   in class: 
     -   day 1 slides: [.Rmd](slides/day1.Rmd) [.html](https://econ122-f25.github.io/home/slides/day1.html)
-    -   day 1 activity: [.Rmd](activity/day1_activity.Rmd) [.md](activity/day1_activity.md) 
+    -   day 1 activity: [.Rmd](activity/day1_activity.Rmd) [.html](activity/day1_activity.md) 
     -   continue setting up software
 
 **Wednesday** (reproducibility, R Markdown)
 -   before class:
     -   Start looking at PS 1
 -   in class: 
-    -   day 2 slides: [.Rmd](slides/day1.Rmd) [.html](https://econ122-f25.github.io/home/day2.html)
-    -   day 2 activity: [.Rmd](activities/day2_activity.Rmd) [.md](activities/day2_activity.md) [github classroom link](https://classroom.github.com/a/iWzl8Kr0)
+    -   day 2 slides: [.Rmd](slides/day1.Rmd) [.html](https://econ122-f25.github.io/home/slides/day2.html)
+    -   day 2 activity: [.Rmd](activities/day2_activity.Rmd) [.html](activities/day2_activity.md) [github classroom link](https://classroom.github.com/a/iWzl8Kr0)
     
 ------------------------------------------------------------------------
 ### Week 2 (09/01)
@@ -65,8 +65,8 @@ References:
     -   Readings
 -   in class: 
     -   day 3 slides [.Rmd](docs/day3_sslides.Rmd) [.html](https://econ122-f25.github.io/home/day3_slides.html)
-    -   day 3 activity: [.Rmd](activities/day3_activity.Rmd) [.md](activities/day3_activity.md)
-        -  solutions: [.Rmd](activities/solutions/day3_activity_sol.Rmd) [.md](activities/solutions/day3_activity_sol.md)
+    -   day 3 activity: [.Rmd](activities/day3_activity.Rmd) [.html](activities/day3_activity.md)
+        -  solutions: [.Rmd](activities/solutions/day3_activity_sol.Rmd) [.html](activities/solutions/day3_activity_sol.md)
 
 ------------------------------------------------------------------------
 ### Week 3 (09/08)
@@ -78,8 +78,8 @@ References:
     - Reminder `ps1` due 9/12
 -   in class: 
     -   day 4 slides: [.Rmd](docs/day4_ggplotSlides.Rmd) [.html](https://econ122-f25.github.io/home/day4_ggplotSlides.html)
-    -   day 4 activity: [.Rmd](activities/day4_ggplotActivity.Rmd) [.md](activities/day4_ggplotActivity.md)
-        -  solutions: [.Rmd](activities/solutions/day4_ggplotActivity_solution.Rmd) [.md](activities/solutions/day4_ggplotActivity_solution.md)
+    -   day 4 activity: [.Rmd](activities/day4_ggplotActivity.Rmd) [.html](activities/day4_ggplotActivity.md)
+        -  solutions: [.Rmd](activities/solutions/day4_ggplotActivity_solution.Rmd) [.html](activities/solutions/day4_ggplotActivity_solution.md)
 
 **Wednesday** (exploratory data analysis (EDA))
 
@@ -88,7 +88,7 @@ References:
 -   in class: 
     -   discuss [team project 1](https://github.com/econ122-f25/teamproject1)
     -   day 5 slides: [.Rmd](docs/day5_moreggplotsSlides.Rmd) [.html](https://econ122-f25.github.io/home/day5_moreggplotsSlides.html)
-    -   day 5 activity: [.Rmd](activities/day5_ggplotActivity_2.Rmd) [.md](activities/day5_ggplotActivity_2.md)
-        -  solutions: [.Rmd](activities/solutions/day5_ggplotActivity_2_solution.Rmd) [.md](activities/solutions/day5_ggplotActivity_2_solution.md)
+    -   day 5 activity: [.Rmd](activities/day5_ggplotActivity_2.Rmd) [.html](activities/day5_ggplotActivity_2.md)
+        -  solutions: [.Rmd](activities/solutions/day5_ggplotActivity_2_solution.Rmd) [.html](activities/solutions/day5_ggplotActivity_2_solution.md)
 
 ------------------------------------------------------------------------
