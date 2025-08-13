@@ -39,8 +39,8 @@ References:
 -   before class:
     - Try to set up R, RStudio, Git, GitHub account (See [GitHub reference quick guide](https://github.com/econ122-f25/github-classroom-for-students) and See [GitHub reference full guide](https://happygitwithr.com/index.html))
 -   in class: 
-    -   day 1 slides: [.Rmd](day1.Rmd) [.html](https://econ122-f25.github.io/home/day1.html)
-    -   day 1 activity: [.Rmd](day1_activity.Rmd) [.md](day1_activity.md) 
+    -   day 1 slides: [.Rmd](slides/day1.Rmd) [.html](https://econ122-f25.github.io/home/slides/day1.html)
+    -   day 1 activity: [.Rmd](activity/day1_activity.Rmd) [.md](activity/day1_activity.md) 
     -   continue setting up software
 
 **Wednesday** (reproducibility, R Markdown)
