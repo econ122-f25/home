@@ -26,7 +26,7 @@ References:
 ------------------------------------------------------------------------
 ### Assignments due
 
-- [Problem Set 1]() (due **09/12**)
+- [Problem Set 1](https://classroom.github.com/a/99IiggPA) (due **09/12**)
 - [Team Project 1]() (due **09/29**)
 - [Problem Set 2]() (due **09/27**)
 
@@ -48,7 +48,7 @@ References:
 -   before class:
     -   Start looking at PS 1
 -   in class: 
-    -   day 2 slides: [.Rmd](slides/day1.Rmd) [.html](https://econ122-f25.github.io/home/slides/day2.html)
+    -   day 2 slides: [.Rmd](slides/day2.Rmd) [.html](https://econ122-f25.github.io/home/slides/day2.html)
     -   day 2 activity: [github classroom link](https://classroom.github.com/a/iWzl8Kr0)
     
 ------------------------------------------------------------------------
