@@ -29,11 +29,12 @@ References:
 - [Problem Set 1]() (due **09/12**)
 - [Team Project 1]() (due **09/29**)
 - [Problem Set 2]() (due **09/27**)
+
 ------------------------------------------------------------------------
 
 ### Week 1 (08/25)
 
-**Readings:** Ch 1-3,27 of R4DS.
+**Readings:** Ch 1-3, 27 of R4DS
 
 **Monday** (intro) 
 -   before class:
@@ -48,12 +49,12 @@ References:
     -   Start looking at PS 1
 -   in class: 
     -   day 2 slides: [.Rmd](slides/day1.Rmd) [.html](https://econ122-f25.github.io/home/slides/day2.html)
-    -   day 2 activity: [.Rmd](activities/day2_activity.Rmd) [.html](activities/day2_activity.md) [github classroom link](https://classroom.github.com/a/iWzl8Kr0)
+    -   day 2 activity: [github classroom link](https://classroom.github.com/a/iWzl8Kr0)
     
 ------------------------------------------------------------------------
 ### Week 2 (09/01)
 
-**Readings:**  Ch 5, 12, and 13 of R4DS.
+**Readings:**  Ch 5, 12, and 13 of R4DS
 
 **Monday** 
 
@@ -64,7 +65,7 @@ References:
 -   before class:
     -   Readings
 -   in class: 
-    -   day 3 slides [.Rmd](docs/day3_sslides.Rmd) [.html](https://econ122-f25.github.io/home/day3_slides.html)
+    -   day 3 slides [.Rmd](slides/day3_slides.Rmd) [.html](https://econ122-f25.github.io/home/slides/day3_slides.html)
     -   day 3 activity: [.Rmd](activities/day3_activity.Rmd) [.html](activities/day3_activity.md)
         -  solutions: [.Rmd](activities/solutions/day3_activity_sol.Rmd) [.html](activities/solutions/day3_activity_sol.md)
 
@@ -77,9 +78,9 @@ References:
     - Readings
     - Reminder `ps1` due 9/12
 -   in class: 
-    -   day 4 slides: [.Rmd](docs/day4_ggplotSlides.Rmd) [.html](https://econ122-f25.github.io/home/day4_ggplotSlides.html)
-    -   day 4 activity: [.Rmd](activities/day4_ggplotActivity.Rmd) [.html](activities/day4_ggplotActivity.md)
-        -  solutions: [.Rmd](activities/solutions/day4_ggplotActivity_solution.Rmd) [.html](activities/solutions/day4_ggplotActivity_solution.md)
+    -   day 4 slides: [.Rmd](slides/day4_slides.Rmd) [.html](https://econ122-f25.github.io/home/slides/day4.html)
+    -   day 4 activity: [.Rmd](activity/day4_activity.Rmd) [.html](activity/day4_activity.md)
+        -  solutions: [.Rmd](activity/solutions/day4_ggplotActivity_solution.Rmd) [.html](activities/solutions/day4_ggplotActivity_solution.md)
 
 **Wednesday** (exploratory data analysis (EDA))
 
