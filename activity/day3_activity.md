@@ -1,0 +1,205 @@
+Data Wrangling with `dplyr`: In-Class Activity
+================
+Your Name
+2025-08-20
+
+## Welcome to Your `dplyr` Activity! (5 minutes)
+
+This activity is designed to give you hands-on practice with the core
+`dplyr` verbs we just discussed. You’ll be working with the `starwars`
+dataset, which is already available when you load `dplyr`.
+
+**Goal:** By the end of this activity, you should feel more comfortable
+using `filter()`, `select()`, `arrange()`, `mutate()`, `summarize()`,
+and `group_by()`, including combining them for more complex tasks.
+
+**Instructions:**
+
+1.  Read each task carefully.
+2.  Write your R code in the provided code chunks.
+3.  Run the code chunk to see your output.
+4.  Compare your output with the expected results or hints.
+5.  Don’t be afraid to experiment! If you get stuck, refer back to the
+    presentation slides or discuss with a classmate.
+
+Let’s get started!
+
+### Load Libraries and Data
+
+First, make sure you have the necessary packages loaded.
+
+``` r
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+# The starwars dataset is automatically available after loading dplyr
+```
+
+------------------------------------------------------------------------
+
+## Task 1: Filtering Data (`filter()`) (8 minutes)
+
+The `filter()` verb allows you to select rows based on conditions.
+
+**Exercise 1.1:** Find all `starwars` characters whose `species` is
+“Droid”.
+
+``` r
+# Your code here
+```
+
+**Exercise 1.2:** Find all `starwars` characters who are “Human” AND
+have a `height` greater than 180.
+
+``` r
+# Your code here
+```
+
+**Exercise 1.3 (Challenging Filter):** Find all `starwars` characters
+who have either “brown” or “black” `hair_color` AND have either “blue”
+or “brown” `eye_color`.
+
+``` r
+# Your code here
+```
+
+------------------------------------------------------------------------
+
+## Task 2: Selecting Columns (`select()`) (7 minutes)
+
+The `select()` verb allows you to choose specific columns.
+
+**Exercise 2.1:** Select only the `name`, `species`, and `homeworld`
+columns from the `starwars` dataset.
+
+``` r
+# Your code here
+```
+
+**Exercise 2.2:** Select all columns EXCEPT `films` and `vehicles`.
+
+``` r
+# Your code here
+```
+
+**Exercise 2.3 (Challenging Select):** Select all columns that contain
+the word “color” (e.g., `hair_color`, `skin_color`, `eye_color`).
+
+``` r
+# Your code here
+```
+
+------------------------------------------------------------------------
+
+## Task 3: Arranging Rows (`arrange()`) (5 minutes)
+
+The `arrange()` verb sorts your data.
+
+**Exercise 3.1:** Arrange the `starwars` data by `mass` in ascending
+order. (Note: `arrange()` handles `NA` values by default, placing them
+at the end for ascending sort).
+
+``` r
+# Your code here
+```
+
+**Exercise 3.2 (Challenging Arrange):** Arrange the `starwars` data
+first by `species` in ascending order, then by `height` in descending
+order, and finally by `name` in ascending order for characters with the
+same species and height.
+
+``` r
+# Your code here
+```
+
+------------------------------------------------------------------------
+
+## Task 4: Adding/Modifying Columns (`mutate()`) (8 minutes)
+
+The `mutate()` verb creates new columns or modifies existing ones.
+
+**Exercise 4.1:** Create a new column called `height_meters` that
+converts `height` from centimeters to meters (divide by 100). Then,
+select `name`, `height`, and your new `height_meters` column.
+
+``` r
+# Your code here
+```
+
+**Exercise 4.2:** Create a new column called `bmi` (Body Mass Index).
+The formula for BMI is `mass / (height_meters^2)`. Remember to use the
+`height_meters` column you just created. Select `name`, `height`,
+`mass`, and your new `bmi` column.
+
+``` r
+# Your code here
+```
+
+**Exercise 4.3 (Challenging Mutate):** Create a new column called
+`mass_class`. Use `case_when()` to assign the following categories based
+on `mass`:
+
+- `mass < 50`: “Light”
+- `mass >= 50 & mass < 100`: “Medium”
+- `mass >= 100`: “Heavy”
+- For `NA` values in `mass`, assign “Unknown”. Select `name`, `mass`,
+  and your new `mass_class` column.
+
+``` r
+# Your code here (Hint: `is.na()` might be useful for the "Unknown" category)
+```
+
+------------------------------------------------------------------------
+
+## Task 5: Summarizing and Grouping (`summarize()`, `group_by()`, `n()`, `n_distinct()`) (7 minutes)
+
+These verbs are often used together to get insights from your data.
+
+**Exercise 5.1:** Calculate the average `mass` for each `species`.
+Exclude `NA` values from the mass calculation.
+
+``` r
+# Your code here
+```
+
+**Exercise 5.2:** Count how many characters there are for each
+`eye_color`. Order the results by the count in descending order.
+
+``` r
+# Your code here
+```
+
+**Exercise 5.3 (Challenging Summary):** For each `species`, calculate
+the **average `height`**, the **average `mass`**, and the **number of
+distinct `homeworld`s**. Only include species that have **more than 10
+characters**. Order the final result by the number of characters in
+descending order.
+
+``` r
+# Your code here (Hint: you'll need `group_by()`, `summarize()` with multiple calculations, `filter()`, and `arrange()`)
+```
+
+------------------------------------------------------------------------
+
+## Wrap-up (Optional: 5 minutes for discussion)
+
+Take a moment to review your answers.
+
+- Did you find any challenges?
+- Which `dplyr` verb do you think will be most useful for your own data?
+- Discuss with a neighbor any parts you found particularly tricky or
+  elegant.
+
+Feel free to ask questions if anything is unclear!

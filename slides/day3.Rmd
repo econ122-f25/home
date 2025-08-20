@@ -1,0 +1,243 @@
+---
+title: "Data Wrangling with `dplyr`"
+subtitle: "Day 3"
+author: "Econ 122"
+date: "`r Sys.Date()`"
+output: 
+  ioslides_presentation:
+   widescreen: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse=TRUE, prompt=TRUE, eval=TRUE, message=F, include=T,comment=NULL)
+```
+
+
+## What is `dplyr`?
+
+* `dplyr` is a powerful R package for data manipulation.
+* It provides a consistent and intuitive set of "verbs" for common data-wrangling tasks.
+* It is a core part of the `tidyverse`, a collection of packages designed for data science.
+
+## The `tidyverse` Philosophy
+
+* Focus on consistency and readability.
+* Use the pipe operator, `%>%`, to chain multiple operations together.
+* The output of one function becomes the first argument of the next, making code easier to read from left to right.
+
+## The Pipe Operator (`%>%`) {.smaller}
+
+The pipe operator, `%>%`, allows you to pass the result of one function to the next.
+
+**Example:**
+
+```{r}
+library(magrittr) # You get this with `dplyr`
+# Without the pipe
+mean(c(1, 2, 3, 4, 5))
+
+# With the pipe
+c(1, 2, 3, 4, 5) %>%
+  mean()
+```
+
+## Sample Data {.smaller}
+
+We'll use the `starwars` dataset from the `dplyr` package for our examples.
+
+**Code:**
+
+```{r}
+library(dplyr)
+starwars
+```
+
+**Output:** A tibble (a modern data frame) with 14 variables and 87 observations.
+
+## `select()`: Choosing Columns {.smaller}
+
+* The `select()` function allows you to choose columns by name.
+* The first argument is the data frame, followed by the columns you want to keep.
+
+**Example:** Selecting `name`, `height`, and `mass`.
+
+```{r}
+starwars %>% select(name, height, mass)
+```
+
+## `select()`: Excluding Columns {.smaller}
+
+You can also use `select()` to drop columns by using a minus sign (`-`).
+
+**Example:** Dropping `films` and `vehicles`.
+
+```{r}
+starwars %>% select(-films, -vehicles)
+```
+
+## `select()` with Helper Functions {.smaller}
+
+`select()` has helpers like `starts_with()`, `ends_with()`, and `contains()` to choose columns programmatically.
+
+**Example:** Selecting all columns that end with `color`.
+
+```{r}
+starwars %>% select(ends_with("color"))
+```
+
+## `filter()`: Choosing Rows {.smaller}
+
+* The `filter()` function allows you to choose rows based on a condition.
+* The first argument is the data frame, followed by logical conditions.
+
+**Example:** Filtering for characters with a `height` greater than 150.
+
+```{r}
+starwars %>% filter(height > 150)
+```
+
+## `filter()` with Multiple Conditions {.smaller}
+
+You can combine conditions using logical operators:
+* `&` for AND (both conditions must be true)
+* `|` for OR (at least one condition must be true)
+
+**Example:** Filtering for characters with `height > 150` AND `mass > 50`.
+
+```{r}
+starwars %>% filter(height > 150 & mass > 50)
+```
+
+## `arrange()`: Reordering Rows {.smaller}
+
+* The `arrange()` function sorts rows by a specified column.
+* The first argument is the data frame, followed by the column(s) to sort by.
+
+**Example:** Arranging rows by `height` in ascending order.
+
+```{r}
+starwars %>% arrange(height)
+```
+
+## `arrange()`: Descending Order {.smaller}
+
+Use the `desc()` function inside `arrange()` to sort in descending order.
+
+**Example:** Arranging rows by `height` in descending order.
+
+```{r}
+starwars %>% arrange(desc(height))
+```
+
+## `mutate()`: Adding New Columns {.smaller}
+
+* The `mutate()` function adds new columns to your data frame.
+* The first argument is the data frame, followed by the new column name and its value.
+
+**Example:** Creating a new column `height_meters`.
+
+```{r}
+starwars %>% mutate(height_meters = height / 100) %>% select(name,height,height_meters)
+```
+
+## `mutate()` with a Calculation {.smaller}
+
+You can use `mutate()` to create a new column based on a calculation involving existing columns.
+
+**Example:** Creating a `bmi` column.
+
+```{r}
+starwars %>% mutate(height_meters = height / 100, bmi = mass / (height_meters^2)) %>% select(name, bmi)
+```
+
+## `summarize()`: Condensing Data {.smaller}
+
+* `summarize()` (or `summarise()`) collapses a data frame into a single row.
+* It's useful for calculating summary statistics.
+* Need to add `na.rm= TRUE` option if there is missing data
+
+**Example:** Finding the `mean_height`.
+
+```{r}
+starwars %>% summarize(mean_height = mean(height, na.rm = TRUE))
+```
+
+## `summarize()` with Multiple Statistics {.smaller}
+
+You can calculate multiple summary statistics at once.
+
+**Example:** Calculating mean `height` and `mass`.
+
+```{r}
+starwars %>%
+  summarize(
+    mean_height = mean(height, na.rm = TRUE),
+    mean_mass = mean(mass, na.rm = TRUE)
+  )
+```
+
+## `group_by()`: The Key to Grouped Summaries {.smaller}
+
+* The `group_by()` function doesn't change the data immediately, but it sets up a special grouping structure.
+* Any subsequent `dplyr` verb will operate on these groups independently.
+
+**Example:** Grouping the data by `gender`.
+
+```{r}
+starwars %>% group_by(gender)
+```
+
+## `group_by()` + `summarize()` {.smaller}
+
+* This is one of the most powerful combinations in `dplyr`.
+* First, you `group_by()` a categorical variable, then you `summarize()` to get a summary statistic for each group.
+
+**Example:** Finding the mean `height` for each `gender`.
+
+```{r}
+starwars %>% group_by(gender) %>% summarize(mean_height = mean(height, na.rm = TRUE))
+```
+
+## `group_by()` with `mutate()` {.smaller}
+
+* When you use `mutate()` after `group_by()`, the new column is calculated **within each group**.
+* This is perfect for standardizing data or finding values relative to a group.
+
+**Example:** Calculating a character's mass as a percentage of their species' average mass.
+
+```{r}
+starwars %>%
+  group_by(species) %>%
+  mutate(species_average_mass = mean(mass, na.rm = TRUE)) %>%
+  mutate(mass_proportion = (mass / species_average_mass) * 100) %>%
+  select(name, species, mass, species_average_mass, mass_proportion)
+```
+
+## Counting with `n()` {.smaller}
+
+* The `n()` function is a powerful helper function for use inside `summarize()`.
+* It counts the number of observations in the current group.
+
+**Example:** Counting the number of characters for each `gender` and `species`.
+
+```{r}
+starwars %>% group_by(gender, species) %>% summarize(count = n())
+```
+
+## Putting It All Together: A Chained Example {.smaller}
+
+Let's find the mean `mass` of all masculine, humanoid characters taller than 170cm.
+
+```{r}
+starwars %>% filter(gender == "masculine" & species == "Human" & height > 170) %>%
+  summarize(mean_mass = mean(mass, na.rm = TRUE))
+```
+
+## Summary of `dplyr` Verbs
+
+* `select()`: Choose columns.
+* `filter()`: Choose rows.
+* `arrange()`: Reorder rows.
+* `mutate()`: Add new columns.
+* `summarize()`: Condense data to a single row.
+* `group_by()`: Perform operations on groups.
