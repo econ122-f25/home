@@ -49,7 +49,7 @@ References:
     -   Start looking at PS 1
 -   in class: 
     -   day 2 slides: [.Rmd](slides/day2.Rmd) [.html](https://econ122-f25.github.io/home/slides/day2.html)
-    -   day 2 activity: [github classroom link](https://classroom.github.com/a/iWzl8Kr0)
+    -   day 2 activity: [.Rmd](activity/day2_activity.Rmd) [github classroom link](https://classroom.github.com/a/GWld0A2q)
     
 ------------------------------------------------------------------------
 ### Week 2 (09/01)

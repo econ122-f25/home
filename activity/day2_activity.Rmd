@@ -1,0 +1,103 @@
+---
+title: "Reproducible Reports & Version Control: A Hands-on Activity"
+author: "Your Name"
+date: "August 4, 2025"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,          # Show the code in the output
+  eval = TRUE,         # Don't run the code chunks initially
+  warning = FALSE,      # Hide all warnings
+  message = FALSE,      # Hide all messages from packages
+  fig.width = 6,        # Set a default width for all figures
+  fig.height = 4,       # Set a default height for all figures
+  fig.align = "center"  # Center all figures
+)
+```
+
+### Welcome to the Activity!
+
+This is a self-directed activity designed to reinforce the concepts of R Markdown and Git/GitHub. Please work through the steps at your own pace. If you get stuck, please ask for help!
+
+Estimated Time: 40 minutes
+
+### Part 1: Creating a Reproducible Report with R Markdown (20 mins)
+
+In this section, you will create a simple R Markdown report that combines text and code.
+
+#### Step 1: Fill in the YAML Header
+
+At the very top of your .Rmd file is the YAML header, enclosed by `---`. Update it to include your name and today's date. 
+
+#### Step 2: Add Some Formatted Text
+
+Below the YAML header, add a new section for your report using a heading. Add a heading, a list, and some bold text using the Markdown syntax you learned today.
+
+#### Step 3: Add and Run a Code Chunk
+
+Now, we will add an R code chunk. 
+
+```{r}
+# This code chunk displays the first few rows of the mtcars dataset
+head(mtcars)
+```
+
+Your Turn: Now, knit the document by clicking the "Knit" button in the RStudio toolbar. A new file should appear, showing both your text and the output from the R code.
+
+#### Step 4: Calculate a Value with Inline Code
+
+Below the code chunk you just added, write a sentence that calculates the average miles per gallon (mpg) from the `mtcars` dataset using *inline code*. The variable name is mean(mtcars$mpg)
+
+
+#### Step 5: Add a Plot
+
+Add a new code chunk to your file that creates a simple plot. You'll need the `ggplot2` package for this.
+
+**R**
+
+```
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  labs(title = "MPG vs. Weight", x = "Weight (1000 lbs)", y = "Miles per Gallon")
+```
+
+Your Turn: Knit the document again to see the plot included in your report.
+
+#### Step 6: Control Code Chunk Behavior
+
+What if you want to hide the R code, but keep the plot? What chunk option would you use?
+
+Your Turn: Knit the document one last time and check that the R code for the plot is now hidden.
+
+### Part 2: Version Control with Git & GitHub (20 mins)
+
+In this section, you will use Git to track the changes to your .Rmd file and push them to a remote repository on GitHub.
+
+**Important: Save Your File!**
+
+Before you continue, please make sure you have saved your .Rmd file. **Take note of where you saved it, as you will need to find it and move it in a moment.**
+
+#### Step 1: Accept the GitHub Classroom Assignment
+
+Click on the provided GitHub Classroom link on the homepage under day 2 activity. You will be prompted to "Accept this assignment". Click the button. GitHub will create a new, private repository for you. It may take a minute. Once the repository is created, click the link to "View assignment". On your new repository's page, click the green "Code" button and copy the HTTPS URL.
+
+#### Step 2: Clone the Project into RStudio
+
+Now, we will clone this repository into RStudio. In RStudio, go to `File > New Project...`. Select "Version Control" -> "Git". Paste the URL you copied from GitHub into the "Repository URL" field. Choose a new, empty directory name for the project and click "Create Project".
+
+#### Step 3: Commit and Push Your Changes
+
+You now have a new RStudio project and a new folder on your computer. Find the .Rmd file you saved from Part 1 and move it into this new project folder. In the "Git" pane in RStudio, you should see the file listed.
+
+1.  Stage the file: Click the "Staged" checkbox next to **both** your `.Rmd` and `.md` file.
+2.  Commit the change: Click the "Commit" button. A new window will appear. Write a clear commit message (e.g., "Completed Part 1 of the activity") and click "Commit". Close the commit window.
+3.  Push the change: Click the green "Push" (up arrow) button in the Git pane to send your changes to GitHub.
+
+#### Step 4: Verify Your Work
+
+Go back to your repository on github.com and refresh the page. You should now see that the files have been updated with the changes you made and the commit message you just wrote. Clicking on the `.md` file will show you the report and clicking on the `.Rmd` file will show you the code.
+
+If you don't see it let me know so I can come help diagnose the issue. Congratulations! You have successfully created a reproducible report and used version control to save your work and share it on GitHub.
