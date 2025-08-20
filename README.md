@@ -66,8 +66,8 @@ References:
     -   Readings
 -   in class: 
     -   day 3 slides [.Rmd](slides/day3.Rmd) [.html](https://econ122-f25.github.io/home/slides/day3.html)
-    -   day 3 activity: [.Rmd](activities/day3_activity.Rmd) [.html](activities/day3_activity.md)
-        -  solutions: [.Rmd](activities/solutions/day3_activity_sol.Rmd) [.html](activities/solutions/day3_activity_sol.md)
+    -   day 3 activity: [.Rmd](activity/day3_activity.Rmd) [.html](activity/day3_activity.md)
+        -  solutions: [.Rmd](activity/solutions/day3_activity_sol.Rmd) [.html](activity/solutions/day3_activity_sol.md)
 
 ------------------------------------------------------------------------
 ### Week 3 (09/08)
@@ -80,7 +80,7 @@ References:
 -   in class: 
     -   day 4 slides: [.Rmd](slides/day4.Rmd) [.html](https://econ122-f25.github.io/home/slides/day4.html)
     -   day 4 activity: [.Rmd](activity/day4_activity.Rmd) [.html](activity/day4_activity.md)
-        -  solutions: [.Rmd](activity/solutions/day4_ggplotActivity_solution.Rmd) [.html](activities/solutions/day4_ggplotActivity_solution.md)
+        -  solutions: [.Rmd](activity/solutions/day4_ggplotActivity_solution.Rmd) [.html](activity/solutions/day4_ggplotActivity_solution.md)
 
 **Wednesday** (exploratory data analysis (EDA))
 
@@ -89,7 +89,7 @@ References:
 -   in class: 
     -   discuss [team project 1](https://github.com/econ122-f25/teamproject1)
     -   day 5 slides: [.Rmd](docs/day5_moreggplotsSlides.Rmd) [.html](https://econ122-f25.github.io/home/day5_moreggplotsSlides.html)
-    -   day 5 activity: [.Rmd](activities/day5_ggplotActivity_2.Rmd) [.html](activities/day5_ggplotActivity_2.md)
-        -  solutions: [.Rmd](activities/solutions/day5_ggplotActivity_2_solution.Rmd) [.html](activities/solutions/day5_ggplotActivity_2_solution.md)
+    -   day 5 activity: [.Rmd](activity/day5_ggplotActivity_2.Rmd) [.html](activity/day5_ggplotActivity_2.md)
+        -  solutions: [.Rmd](activity/solutions/day5_ggplotActivity_2_solution.Rmd) [.html](activity/solutions/day5_ggplotActivity_2_solution.md)
 
 ------------------------------------------------------------------------
