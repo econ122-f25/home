@@ -65,7 +65,7 @@ References:
 -   before class:
     -   Readings
 -   in class: 
-    -   day 3 slides [.Rmd](slides/day3_slides.Rmd) [.html](https://econ122-f25.github.io/home/slides/day3_slides.html)
+    -   day 3 slides [.Rmd](slides/day3.Rmd) [.html](https://econ122-f25.github.io/home/slides/day3.html)
     -   day 3 activity: [.Rmd](activities/day3_activity.Rmd) [.html](activities/day3_activity.md)
         -  solutions: [.Rmd](activities/solutions/day3_activity_sol.Rmd) [.html](activities/solutions/day3_activity_sol.md)
 
@@ -78,7 +78,7 @@ References:
     - Readings
     - Reminder `ps1` due 9/12
 -   in class: 
-    -   day 4 slides: [.Rmd](slides/day4_slides.Rmd) [.html](https://econ122-f25.github.io/home/slides/day4.html)
+    -   day 4 slides: [.Rmd](slides/day4.Rmd) [.html](https://econ122-f25.github.io/home/slides/day4.html)
     -   day 4 activity: [.Rmd](activity/day4_activity.Rmd) [.html](activity/day4_activity.md)
         -  solutions: [.Rmd](activity/solutions/day4_ggplotActivity_solution.Rmd) [.html](activities/solutions/day4_ggplotActivity_solution.md)
 
