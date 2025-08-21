@@ -90,7 +90,7 @@ References:
     -   Readings
 -   in class: 
     -   discuss [team project 1](https://github.com/econ122-f25/teamproject1)
-    -   day 5 slides: [.Rmd](docs/day5.Rmd) [.html](https://econ122-f25.github.io/home/day5.html)
+    -   day 5 slides: [.Rmd](slides/day5.Rmd) [.html](https://econ122-f25.github.io/home/slides/day5.html)
     -   day 5 activity: [.Rmd](activity/day5_activity.Rmd) [.html](activity/day5_activity.md)
         -  solutions: [.Rmd](activity/day5_activity_sol.Rmd) [.html](activity/day5_activity_sol.md)
 
