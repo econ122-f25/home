@@ -34,7 +34,7 @@ References:
 
 ### Week 1 (08/25)
 
-**Readings:** Ch 1-3, 27 of R4DS
+**Readings:** Ch 1-2, 27 of R4DS
 
 **Monday** (intro) 
 -   before class:
@@ -54,7 +54,7 @@ References:
 ------------------------------------------------------------------------
 ### Week 2 (09/01)
 
-**Readings:**  Ch 5, 12, and 13 of R4DS
+**Readings:**  Ch 5 of R4DS
 
 **Monday** 
 
@@ -72,6 +72,8 @@ References:
 ------------------------------------------------------------------------
 ### Week 3 (09/08)
 
+**Readings:**  Ch 3, 7, 12, 13 of R4DS
+
 **Monday** (reshaping/joining)
 
 -   before class:
@@ -88,8 +90,55 @@ References:
     -   Readings
 -   in class: 
     -   discuss [team project 1](https://github.com/econ122-f25/teamproject1)
-    -   day 5 slides: [.Rmd](docs/day5_moreggplotsSlides.Rmd) [.html](https://econ122-f25.github.io/home/day5_moreggplotsSlides.html)
-    -   day 5 activity: [.Rmd](activity/day5_ggplotActivity_2.Rmd) [.html](activity/day5_ggplotActivity_2.md)
-        -  solutions: [.Rmd](activity/solutions/day5_ggplotActivity_2_solution.Rmd) [.html](activity/solutions/day5_ggplotActivity_2_solution.md)
+    -   day 5 slides: [.Rmd](docs/day5.Rmd) [.html](https://econ122-f25.github.io/home/day5.html)
+    -   day 5 activity: [.Rmd](activity/day5_activity.Rmd) [.html](activity/day5_activity.md)
+        -  solutions: [.Rmd](activity/day5_activity_sol.Rmd) [.html](activity/day5_activity_sol.md)
 
 ------------------------------------------------------------------------
+### Week 4 (09/15)
+
+**Readings:**  Ch 7, 14-16 of R4DS
+
+**Monday** (advanced EDA)
+
+-   before class:
+    - Readings
+-   in class: 
+    -   day 6 slides: [.Rmd](slides/day6.Rmd) [.html](https://econ122-f25.github.io/home/slides/day6.html)
+    -   day 6 activity: [.Rmd](activity/day4_activity.Rmd) [.html](activity/day4_activity.md)
+        -  solutions: [.Rmd](activity/solutions/day4_ggplotActivity_solution.Rmd) [.html](activity/solutions/day4_ggplotActivity_solution.md)
+
+**Wednesday** (Work on Team Project 1 **due 9/19**)
+
+-   before class:
+    -   Make sure you have your Team Project 1 partners
+-   in class: 
+    -   Work with partners on Team Project 1
+    -   Ask any questions related to material up to this point
+
+------------------------------------------------------------------------
+### Week 5 (09/22)
+
+**Readings:**  Ch 14-16 of R4DS
+
+**Monday** (advanced wrangling)
+
+-   before class:
+    -   Readings
+-   in class: 
+    -   discuss [team project 1](https://github.com/econ122-f25/teamproject1)
+    -   day 7 slides: [.Rmd](docs/day7.Rmd) [.html](https://econ122-f25.github.io/home/day7.html)
+    -   day 7 activity: [.Rmd](activity/day7_activity.Rmd) [.html](activity/day7_activity.md)
+        -  solutions: [.Rmd](activity/day7_activity_sol.Rmd) [.html](activity/day7_activity_sol.md)
+
+**Wednesday** (feature engineering)
+
+-   before class:
+    -   Readings
+-   in class: 
+    -   discuss [team project 1](https://github.com/econ122-f25/teamproject1)
+    -   day 8 slides: [.Rmd](docs/day8.Rmd) [.html](https://econ122-f25.github.io/home/day8.html)
+    -   day 8 activity: [.Rmd](activity/day8_activity.Rmd) [.html](activity/day8_activity.md)
+        -  solutions: [.Rmd](activity/day8_activity_sol.Rmd) [.html](activity/day8_activity_sol.md)
+
+

@@ -1,0 +1,283 @@
+---
+title: "Reshaping/combining"
+subtitle: "Day 4"
+author: "Econ 122"
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation:
+    widescreen: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+```
+
+## Welcome to Day 4!
+
+### Reshaping and Joining Data
+
+<br>
+<br>
+
+Today we'll learn how to transform and combine datasets to prepare them for analysis, visualization, and modeling.
+
+## Learning Objectives
+
+By the end of this session, you will be able to:
+
+* Explain the principles of **"tidy data"**.
+* Use **`tidyr`** to reshape data between wide and long formats.
+* Understand the different types of **mutating joins** and **filtering joins**.
+* Combine multiple datasets using various join functions in R.
+
+
+## Part 1: Tidy Data Principles
+
+### What is Tidy Data?
+
+According to Hadley Wickham, a dataset is "tidy" if:
+
+1.  Each **variable** forms a column.
+2.  Each **observation** forms a row.
+3.  Each type of **observational unit** forms a table.
+
+## Why Tidy Data?
+
+Tidy data is essential because:
+
+* It makes data manipulation and analysis easier and more intuitive.
+* It works seamlessly with other `tidyverse` packages, like `ggplot2` and `dplyr`.
+* It's a foundational concept for reproducible data science.
+
+## An Untidy Example: Weather Data {.smaller}
+
+This dataset is untidy because the column headers `Jan`, `Feb`, and `Mar` are actually **values** of a variable called "month".
+
+```{r, echo = TRUE}
+weather_data <- tibble(
+  city = c("NY", "LA"),
+  year = c(2023, 2023),
+  Jan = c(30, 60),
+  Feb = c(35, 65),
+  Mar = c(45, 70)
+)
+weather_data
+```
+
+* How would you get the average temperature by month?
+* What if we want to use `group_by` to summarize by month?
+
+
+## The Tidy Version {.smaller}
+
+The tidy version of this data has one column for `month` and another for `temperature`.
+
+```{r, echo = FALSE}
+weather_tidy <- tibble(
+  city = c("NY", "LA", "NY", "LA", "NY", "LA"),
+  year = c(2023, 2023, 2023, 2023, 2023, 2023),
+  month = c("Jan", "Jan", "Feb", "Feb", "Mar", "Mar"),
+  temperature = c(30, 60, 35, 65, 45, 70)
+)
+
+```
+
+```{r}
+weather_tidy
+
+weather_tidy %>% group_by(month) %>% summarize(avg_temp=mean(temperature))
+```
+
+* Now we can easily use 
+
+## Why the Tidy Version is Better
+
+* We can now easily filter by `month`.
+* We can create visualizations (e.g., a line graph of temperature over time).
+* We can perform calculations (e.g., find the average temperature per month).
+
+## Part 2: Reshaping Data with `tidyr`
+
+The `tidyr` package provides functions to move data between "wide" and "long" formats.
+
+* `pivot_longer()`: Makes wide data long.
+* `pivot_wider()`: Makes long data wide.
+
+## `pivot_longer()`: Wide to Long
+
+`pivot_longer()` takes multiple columns and collapses them into key-value pairs, making the dataset longer.
+
+### Syntax
+`pivot_longer(data, cols, names_to, values_to)`
+
+## `pivot_longer()` Live Example: The Code {.smaller}
+
+We specify which columns to pivot (`Jan:Mar`), what to name the new key column (`month`), and what to name the new value column (`temperature`).
+
+```{r, echo = TRUE}
+weather_data
+
+weather_data %>%
+  pivot_longer(cols = Jan:Mar,names_to = "month",values_to = "temperature")
+```
+
+## `pivot_wider()`: Long to Wide
+
+`pivot_wider()` does the opposite: it takes a long format and spreads it out into a wide format based on key-value pairs.
+
+### Syntax
+`pivot_wider(data, names_from, values_from)`
+
+## `pivot_wider()` Live Example: The Data {.smaller}
+
+Let's take our tidy `weather_tidy` and turn it back into a wide format.
+
+```{r, echo = TRUE}
+weather_tidy
+```
+
+## `pivot_wider()` Live Example: The Code and Result {.smaller}
+
+The `names_from` and `values_from` arguments tell the function which columns to use to create the new columns and fill in the values.
+
+```{r, echo = TRUE}
+weather_tidy %>%
+  pivot_wider(
+    names_from = month,
+    values_from = temperature
+  )
+```
+
+## Part 3: Combining Datasets with Joins
+
+Joins are a way to combine two data frames based on a common variable, or "key". They are performed using the `dplyr` package.
+
+## Mutating Joins
+
+**Mutating joins** add new columns from one data frame to another. The original data from the "left" table is preserved to varying degrees.
+
+* `inner_join()`
+* `left_join()`
+* `full_join()`
+
+## Our Example Datasets: The Claremont Colleges {.smaller}
+
+We'll use two data frames: `students` and `colleges`.
+
+```{r, echo = FALSE}
+students <- tibble(
+  student_id = c(101, 102, 103, 104, 105),
+  name = c("Alice", "Bob", "Charlie", "David", "Eve"),
+  college_id = c(1, 2, 1, 3, 5)
+)
+
+colleges <- tibble(
+  college_id = c(1, 2, 3, 4),
+  college_name = c("Pomona", "Scripps", "Claremont McKenna", "Pitzer")
+)
+```
+
+```{r}
+students
+colleges
+```
+
+## `inner_join()` {.smaller}
+
+`inner_join()` keeps only the rows that have a match in **both** data frames.
+
+```{r, echo = TRUE}
+students %>%
+  inner_join(colleges, by = "college_id")
+```
+
+Note: Eve (student_id 105) and Pitzer College were dropped because they did not have a match.
+
+## `left_join()` {.smaller}
+
+`left_join()` keeps **all rows from the first (left) data frame**, and only the matching rows from the second. If there's no match, it fills with `NA`.
+
+```{r, echo = TRUE}
+students %>%
+  left_join(colleges, by = "college_id")
+```
+
+Eve is kept, but her `college_name` is `NA` because there is no matching `college_id` in the `colleges` table.
+
+## `full_join()` {.smaller}
+
+`full_join()` keeps **all rows from both data frames**. Where there is no match in either table, it fills with `NA`.
+
+```{r, echo = TRUE}
+students %>%
+  full_join(colleges, by = "college_id")
+```
+
+This includes all students and all colleges, regardless of whether a match exists.
+
+## Filtering Joins
+
+**Filtering** joins do not add new columns. They filter the rows of the "left" data frame based on whether or not they have a match in the "right" data frame.
+
+* `semi_join()`
+* `anti_join()`
+
+## When are Filtering Joins Useful?
+
+Filtering joins are powerful when you want to **filter a dataset based on conditions in another dataset, without adding any new columns**.
+
+* **`semi_join()`** is used to **keep rows** in the left table that have a match in the right table.
+
+  * **Use case:** Identifying records that exist in a "master list" or checking for valid entries. For example, finding all students who are registered in one of the Claremont Colleges.
+
+* **`anti_join()`** is used to **remove rows** from the left table that have a match in the right table.
+
+  * **Use case:** Identifying records that are missing from a "master list" or finding "exceptions" or data quality issues. For example, finding all students who are *not* registered in any of the Claremont Colleges (perhaps they have an invalid college ID or attend an external program).
+
+## `semi_join()` {.smaller}
+
+`semi_join()` keeps all rows from the first (left) data frame that have a match in the second (right) data frame. It's like a filter.
+
+### Live Example:
+
+Find all students who belong to a college in our `colleges` table.
+
+```{r, echo = TRUE}
+students %>%
+  semi_join(colleges, by = "college_id")
+```
+This returns students who have a matching `college_id`.
+
+## `anti_join()` {.smaller}
+
+`anti_join()` keeps all rows from the first (left) data frame that **do not** have a match in the second (right) data frame.
+
+### Live Example:
+
+Find all students who do not belong to a college in our `colleges` table.
+
+```{r, echo = TRUE}
+students %>%
+  anti_join(colleges, by = "college_id")
+```
+This returns the one student, Eve, who has no matching `college_id`.
+
+## Summary of Joins
+
+* **Mutating Joins** (`inner`, `left`, `full`): Add columns to a dataset.
+* **Filtering Joins** (`semi`, `anti`): Filter rows of a dataset.
+
+Knowing when to use each type of join is key to efficient data wrangling.
+
+## Final Review
+
+We've covered:
+
+* The principles of tidy data.
+* Reshaping data with `pivot_longer()` and `pivot_wider()`.
+* Mutating joins (`inner`, `left`, and `full`).
+* Filtering joins (`semi` and `anti`).
+
+These are fundamental building blocks for all data analysis in R!
+
