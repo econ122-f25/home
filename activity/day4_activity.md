@@ -1,7 +1,7 @@
 Day 4: In-Class Activity - Student Data Wrangling
 ================
 Your Name
-2025-08-20
+2025-08-21
 
 ## Welcome to Your In-Class Activity!
 
@@ -169,7 +169,7 @@ enrolled in any course listed in `course_enrollment`.
 # Display the result
 ```
 
-## Reflection & Discussion (Optional)
+## Reflection & Discussion
 
 - What was the most challenging part of this activity for you?
 - Can you think of other real-world scenarios where reshaping data would

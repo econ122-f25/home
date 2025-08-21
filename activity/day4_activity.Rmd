@@ -129,7 +129,7 @@ Now, use another filtering join to identify which students from `students_raw` a
 ```
 
 
-## Reflection & Discussion (Optional)
+## Reflection & Discussion
 
 * What was the most challenging part of this activity for you?
 * Can you think of other real-world scenarios where reshaping data would be necessary?
