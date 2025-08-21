@@ -1,0 +1,318 @@
+---
+title: "Exploratory Data Analysis (EDA) & Visualization"
+subtitle: "Day 5"
+author: "Econ 122"
+output:
+  ioslides_presentation:
+    widescreen: true # Enable widescreen
+---
+
+```{r setup, include=FALSE, eval=TRUE}
+options(htmltools.dir.version = FALSE, width = 80) # Set output width to 80 characters
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = TRUE)
+# Load libraries needed for the presentation
+library(ggplot2)
+library(sf) # For spatial data
+library(rnaturalearth) # For world map data
+library(rnaturalearthdata) # For world map data
+library(scales) # For formatting numbers in plots
+```
+
+
+## EDA: What, Why & Process
+
+- **Exploratory Data Analysis (EDA)** is about understanding your data's main characteristics, often visually, before formal modeling.
+
+- **Why important?** Discover patterns, identify anomalies, test hypotheses, inform modeling, and communicate insights effectively.
+
+- **Process:** It's iterative: 
+
+    - **Ask Questions** -> **Wrangle** -> **Transform** -> **Visualize** -> **Model**
+
+
+- Today: Questions & Visualization.
+
+
+
+## Asking Questions: The Foundation of EDA {.smaller}
+
+Before data analysis, formulate questions to guide your exploration. Good questions lead to meaningful insights.
+
+Consider:
+
+* **Distribution:** Typical values, spread, unusual values?
+* **Relationship:** How do variables interact? Correlation?
+* **Comparison:** How do groups compare on a metric?
+
+```{r, eval=FALSE}
+# Example: What is the distribution of ages? Is there a relationship between income and education?
+```
+
+
+
+## Introduction to `ggplot2` & Grammar of Graphics {.smaller}
+
+`ggplot2` is an R package for powerful data visualization, based on the "Grammar of Graphics". It builds plots layer by layer.
+
+**Core Components:**
+
+* **Data:** The dataset.
+* **Aesthetics (`aes()`):** How variables map to visual properties (x, y, color, size).
+* **Geoms (`geom_` functions):** Geometric objects (points, lines, bars).
+* **Stats:** Statistical transformations (e.g., binning, smoothing).
+* **Facets:** Subplots for comparisons.
+* **Scales:** Control mapping from data to aesthetics.
+* **Themes:** Overall visual style.
+
+# Single variable plots
+
+## Histograms: Visualizing Distributions {.smaller}
+
+Display the distribution of a single continuous variable by showing the frequency of observations in defined bins.
+
+```{r, fig.width=6, fig.height=3.5}
+# Histogram of horsepower
+ggplot(data = mtcars, aes(x = hp)) +
+  geom_histogram(binwidth = 20, fill = "steelblue", color = "white", alpha = 0.8) +
+  labs(title = "Distribution of Horsepower", x = "Horsepower (HP)", y = "Frequency") 
+```
+
+## Bar Charts: Visualizing Categories {.smaller}
+
+Used to display counts or proportions of categorical variables, great for comparing values across different categories.
+
+```{r, fig.width=6, fig.height=3.5}
+# Bar chart of cylinder counts
+ggplot(data = mtcars, aes(x = factor(cyl))) +
+  geom_bar(fill = "darkgreen", alpha = 0.8) +
+  labs(title = "Count of Cars by Number of Cylinders", x = "Number of Cylinders", y = "Count") 
+```
+
+# Beyond single variables
+
+## Scatter Plot {.smaller}
+
+The most common way to start visualizing is by adding `geom_point()` to create a scatter plot, showing the relationship between two continuous variables.
+
+```{r, fig.width=6, fig.height=3.5}
+# Scatter plot: MPG vs. HP
+ggplot(data = mtcars, aes(x = hp, y = mpg)) + # Define data and basic aesthetics
+  geom_point(size = 3, alpha = 0.7) + # Add points
+  labs(title = "Horsepower vs. Miles Per Gallon", x = "Horsepower", y = "Miles Per Gallon") 
+```
+
+
+
+## Aesthetic Mapping: Beyond X & Y {.smaller}
+
+Besides `x` and `y`, `aes()` allows mapping data variables to other visual properties:
+
+* `color`: Outline color for points/bars, line color.
+* `fill`: Fill color for bars/polygons.
+* `size`: Size of points or lines.
+* `shape`: Shape of points.
+* `alpha`: Transparency.
+* `linetype`: Style of lines (solid, dashed, dotted).
+
+
+
+## Aesthetic Mapping Example: Continuous Variables {.smaller}
+
+Map a continuous variable to `color` or `size` to show its variation across data points.
+
+```{r, fig.width=6, fig.height=3.2}
+ggplot(data = mtcars, aes(x = hp, y = mpg, size = wt, color = qsec)) + geom_point(alpha = 0.7) +
+  scale_size_continuous(range = c(2, 8)) + # Control min/max size
+  scale_color_viridis_c(option = "magma") + # Use a colorblind-friendly palette
+  labs(title = "MPG vs. HP (Size by Weight, Color by Q-Mile Time)",x = "Horsepower", y = "Miles Per Gallon") 
+```
+
+## Aesthetic Mapping Example: Categorical Variables {.smaller}
+
+Map a categorical variable to `color` to distinguish groups.
+
+```{r, fig.width=6, fig.height=3.5}
+ggplot(data = mtcars, aes(x = factor(cyl), fill = factor(am))) +
+  geom_bar(position = "dodge", alpha = 0.8) + # 'dodge' separates bars by fill group
+  scale_fill_manual(values = c("0" = "darkorange", "1" = "darkblue"), labels = c("Automatic", "Manual"), name = "Transmission") + labs(title = "Cars by Cylinders and Transmission Type", x = "Number of Cylinders", y = "Count") 
+```
+
+
+## Box Plots: Grouped Distributions {.smaller}
+
+Summarize the distribution of a continuous variable for different categories, showing median, quartiles, and potential outliers.
+
+```{r, fig.width=6, fig.height=3.5}
+# Box plot of MPG by number of cylinders
+ggplot(data = mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot(fill = "lightblue", color = "darkblue", alpha = 0.8) +
+  labs(title = "MPG Distribution by Number of Cylinders", x = "Number of Cylinders", y = "Miles Per Gallon (MPG)") 
+```
+
+
+## Line Plots: Showing Trends Over Time {.smaller}
+
+Ideal for visualizing trends of one or more continuous variables over an ordered sequence, most commonly time.
+
+```{r, fig.width=6, fig.height=3.5}
+# Example using a time series-like dataset (e.g., economics from ggplot2)
+ggplot(data = economics, aes(x = date, y = unemploy)) +
+  geom_line(color = "purple", linewidth = 1.2) +
+  labs(title = "Unemployment Rate Over Time", x = "Date", y = "Unemployment (Thousands)") 
+```
+
+
+
+## Area Plots: Visualizing Magnitude Over Time {.smaller}
+
+Similar to line plots, but fill the area between the line and the x-axis. Useful for showing magnitude of change and total contribution over time.
+
+```{r, fig.width=6, fig.height=3.5}
+# Example using economics data
+ggplot(data = economics, aes(x = date, y = pop)) +
+  geom_area(fill = "lightcoral", alpha = 0.7, color = "darkred") +
+  labs(title = "Population Growth Over Time", x = "Date", y = "Population (Thousands)") 
+```
+
+
+## Smooth Lines (`geom_smooth`) {.smaller}
+
+`geom_smooth()` adds a smoothed mean to your plots, often used to visualize trends or relationships in scatter plots. 
+
+```{r, fig.width=6, fig.height=3.5}
+# Scatter plot with a smoothed linear trend line
+ggplot(data = mtcars, aes(x = disp, y = mpg)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") + labs(title = "Displacement vs. MPG with Linear Trend")
+```
+
+## Faceting: Subplots for Comparisons {.smaller}
+
+Faceting allows you to create multiple subplots based on the levels of one or more categorical variables. Use `facet_wrap()` or `facet_grid()`.
+
+```{r, fig.width=8, fig.height=3.5}
+ggplot(data = mtcars, aes(x = disp, y = mpg)) +
+  geom_point(alpha = 0.7, color = "darkblue") +
+  facet_wrap(~ cyl) + # Facet by 'cyl' variable
+  labs(title = "Displacement vs. MPG by Cylinder Count",
+       subtitle = "Comparing car performance across different engine sizes")
+```
+
+
+
+## Customizing Axes and Labels {.smaller}
+
+You have fine-grained control over axis limits, breaks, and labels using `scale_x_continuous()`, `scale_y_continuous()`, and `labs()`.
+
+```{r, fig.width=6, fig.height=3.5}
+ggplot(data = mtcars, aes(x = wt, y = qsec)) + geom_point(color = "purple", size = 3, alpha = 0.8) +
+  labs(x = "Vehicle Weight (in 1000 lbs)", y = "Quarter-Mile Time (in seconds)") +
+  scale_x_continuous(limits = c(1, 6), breaks = seq(1, 6, by = 1)) +
+  scale_y_continuous(limits = c(14, 24), breaks = seq(14, 24, by = 2)) 
+```
+
+## Adding Titles and Subtitles {.smaller}
+
+Clear titles and subtitles are essential for making your plots informative and easy to understand. Use `labs()` to add these elements.
+
+```{r, fig.width=6, fig.height=3.5}
+ggplot(data = mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "darkgreen", size = 3, alpha = 0.7) +
+  labs(title = "Relationship Between Horsepower and Miles Per Gallon", subtitle = "Insights from the mtcars dataset",caption = "Data source: 1974 Motor Trend US magazine") 
+```
+
+## Customizing Colors and Fills {.smaller}
+
+`ggplot2` provides powerful `scale_color_` and `scale_fill_` functions to control the colors used in your plots. 
+
+```{r, fig.width=6, fig.height=3.5}
+# Example using manual colors for a categorical variable
+ggplot(data = mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_discrete() + 
+  labs(title = "MPG Distribution by Cylinders (Custom Colors)", x = "Number of Cylinders", y = "Miles Per Gallon") 
+```
+
+## Introduction to Geographic Mapping in R (`sf`)
+
+* Mapping visualizes data in a spatial context, revealing geographic patterns. 
+* The `sf` (Simple Features) package is the modern standard for handling spatial data in R, integrating seamlessly with `ggplot2`.
+
+**Spatial Data Types:**
+
+* **Points:** Single locations (e.g., cities).
+* **Lines:** Roads, rivers, boundaries.
+* **Polygons:** Countries, states, lakes.
+
+
+
+## Loading Spatial Data & Basic Static Map {.smaller}
+
+We'll use `rnaturalearth` for built-in world map data and then create a basic static map.
+
+```{r, fig.width=8, fig.height=4}
+# Load world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+# Basic world map
+ggplot(data = world) +
+  geom_sf(fill = "lightgray", color = "white", size = 0.2) + theme_void() + labs(title = "Basic World Map")
+```
+
+
+## Thematic Mapping: Choropleth Maps {.smaller}
+
+Choropleth maps color geographic areas based on a variable's value, showing spatial distribution. We map a data variable to the `fill` aesthetic of `geom_sf()`.
+
+```{r, fig.width=8, fig.height=4, warning=FALSE}
+ggplot(data = world) +
+  geom_sf(aes(fill = pop_est), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "magma", name = "Estimated Population (log10 Scale)",
+                       labels = scales::comma, trans = "log10") + # Apply log10 transformation
+  theme_void() + labs(title = "World Population Estimate (Log10 Scale, 2020 Est.)")
+```
+
+
+
+## Adding Points and Lines to Maps {.smaller}
+
+Overlay additional spatial data (points, lines, or other polygons) on your base map by adding more `geom_sf()` layers.
+
+```{r, include=FALSE}
+cities <- data.frame(  city = c("London", "New York", "Tokyo", "Sydney"),
+                  lon = c(-0.1278, -74.0060, 139.6917, 151.2093),
+                  lat = c(51.5074, 40.7128, 35.6895, -33.8688)
+) %>% st_as_sf(coords = c("lon", "lat"), crs = 4326) # WGS84 CRS
+
+```
+
+```{r, fig.width=8, fig.height=3.5}
+# Plot world map with cities
+ggplot(data = world) +
+  geom_sf(fill = "lightgray", color = "white", size = 0.2) +
+  geom_sf(data = cities, color = "red", size = 4, shape = 17, alpha = 0.8) + # Add city points
+  theme_void() + labs(title = "World Map with Major Cities")
+```
+
+## Common Pitfalls in Visualization
+
+* **Misleading Scales:** Truncating axes or non-zero baselines distort perception.
+* **Overplotting:** Too many points obscure patterns.
+* **Poor Color Choices:** Inaccessible palettes or too many colors.
+* **Lack of Labels/Titles:** Plots without clear context are hard to interpret.
+* **Using 3D when 2D Suffices:** Adds complexity without clarity.
+* **Ignoring Data Types:** Inappropriate plots for categorical vs. continuous data.
+
+
+## Summary
+
+Today, we covered:
+
+* The importance and process of EDA.
+* Fundamentals of `ggplot2` and its components, including **aesthetic mapping (color, size, shape)**.
+* Common plots: **scatter, histogram, bar, box, line, and area plots.**
+* **Key `ggplot2` features:** **smooth lines, faceting, enhancing plots, customizing axes, and adding titles, and customizing colors/fills.**
+* **Introduction to Geographic Mapping:**
+    * `sf` for spatial data handling.
+    * `ggplot2` for static maps (choropleth, points).
+* Common **Pitfalls** to avoid 
+
