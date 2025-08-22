@@ -40,7 +40,7 @@ References:
 -   before class:
     - Try to set up R, RStudio, Git, GitHub account (See [GitHub reference quick guide](https://github.com/econ122-f25/github-classroom-for-students) and See [GitHub reference full guide](https://happygitwithr.com/index.html))
 -   in class: 
-    -   day 1 [slides](https://econ122-f25.github.io/home/slides/day1.html), [activity](activity/day1_activity.Rmd) 
+    -   day 1 [slides](https://econ122-f25.github.io/home/slides/day1.html){:target="_blank"}, [activity](activity/day1_activity.Rmd) 
     -   continue setting up software
 
 **Wednesday** (reproducibility, R Markdown)
@@ -56,11 +56,9 @@ References:
 **Readings:**  Ch 5 of R4DS
 
 **Monday** 
-
 - Labor day!!
 
 **Wednesday** (data wrangling with dplyr)
-
 -   before class:
     -   Readings
 -   in class: 
@@ -72,7 +70,6 @@ References:
 **Readings:**  Ch 3, 7, 12, 13 of R4DS
 
 **Monday** (reshaping/joining)
-
 -   before class:
     - Readings
     - Reminder `ps1` due 9/12
@@ -80,7 +77,6 @@ References:
     -   day 4 [slides](https://econ122-f25.github.io/home/slides/day4.html), [activity](activity/day4_activity.Rmd), [solutions](activity/solutions/day4_activity_sol.md)
 
 **Wednesday** (exploratory data analysis (EDA))
-
 -   before class:
     -   Readings
 -   in class: 
@@ -93,14 +89,12 @@ References:
 **Readings:**  Ch 7, 14-16 of R4DS
 
 **Monday** (advanced EDA)
-
 -   before class:
     - Readings
 -   in class: 
     -   day 6 [slides](https://econ122-f25.github.io/home/slides/day6.html), [activity](activity/day6_activity.Rmd), [solutions](activity/solutions/day6_activity_sol.md)
     
 **Wednesday** (Work on Team Project 1 **due 9/19**)
-
 -   before class:
     -   Make sure you have your Team Project 1 partners
 -   in class: 
@@ -113,14 +107,12 @@ References:
 **Readings:**  Ch 14-16 of R4DS
 
 **Monday** (advanced wrangling)
-
 -   before class:
     -   Readings
 -   in class: 
     -   day 7 [slides](https://econ122-f25.github.io/home/slides/day7.html), [activity](activity/day7_activity.Rmd), [solutions](activity/solutions/day7_activity_sol.md)
 
 **Wednesday** (feature engineering)
-
 -   before class:
     -   Readings
 -   in class: 
@@ -130,7 +122,6 @@ References:
 ### Week 6 (09/29)
 
 **Monday** 
-
 -   before class:
     -   study for exam 1
 -   in class:
