@@ -9,8 +9,8 @@ Office hours:
 
 Tutor sessions:
 
-- **Mo 0X:00-XX:00 PM (BC XX)** - Joshua Zhou
-- **We 0X:00-XX:00 PM (BC XX)** - Asher Frye
+- **TBD** - Joshua Zhou
+- **TBD** - Asher Frye
 
 Texbooks:
 
@@ -45,7 +45,7 @@ References:
 
 **Wednesday** (reproducibility, R Markdown)
 -   before class:
-    -   Start looking at PS 1
+    -   Start looking at `ps1`
 -   in class: 
     -   day 2 [slides](https://econ122-f25.github.io/home/slides/day2.html){:target="_blank"}, [activity](activity/day2_activity.Rmd) 
     -   day 2 activity [github classroom link](https://classroom.github.com/a/GWld0A2q)
