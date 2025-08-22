@@ -1,0 +1,269 @@
+---
+title: "Day 6: Advanced EDA & Patterns"
+author: "Econ 122"
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation:
+    widescreen: true
+    css: styles.css # Optional: for custom CSS
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, out.width = '50%', out.height = '50%', fig.align = 'center')
+
+
+# Load all necessary libraries
+library(ggplot2)
+library(dplyr)
+library(reshape2) # For melt function
+library(corrplot) # For visualizing correlation matrix
+
+# Load and prepare the mtcars dataset
+data(mtcars)
+mtcars$cyl_factor <- as.factor(mtcars$cyl) # Convert cylinders to factor
+mtcars$model <- rownames(mtcars) # Add model names as a new column
+rownames(mtcars) <- NULL # Optional: remove row names if they are no longer needed as identifiers
+```
+
+## Day 6: Advanced EDA & Patterns
+
+
+* Today, we'll dive deeper into Exploratory Data Analysis (EDA).
+* We'll focus on:
+    * Identifying patterns, relationships, and anomalies.
+    * Building more complex visualizations using `ggplot2`.
+
+## Recap: What is EDA?
+
+* EDA is the process of analyzing data sets to summarize their main characteristics.
+* It often involves visual methods.
+* EDA helps us understand the data before formal modeling.
+* Today, we'll go beyond basic plots to uncover deeper insights.
+
+## Beyond Basic Scatter Plots: Faceting {.smaller}
+
+* **Faceting** allows us to split a single plot into multiple subplots.
+* This is based on the levels of one or more categorical variables.
+* It's incredibly powerful for comparing distributions or relationships across different groups.
+* What if we want to see this relationship by cylinder count?
+
+```{r}
+# Basic scatter plot
+ggplot(mtcars, aes(x = hp, y = mpg)) + geom_point() +
+  labs(title = "HP vs MPG (Overall)", x = "Horsepower", y = "Miles Per Gallon")
+```
+
+## Example: Faceting by Categorical Variable {.smaller}
+
+* We can easily create subplots using `facet_wrap()` or `facet_grid()`.
+* `facet_wrap()` is ideal for a single categorical variable.
+* `facet_grid()` is used for two categorical variables.
+
+```{r}
+# Faceting by cylinder count
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point() +
+  facet_wrap(~ cyl_factor) +
+  labs(title = "HP vs MPG by Cylinder Count", x = "Horsepower", y = "Miles Per Gallon")
+```
+
+## Exploring Relationships with `geom_smooth()` {.smaller}
+
+* `geom_smooth()` adds a smoothed conditional mean to a plot.
+* It's useful for visualizing trends in data.
+
+```{r}
+# Scatter plot with a smooth line
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + # Add linear regression line, no standard error
+  labs(title = "HP vs MPG with Linear Trend", x = "Horsepower", y = "Miles Per Gallon")
+```
+
+## Example: Adding Regression Lines to Faceted Plots {.smaller}
+
+* Combining `geom_smooth()` with faceting shows how trends vary across different groups.
+* This provides a richer understanding of conditional relationships.
+
+```{r}
+ggplot(mtcars, aes(x = hp, y = mpg)) + geom_point() +   facet_wrap(~ cyl_factor) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "HP vs MPG by Cylinder Count with Linear Trends", x = "Horsepower", y = "Miles Per Gallon")
+```
+
+## Correlation Matrices {.smaller}
+
+* A **correlation matrix** is a table showing correlation coefficients between variables.
+* Each cell shows the correlation between two variables.
+* It's a powerful way to quickly identify linear relationships.
+
+```{r}
+# Calculate correlation matrix for numerical variables
+cor_matrix <- cor(mtcars[, c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb")])
+print(round(cor_matrix, 2))
+```
+
+## Example: Visualizing via Heatmap {.smaller}
+
+* A **heatmap** provides an intuitive visual representation of the correlation matrix.
+* It makes strong positive and negative correlations immediately apparent.
+
+```{r, fig.width=6, fig.height=4}
+# Convert correlation matrix to long format for ggplot2
+melted_cor <- melt(cor_matrix)
+ggplot(melted_cor, aes(x = Var1, y = Var2, fill = value)) + geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1,1), name = "Correlation") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) + labs(title = "Correlation Matrix of mtcars variables")
+```
+
+## Detecting Anomalies: What are They?
+
+* **Anomalies** (or outliers) are data points that significantly deviate from the majority of the data.
+* Identifying them is crucial because they can indicate:
+    * Errors in data collection.
+    * Rare events.
+    * Important insights.
+
+## Density (or histogram) Plots {.smaller}
+
+* **Density plots** (or kernel density estimates) show the distribution of a numerical variable.
+* Anomalies might appear as:
+    * Small, isolated peaks.
+    * Points in very low-density regions.
+
+```{r}
+ggplot(mtcars, aes(x = hp)) +
+  geom_density(fill = "lightblue", alpha = 0.7,adjust = 0.3) +
+  labs(title = "Density Plot of Horsepower (mtcars)", x = "Horsepower", y = "Density")
+```
+
+## Statistical Methods for Anomaly Detection: IQR Method {.smaller}
+
+* The **Interquartile Range (IQR)** method defines outliers as points outside a certain range.
+* Outliers are typically below $Q1 - 1.5 \times IQR$ or above $Q3 + 1.5 \times IQR$.
+* This method is robust to skewed distributions.
+
+```{r}
+# Calculate Q1, Q3, and IQR for 'hp'
+Q1 <- quantile(mtcars$hp, 0.25)
+Q3 <- quantile(mtcars$hp, 0.75)
+IQR_val <- Q3 - Q1
+
+# Define outlier bounds
+lower_bound <- Q1 - 1.5 * IQR_val
+upper_bound <- Q3 + 1.5 * IQR_val
+
+# Identify outliers based on IQR method
+mtcars %>% filter(hp < lower_bound | hp > upper_bound) %>% select(model, hp)
+```
+
+## Using Box Plots for Anomaly Detection {.smaller}
+
+* **Box plots** are excellent for visualizing the distribution of numerical data.
+* The box edges represent Q1 and Q3 and the whiskers represent the 1.5 range.
+* Outliers are typically plotted as individual points beyond the 'whiskers' of the box plot.
+
+```{r}
+# Using 'hp' from mtcars for anomaly detection
+ggplot(mtcars, aes(y = hp)) +
+  geom_boxplot() +
+  labs(title = "Box Plot of Horsepower (mtcars)", y = "Horsepower")
+```
+
+
+## Statistical Methods for Anomaly Detection: Z-score {.smaller}
+
+* The **Z-score** measures how many standard deviations an observation is from the mean.
+* A common threshold for outliers is a Z-score greater than 2 or 3 (or less than -2 or -3).
+* Relies more on normal dist than IQR. However, output is more interpretable 
+
+```{r}
+# Calculate Z-scores for 'hp'
+mtcars$hp_zscore <- scale(mtcars$hp)
+
+# Identify outliers based on Z-score > 2
+mtcars %>% filter(abs(hp_zscore) > 2) %>% select(model,hp,hp_zscore)
+```
+
+## Challenges in Anomaly Detection
+
+* **Defining "Normal":** What constitutes normal behavior can be subjective and context-dependent.
+* **High Dimensionality:** As the number of variables increases, the concept of distance and density becomes less intuitive.
+* **Evolving Patterns:** Normal behavior can change over time, requiring adaptive anomaly detection systems.
+
+## Visualizing Categorical Data Relationships {.smaller}
+
+* When working with two or more categorical variables, we often want to see their joint distribution.
+* **Stacked bar charts** are excellent for this, showing proportions within groups.
+* **Grouped bar charts** can also be used to compare counts across categories.
+
+```{r}
+# Example: Stacked bar chart of transmission type by cylinder count
+ggplot(mtcars, aes(x = cyl_factor, fill = as.factor(am))) +
+  geom_bar(position = "fill") + # 'fill' shows proportions
+  labs(title = "Proportion of Transmission Types by Cylinder",
+       x = "Cylinders", y = "Proportion", fill = "Transmission (0=Auto, 1=Manual)") + theme_minimal()
+```
+
+## Grouped Bar Charts {.smaller}
+
+* **Grouped bar charts** allow for direct comparison of counts or values across different categories.
+* They are useful when you want to compare the absolute numbers of sub-groups side-by-side.
+
+```{r}
+# Example: Grouped bar chart of car count by cylinder and transmission type
+ggplot(mtcars, aes(x = cyl_factor, fill = as.factor(am))) +
+  geom_bar(position = "dodge") + # 'dodge' places bars side-by-side
+  labs(title = "Car Count by Cylinder and Transmission (Grouped)",
+       x = "Cylinders", y = "Count", fill = "Transmission (0=Auto, 1=Manual)") +
+  theme_minimal()
+```
+
+## Data Transformation for Visualization {.smaller}
+
+* Sometimes, raw data distributions can be skewed, making visualizations hard to interpret.
+* **Transformations** (like log or square root) can make data more symmetric.
+* This helps reveal patterns that might be hidden in the original scale.
+
+```{r,echo=FALSE}
+# Example: Original vs. Log-transformed Income
+# Create a sample skewed income dataset
+set.seed(123) # for reproducibility
+income_data <- data.frame(
+  income = c(rlnorm(100, meanlog = 9, sdlog = 1.2), runif(10, min = 1000000, max = 5000000))
+)
+```
+```{r}
+par(mfrow = c(1, 2)) # Arrange plots side by side
+hist(income_data$income, main = "Original Income Distribution", xlab = "Income")
+hist(log(income_data$income), main = "Log-transformed Income Distribution", xlab = "Log(Income)")
+```
+
+
+## Heatmaps for Multi-variable Relationships {.smaller}
+
+* **Heatmaps** are excellent for visualizing relationships between three or more variables.
+* They are especially useful when one or more variables are categorical.
+* They use color intensity to represent a third variable's value.
+
+```{r}
+mtcars_summary <- mtcars %>% group_by(cyl_factor, gear) %>% summarise(avg_mpg = mean(mpg)) #dplyr
+ggplot(mtcars_summary, aes(x = cyl_factor, y = as.factor(gear), fill = avg_mpg)) +
+  geom_tile(color = "white") + scale_fill_gradient(low = "yellow", high = "red") +
+  labs(title = "Average MPG by Cylinder and Gear", x = "Cylinders", y = "Gears", fill = "Average MPG") + theme_minimal()
+```
+
+## Key Takeaways from Day 6
+
+Today, we explored advanced EDA techniques:
+
+* **Faceting:** Comparing relationships across groups.
+* **`geom_smooth()`:** Visualizing trends.
+* **Correlation Matrices & Heatmaps:** Understanding multi-variable linear relationships.
+* **Box & Density Plots:** Identifying anomalies/outliers visually.
+* **Statistical Anomaly Detection:** Using Z-score and IQR methods.
+* **Challenges in Anomaly Detection:** Understanding practical difficulties.
+* **Data Transformation:** Improving data distribution for visualization through log transforms and scaling.
+* **Visualizing Categorical Relationships:** Using stacked and grouped bar charts.
+
+

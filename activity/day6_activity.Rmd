@@ -1,0 +1,176 @@
+---
+title: "Day 6: Advanced EDA & Patterns - In-Class Activity"
+author: "Econ 122"
+date: "`r Sys.Date()`"
+output:
+  github_document:
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, out.width = '70%', fig.align = 'center') # Adjusted out.width for document readability
+
+# Load all necessary libraries
+library(ggplot2)
+library(dplyr)
+library(reshape2) # For melt function
+library(readr) # For reading CSV files
+
+#Download happiness data and clean it
+whr_url <- "https://raw.githubusercontent.com/mgelman/data/master/whr2023.csv"
+whr_data <- read_csv(whr_url)
+
+whr_data <- whr_data %>%
+  rename(
+    happiness = `Happiness score`, 
+    Logged_GDP_per_capita = `Logged GDP per capita`,
+    Social_support = `Social support`,
+    Healthy_life_expectancy = `Healthy life expectancy`, 
+    Freedom_to_make_life_choices = `Freedom to make life choices`,
+    Generosity = `Generosity`,
+    Perceptions_of_corruption = `Perceptions of corruption`,
+    Regional_indicator = `Regional indicator`,
+    Country_name = `Country name`
+  ) %>%
+  na.omit() 
+
+# Generate raw GDP per capita from the logged version for Task 3.1
+whr_data <- whr_data %>%
+  mutate(GDP_per_capita_raw = exp(Logged_GDP_per_capita))
+
+# Create happiness bins for stacked bar chart (Task 3.2)
+whr_data <- whr_data %>%
+  mutate(
+    happiness_bin = cut(happiness,
+                        breaks = c(0, 4.5, 6.5, Inf), # Example bins: Low, Medium, High
+                        labels = c("Low Happiness", "Medium Happiness", "High Happiness"),
+                        right = FALSE) # Include lower bound, exclude upper
+  )
+
+```
+
+# 📊 Day 6: Advanced EDA & Patterns - In-Class Activity
+
+Welcome to your in-class activity for Day 6! Today, you'll apply the advanced Exploratory Data Analysis (EDA) techniques we discussed, focusing on identifying patterns, relationships, anomalies, and data transformations, using an **actual World Happiness Report dataset (2023)**. This dataset tracks **happiness scores**, **GDP per capita**, **social support**, and **healthy life expectancy** across various countries and regions. It offers **interesting variations** and **distinct patterns** throughout the world, making it ideal for deeper exploration of global well-being and economic trends.
+
+**Estimated Time:** 40 minutes
+
+**Instructions:**
+
+1.  Work through each section.
+2.  Execute the R code chunks as you go.
+3.  Answer any questions or complete any coding tasks.
+4.  Feel free to discuss with your peers!
+
+---
+
+## Part 1: Global Happiness & Economy Relationships (15 minutes)
+
+In this section, you'll explore relationships between happiness scores and economic indicators using scatter plots, faceting, and correlation matrices.
+
+### Task 1.1: Log GDP Per Capita vs. Happiness Score with Trend Line
+
+Create a scatter plot showing `Logged_GDP_per_capita` (Log GDP per capita) on the x-axis and `happiness` (Happiness Score) on the y-axis from the `whr_data` dataset. Add a linear regression line (`geom_smooth(method = "lm", se = FALSE)`) to visualize the overall trend.
+
+```{r task1.1}
+# Your code here for Log GDP vs Happiness Score with linear trend
+
+```
+
+### Task 1.2: Faceting by Regional Indicator
+
+Take the previous plot (Log GDP Per Capita vs. Happiness Score) and use `facet_wrap` on `Regional_indicator` to create separate plots for each region. Observe how the relationship between Log GDP and happiness changes across these different regions. Do you notice **more distinct patterns** or different slopes for certain regions, indicating varying factors influencing happiness?
+
+```{r task1.2}
+# Your code here for faceted Log GDP vs Happiness Score plot by Regional Indicator
+
+```
+
+### Task 1.3: Visualizing a Correlation Matrix
+
+Generate a heatmap of the correlation matrix for the numerical measurements in `whr_data` (`happiness`, `Logged_GDP_per_capita`, `Social_support`, `Healthy_life_expectancy`, `Freedom_to_make_life_choices`, `Generosity`, `Perceptions_of_corruption`). This will help you quickly identify strong positive and negative linear relationships between these global well-being indicators.
+
+```{r task1.3}
+# Your code here for correlation heatmap
+
+```
+
+---
+
+## Part 2: Anomaly Detection in Global Data (15 minutes)
+
+In this section, you'll use visual and statistical methods to identify potential anomalies (outliers) in the `happiness` (happiness score) variables of the `whr_data` dataset. These might represent countries with unusually high/low happiness for their region/economic context.
+
+### Task 2.1: Outliers in Happiness Score
+
+Explore outliers in the `happiness` score using both visual and statistical methods.
+
+#### Task 2.1.1: Box Plot for Happiness Score Outliers
+
+Create a box plot of `happiness` to visually identify outliers. Given the nature of real-world data, you might observe some interesting outliers.
+
+```{r task2.1.1}
+# Your code here for box plot of happiness
+
+```
+
+#### Task 2.1.2: IQR Method for Happiness Score
+
+Calculate the IQR for `happiness`. Identify and print the `Country_name`, `Regional_indicator`, and `happiness` for any entries that fall outside the $Q1 - 1.5 \\times IQR$ and $Q3 + 1.5 \\times IQR$ bounds. These could be countries with unusually low or high happiness scores.
+
+```{r task2.1.2}
+# Your code here to identify and print IQR outliers
+
+```
+
+#### Task 2.1.3: Z-score Method for Happiness Score (Identifying More Outliers)
+
+Calculate the Z-score for each country's `happiness`. Identify and print the `Country_name`, `Regional_indicator`, and `happiness` for any entries with an absolute Z-score greater than **1.5**. Using this lower threshold will typically identify **even more outliers**, allowing for a broader examination of unusual data points.
+
+```{r task2.1.3}
+# Your code here to identify and print Z-score outliers using a lower threshold
+
+```
+
+---
+
+## Part 3: Data Transformation & Categorical Visualization (10 minutes)
+
+This section focuses on transforming data to improve visualization and exploring relationships between categorical variables.
+
+### Task 3.1: Effect of Log Transformation on GDP Per Capita
+
+Explore the distribution of raw GDP per capita and its log-transformed version. Create two histograms side-by-side: one for `GDP_per_capita_raw` and one for `Logged_GDP_per_capita`. Observe how the log transformation changes the distribution's shape, making it more symmetric and suitable for linear modeling.
+
+```{r task3.1}
+# Your code here for histograms of original and log-transformed GDP per capita
+
+```
+
+### Task 3.2: Stacked Bar Chart of Happiness Distribution by Region
+
+Create a stacked bar chart showing the **count of countries** within each `Regional_indicator` that fall into different `happiness_bin` categories ("Low Happiness", "Medium Happiness", "High Happiness"). This will allow you to visualize the distribution of happiness levels across regions. What do you notice?
+
+```{r task3.2}
+# Your code here for stacked bar chart of happiness distribution by region
+
+```
+
+---
+
+## ✨ Activity Wrap-up
+
+Great job working through these advanced EDA concepts! You've practiced:
+
+* Using **faceting** to compare relationships across groups (specifically by `Regional_indicator`, revealing distinct patterns related to happiness and economic indicators).
+* Visualizing trends with **`geom_smooth()`**.
+* Identifying linear relationships with **correlation matrices** and **heatmaps**.
+* Detecting anomalies using **box plots**, **Z-score**, and **IQR methods**, including identifying **extreme outliers** in happiness scores.
+* Transforming skewed data (like GDP per capita) with **log transformations** to improve visualization.
+* Visualizing relationships between categorical variables using **stacked bar charts** to show distributions.
+
+### Discussion Points:
+
+* Compare the Z-score and IQR methods for detecting outliers in `happiness`. Which method identified more outliers and why might that be the case for these specific variables?
+* How did faceting by `Regional_indicator` provide different insights into the relationship between Log GDP per capita and Happiness Score, potentially highlighting socio-economic disparities?
+* Think of another real-world dataset where identifying obvious data errors or extreme outliers (like a country with an unusually low life expectancy given its high GDP) would be crucial before further analysis related to global well-being.
+
