@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Data Science with R"
+title: "Intro to Data Science with R"
 subtitle: "Day 1"
 author: "Econ 122"
 date: "`r Sys.Date()`"
