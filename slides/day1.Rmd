@@ -56,6 +56,8 @@ Data science is an interdisciplinary field that uses scientific methods, process
 -   **Model:** Build predictive or descriptive models.
 -   **Communicate:** Share findings and insights.
 
+Roles used to be split but now merged
+
 ## Why R?
 
 R is a powerful, open-source programming language and environment specifically designed for statistical computing and graphics. 

@@ -1,5 +1,6 @@
 ---
-title: "Day 6: Advanced EDA & Patterns"
+title: "Advanced EDA & Patterns"
+subtitle: "Day 6"
 author: "Econ 122"
 date: "`r Sys.Date()`"
 output:
