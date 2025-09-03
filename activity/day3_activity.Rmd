@@ -151,6 +151,8 @@ These verbs are often used together to get insights from your data.
 
 **Exercise 5.3 (Challenging Summary):** For each `species`, calculate the **average `height`**, the **average `mass`**, and the **number of distinct `homeworld`s**. Only include species that have **more than 10 characters**. Order the final result by the number of characters in descending order.
 
+*Hint: `n_distinct()` can be useful here*
+
 ```{r summarize-species-challenge}
 # Your code here (Hint: you'll need `group_by()`, `summarize()` with multiple calculations, `filter()`, and `arrange()`)
 ```
