@@ -100,6 +100,7 @@ starwars %>% filter(height > 150)
 ## `filter()` with Multiple Conditions {.smaller}
 
 You can combine conditions using logical operators:
+
 * `&` for AND (both conditions must be true)
 * `|` for OR (at least one condition must be true)
 
