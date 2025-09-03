@@ -223,7 +223,7 @@ starwars %>%
 **Example:** Counting the number of characters for each `gender` and `species`.
 
 ```{r}
-starwars %>% group_by(gender, species) %>% summarize(count = n())
+starwars %>% group_by(gender, species) %>% summarize(count = n()) %>% arrange(desc(count))
 ```
 
 ## Putting It All Together: A Chained Example {.smaller}
