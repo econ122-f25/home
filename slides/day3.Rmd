@@ -243,3 +243,4 @@ starwars %>% filter(gender == "masculine" & species == "Human" & height > 170) %
 * `mutate()`: Add new columns.
 * `summarize()`: Condense data to a single row.
 * `group_by()`: Perform operations on groups.
+    - Typically used with `summarize()` and `mutate()`
