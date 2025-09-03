@@ -9,7 +9,7 @@
 
 
 
-  <meta name="date" content="2025-08-20" />
+  <meta name="date" content="2025-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3204,19 +3204,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2025-08-20</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2025-09-03</p>
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>Welcome to Day 4!</h2></hgroup><article  id="welcome-to-day-4">
+<slide class=""><hgroup><h2>Learning Objectives</h2></hgroup><article  id="learning-objectives">
 
-<h3>Reshaping and Joining Data</h3>
-
-<p><br> <br></p>
-
-<p>Today we’ll learn how to transform and combine datasets to prepare them for analysis, visualization, and modeling.</p>
-
-</article></slide><slide class=""><hgroup><h2>Learning Objectives</h2></hgroup><article  id="learning-objectives">
+<ul>
+<li>Today we’ll learn how to transform and combine datasets to prepare them for analysis, visualization, and modeling.</li>
+</ul>
 
 <p>By the end of this session, you will be able to:</p>
 
@@ -3236,7 +3232,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 <ol>
 <li>Each <strong>variable</strong> forms a column.</li>
 <li>Each <strong>observation</strong> forms a row.</li>
-<li>Each type of <strong>observational unit</strong> forms a table.</li>
+<li>Each type of <strong>observational unit</strong> forms a table.
+
+<ul>
+<li>Ex: We won’t combine <code>students</code> and <code>courses</code> in the same table</li>
+</ul></li>
 </ol>
 
 </article></slide><slide class=""><hgroup><h2>Why Tidy Data?</h2></hgroup><article  id="why-tidy-data">
@@ -3488,15 +3488,6 @@ weather_data</pre>
 </article></slide><slide class=""><hgroup><h2>Filtering Joins</h2></hgroup><article  id="filtering-joins">
 
 <p><strong>Filtering</strong> joins do not add new columns. They filter the rows of the &ldquo;left&rdquo; data frame based on whether or not they have a match in the &ldquo;right&rdquo; data frame.</p>
-
-<ul>
-<li><code>semi_join()</code></li>
-<li><code>anti_join()</code></li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>When are Filtering Joins Useful?</h2></hgroup><article  id="when-are-filtering-joins-useful">
-
-<p>Filtering joins are powerful when you want to <strong>filter a dataset based on conditions in another dataset, without adding any new columns</strong>.</p>
 
 <ul>
 <li><p><strong><code>semi_join()</code></strong> is used to <strong>keep rows</strong> in the left table that have a match in the right table.</p>

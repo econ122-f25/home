@@ -13,16 +13,9 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 ```
 
-## Welcome to Day 4!
-
-### Reshaping and Joining Data
-
-<br>
-<br>
-
-Today we'll learn how to transform and combine datasets to prepare them for analysis, visualization, and modeling.
-
 ## Learning Objectives
+
+* Today we'll learn how to transform and combine datasets to prepare them for analysis, visualization, and modeling.
 
 By the end of this session, you will be able to:
 
@@ -41,6 +34,7 @@ According to Hadley Wickham, a dataset is "tidy" if:
 1.  Each **variable** forms a column.
 2.  Each **observation** forms a row.
 3.  Each type of **observational unit** forms a table.
+    - Ex: We won't combine `students` and `courses` in the same table
 
 ## Why Tidy Data?
 
@@ -220,13 +214,6 @@ This includes all students and all colleges, regardless of whether a match exist
 
 **Filtering** joins do not add new columns. They filter the rows of the "left" data frame based on whether or not they have a match in the "right" data frame.
 
-* `semi_join()`
-* `anti_join()`
-
-## When are Filtering Joins Useful?
-
-Filtering joins are powerful when you want to **filter a dataset based on conditions in another dataset, without adding any new columns**.
-
 * **`semi_join()`** is used to **keep rows** in the left table that have a match in the right table.
 
   * **Use case:** Identifying records that exist in a "master list" or checking for valid entries. For example, finding all students who are registered in one of the Claremont Colleges.
@@ -234,6 +221,7 @@ Filtering joins are powerful when you want to **filter a dataset based on condit
 * **`anti_join()`** is used to **remove rows** from the left table that have a match in the right table.
 
   * **Use case:** Identifying records that are missing from a "master list" or finding "exceptions" or data quality issues. For example, finding all students who are *not* registered in any of the Claremont Colleges (perhaps they have an invalid college ID or attend an external program).
+
 
 ## `semi_join()` {.smaller}
 
