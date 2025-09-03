@@ -15,7 +15,8 @@ knitr::opts_chunk$set(collapse=TRUE, prompt=TRUE, eval=TRUE, message=F, include=
 
 ## What is `dplyr`?
 
-* `dplyr` is a powerful R package for data manipulation.
+* Now that we've set up all our tools we want to get our hands dirty with data.
+* `dplyr` is a powerful R package for data wrangling.
 * It provides a consistent and intuitive set of "verbs" for common data-wrangling tasks.
 * It is a core part of the `tidyverse`, a collection of packages designed for data science.
 
