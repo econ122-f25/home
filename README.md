@@ -26,7 +26,7 @@ References:
 ------------------------------------------------------------------------
 ### Assignments due
 
-- [Problem Set 1](https://classroom.github.com/a/J4eNmuB-) (due **09/12**)
+- [Problem Set 1](https://classroom.github.com/a/99IiggPA) (due **09/12**)
 - [Team Project 1]() (due **09/19**)
 - [Problem Set 2]() (due **09/27**)
 
