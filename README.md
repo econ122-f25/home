@@ -62,7 +62,7 @@ References:
 -   before class:
     -   Readings
 -   in class: 
-    -   day 3 [slides](https://econ122-f25.github.io/home/slides/day3.html){:target="_blank"}, [activity](activity/day3_activity.Rmd), [solutions](activity/solutions/day3_activity_sol.md)
+    -   day 3 [slides](https://econ122-f25.github.io/home/slides/day3.html){:target="_blank"}, [activity](activity/day3_activity.Rmd), [solutions](activity/sol/day3_activity_sol.md)
   
 ------------------------------------------------------------------------
 ### Week 3 (09/08)
@@ -74,14 +74,14 @@ References:
     - Readings
     - Reminder `ps1` due 9/12
 -   in class: 
-    -   day 4 [slides](https://econ122-f25.github.io/home/slides/day4.html){:target="_blank"}, [activity](activity/day4_activity.Rmd), [solutions](activity/solutions/day4_activity_sol.md)
+    -   day 4 [slides](https://econ122-f25.github.io/home/slides/day4.html){:target="_blank"}, [activity](activity/day4_activity.Rmd), [solutions](activity/sol/day4_activity_sol.md)
 
 **Wednesday** (exploratory data analysis (EDA))
 -   before class:
     -   Readings
 -   in class: 
     -   discuss [team project 1](https://github.com/econ122/tp1)
-    -   day 5 [slides](https://econ122-f25.github.io/home/slides/day5.html){:target="_blank"}, [activity](activity/day5_activity.Rmd), [solutions](activity/solutions/day5_activity_sol.md)
+    -   day 5 [slides](https://econ122-f25.github.io/home/slides/day5.html){:target="_blank"}, [activity](activity/day5_activity.Rmd), [solutions](activity/sol/day5_activity_sol.md)
 
 ------------------------------------------------------------------------
 ### Week 4 (09/15)
@@ -92,7 +92,7 @@ References:
 -   before class:
     - Readings
 -   in class: 
-    -   day 6 [slides](https://econ122-f25.github.io/home/slides/day6.html){:target="_blank"}, [activity](activity/day6_activity.Rmd), [solutions](activity/solutions/day6_activity_sol.md)
+    -   day 6 [slides](https://econ122-f25.github.io/home/slides/day6.html){:target="_blank"}, [activity](activity/day6_activity.Rmd), [solutions](activity/sol/day6_activity_sol.md)
     
 **Wednesday** (Work on Team Project 1 **due 9/19**)
 -   before class:
@@ -110,13 +110,13 @@ References:
 -   before class:
     -   Readings
 -   in class: 
-    -   day 7 [slides](https://econ122-f25.github.io/home/slides/day7.html){:target="_blank"}, [activity](activity/day7_activity.Rmd), [solutions](activity/solutions/day7_activity_sol.md)
+    -   day 7 [slides](https://econ122-f25.github.io/home/slides/day7.html){:target="_blank"}, [activity](activity/day7_activity.Rmd), [solutions](activity/sol/day7_activity_sol.md)
 
 **Wednesday** (feature engineering)
 -   before class:
     -   Readings
 -   in class: 
-    -   day 8 [slides](https://econ122-f25.github.io/home/slides/day8.html){:target="_blank"}, [activity](activity/day8_activity.Rmd), [solutions](activity/solutions/day8_activity_sol.md)
+    -   day 8 [slides](https://econ122-f25.github.io/home/slides/day8.html){:target="_blank"}, [activity](activity/day8_activity.Rmd), [solutions](activity/sol/day8_activity_sol.md)
 
 ------------------------------------------------------------------------
 ### Week 6 (09/29)
