@@ -9,7 +9,7 @@ Office hours:
 
 Tutor sessions:
 
-- **TBD** - Joshua Zhou
+- **Tu 8-10pm @ BC 25** - Joshua Zhou
 - **We 8-10pm @ BC 36** - Asher Frye 
 
 Texbooks:
