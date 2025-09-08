@@ -98,6 +98,7 @@ References:
 -   before class:
     -   Make sure you have your Team Project 1 partners
 -   in class: 
+    -   Quick introduction of dates from `day 7`
     -   Work with partners on Team Project 1
     -   Ask any questions related to material up to this point
 
