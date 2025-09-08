@@ -74,8 +74,8 @@ References:
     - Readings
     - Reminder `ps1` due 9/12
 -   in class: 
-    -   discuss [team project 1](https://github.com/econ122/tp1)
     -   day 4 [slides](https://econ122-f25.github.io/home/slides/day4.html){:target="_blank"}, [activity](activity/day4_activity.Rmd), [solutions](activity/sol/day4_activity_sol.md)
+    -   discuss [team project 1](https://github.com/econ122/tp1)
 
 **Wednesday** (exploratory data analysis (EDA))
 -   before class:
