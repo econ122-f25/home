@@ -67,9 +67,16 @@ Welcome to your in-class activity for Day 6! Today, you'll apply the advanced Ex
 
 In this section, you'll explore relationships between happiness scores and economic indicators using scatter plots, faceting, and correlation matrices.
 
-### Task 1.1: Log GDP Per Capita vs. Happiness Score with Trend Line
+### Task 1.0:  GDP Per Capita vs. Happiness Score with Trend Line
+Create a scatter plot showing `GDP_per_capita_raw` (GDP per capita) on the x-axis and `happiness` (Happiness Score) on the y-axis from the `whr_data` dataset. Add a linear regression line (`geom_smooth(method = "lm", se = FALSE)`) to visualize the overall trend.
 
-Create a scatter plot showing `Logged_GDP_per_capita` (Log GDP per capita) on the x-axis and `happiness` (Happiness Score) on the y-axis from the `whr_data` dataset. Add a linear regression line (`geom_smooth(method = "lm", se = FALSE)`) to visualize the overall trend.
+```{r task1.0}
+# Your code here for GDP vs Happiness Score with linear trend
+
+```
+
+### Task 1.1: Log GDP Per Capita vs. Happiness Score with Trend Line
+Do the same thing but use  `Logged_GDP_per_capita` (Log GDP per capita) on the x-axis instead. What are the main differences between the `raw` and `log` versions?
 
 ```{r task1.1}
 # Your code here for Log GDP vs Happiness Score with linear trend
