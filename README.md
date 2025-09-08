@@ -28,7 +28,7 @@ References:
 
 - [Problem Set 1](https://classroom.github.com/a/J4eNmuB-) (due **09/12**)
 - [Team Project 1](https://classroom.github.com/a/4_Pc2W__) (due **09/19**)
-- [Problem Set 2]() (due **09/27**)
+- [Problem Set 2]() (due **09/26**)
 
 ------------------------------------------------------------------------
 
