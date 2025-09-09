@@ -1,0 +1,252 @@
+---
+title: "Day 7 Activity: Data Cleaning Challenge"
+author: "Student Name"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+---
+
+# 🔍 In-Class Activity: The Messy Sales Dataset
+
+**Estimated Time:** 40 minutes
+
+**Goal:** In this activity, you will act as a junior data analyst tasked with cleaning and preparing a new sales dataset. This dataset is "fresh off the press" and contains common data issues like inconsistent date formats, messy text, and missing values.
+
+Your mission is to use the skills you learned today to get the data into a clean, tidy format suitable for analysis.
+
+## Setup
+
+First, let's load the necessary packages and create our messy dataset.
+
+```{r setup, message=FALSE, warning=FALSE}
+# Load the required packages
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(naniar)
+
+# Create the messy dataset
+sales_data <- tibble(
+  order_id = c("ORD-20230115", "ORD-20230220", "ORD-20230325", "ORD-20240410", "ORD-20230505", "ORD-20230630", "ORD-20230712", "ORD-20220818", "ORD-20230920", "ORD-20231105"),
+  order_date_str = c("Jan 15, 2023", "20/02/2023", "2023-03-25", "April 10 2024", "05-May-2023", "2023-06-30", "July 12, 2023", "18-Aug-2022", "Sep 20, 2023", "Nov 5, 2023"),
+  shipping_time_str = c("10:30 AM", "14:05 PM", "12:00 PM", "9:15 AM", "11:45 AM", NA, "13:30 PM", "10:00 AM", "15:30 PM", "8:45 AM"),
+  customer_info = c("John.D-New", "Jane_S_Old", "Peter_J-New", "Maria.L-New", "Mike_A_Old", "Sarah.W-New", "Sam.T_Old", "Emily_R_New", "David_K_New", "Lisa.M-Old"),
+  customer_segment = c("Tier 1", "Tier 2", "Tier 1", "Tier 1", "Tier 2", "Tier 1", "Tier 2", "Tier 1", "Tier 1", "Tier 2"),
+  product_revenue = c(150.75, 200.50, NA, 85.25, -50.00, 45.99, NA, 1250.00, 320.15, 89.99),
+  feedback_status = c("Complete", "Pending", "N/A", "Complete", "Not provided", "Pending", "N/A", "Complete", "Pending", "Complete")
+)
+
+# Look at the data
+sales_data
+```
+
+---
+
+## Part 1: Dates and Times (15 minutes)
+
+Your first task is to fix the `order_date_str` and `shipping_time_str` columns.
+
+### **Step 1: Fix the Order Date**
+
+The `order_date_str` column contains dates in various formats. Convert this column to a proper `Date` object using `lubridate`.
+
+**Hint:** You will need to use a combination of `mutate()` and `parse_date_time()`.
+
+```{r part1_step1}
+# Your code goes here
+# sales_data %>%
+#   mutate(clean_date = ...)
+```
+
+### **Step 2: Combine and Calculate**
+
+The `shipping_time_str` is a character column. Convert it to a time format, then combine it with your clean `order_date` to create a single `POSIXct` timestamp. Finally, calculate the duration between the first and last order.
+
+**Hint:** Use `paste0()` to combine the date and time strings before using `lubridate`'s parsing functions. Use `difftime()` for the calculation.
+
+```{r part1_step2}
+# Your code goes here
+```
+
+---
+
+## Part 2: String Manipulation (15 minutes)
+
+The `customer_info` column is a mess! It contains the customer's first name, last initial, and a status (either "New" or "Old"). You need to extract these pieces of information into separate columns.
+
+### **Step 3: Extract Customer Status**
+
+Extract the customer status ("New" or "Old") into a new column called `customer_status`.
+
+**Hint:** Use `str_extract()` with a simple pattern.
+
+```{r part2_step3}
+# Your code goes here
+```
+
+### **Step 4: Clean Customer Names**
+
+Clean the `customer_info` column to create a new column called `customer_name` that contains only the first name and last initial (e.g., "John D"). Remove any special characters (`.` or `_`).
+
+**Hint:** Use `str_replace_all()` to remove the unwanted characters and `str_extract()` to pull out the first name and initial.
+
+```{r part2_step4}
+# Your code goes here
+```
+
+---
+
+## Part 3: Handling Missing Values & Imputation (10 minutes)
+
+Now, let's address the missing data in our dataset. This is a crucial step for accurate analysis.
+
+### **Step 5: Standardize and Impute**
+
+The `feedback_status` column uses both "N/A" and "Not provided" as missing value indicators. First, standardize these by converting both to `NA`. Then, identify the missing value in `product_revenue` and **impute** it by replacing it with the mean of the other values **within its `customer_segment` group**.
+
+**Hint:** Use `na_if()` to handle the string-based missing values. For imputation, you can use `group_by()` and `mutate()` together.
+
+```{r part3_step5}
+# Your code goes here
+```
+
+### **Step 6: Visualize the Clean Data**
+
+Once you've standardized and imputed your data, visualize the missing values one last time with `vis_miss()` to confirm that all of your intended changes have been successful.
+
+```{r part3_step6}
+# Your code goes here
+```
+
+---
+
+# 🏆 Challenge Activities
+
+If you finish early or want extra practice, try these additional challenges that build on today's topics!
+
+## Challenge 1: Advanced Date Operations (10 minutes)
+
+Create some additional time-based variables from your cleaned data.
+
+### **Challenge 1A: Time Periods**
+
+Calculate how many days have passed between each order and today's date. Also, determine which day of the week each order was placed and which quarter of the year.
+
+**Hint:** Use `today()`, `wday()`, and `quarter()` functions.
+
+```{r challenge1a}
+# Your code goes here
+```
+
+### **Challenge 1B: Seasonal Analysis**
+
+Create a new variable called `season` based on the order month:
+- Winter: Dec, Jan, Feb  
+- Spring: Mar, Apr, May
+- Summer: Jun, Jul, Aug  
+- Fall: Sep, Oct, Nov
+
+**Hint:** Use `month()` and `case_when()` to create the seasonal categories.
+
+```{r challenge1b}
+# Your code goes here
+```
+
+## Challenge 2: Advanced String Manipulation (10 minutes)
+
+Let's do some more complex text processing with the order IDs and customer information.
+
+### **Challenge 2A: Extract Order Numbers**
+
+Extract just the numeric portion from each `order_id` (e.g., from "ORD-20230115" extract "20230115") and create a new column called `order_number`.
+
+**Hint:** Use `str_extract()` with the regex pattern `\\d+` to extract all digits.
+
+```{r challenge2a}
+# Your code goes here
+```
+
+### **Challenge 2B: Customer Email Generator**
+
+Create mock email addresses for each customer using their cleaned name. The format should be: `firstname.lastinitial@company.com` (all lowercase).
+
+**Hint:** Use `str_to_lower()`, `str_replace()`, and `str_c()` to build the email addresses.
+
+```{r challenge2b}
+# Your code goes here
+```
+
+### **Challenge 2C: Order ID Validation**
+
+Check if all order IDs follow the correct format: "ORD-" followed by exactly 8 digits. Create a logical column called `valid_order_id` that indicates whether each ID is properly formatted.
+
+**Hint:** Use `str_detect()` with the pattern `^ORD-\\d{8}$` where `^` means start of string, `\\d{8}` means exactly 8 digits, and `$` means end of string.
+
+```{r challenge2c}
+# Your code goes here
+```
+
+## Challenge 3: Missing Data Patterns (10 minutes)
+
+Explore missing data patterns more deeply.
+
+### **Challenge 3A: Missing Data Summary**
+
+Create a summary table showing the percentage of missing values for each column in your dataset.
+
+**Hint:** You can use `miss_var_summary()` from the `naniar` package.
+
+```{r challenge3a}
+# Your code goes here
+```
+
+### **Challenge 3B: Conditional Missing Values**
+
+Create a scenario where you introduce some additional missing values based on conditions. For example, set `product_revenue` to `NA` for all "Tier 2" customers with revenue less than $100. Then visualize the new missing pattern.
+
+**Hint:** Use `if_else()` or `case_when()` within `mutate()` to create conditional missingness.
+
+```{r challenge3b}
+# Your code goes here
+```
+
+## Challenge 4: Data Quality Checks (5 minutes)
+
+### **Challenge 4A: Revenue Validation**
+
+Check for any unusual values in the `product_revenue` column. Are there any negative values or values that seem unreasonably high? Create a summary of revenue statistics by customer segment.
+
+**Hint:** Use `summary()`, `group_by()`, and `summarise()` to explore the revenue distribution.
+
+```{r challenge4a}
+# Your code goes here
+```
+
+### **Challenge 4B: Date Consistency Check**
+
+Verify that all order dates fall within a reasonable range (e.g., within 2023). Create a logical check to identify any dates that fall outside the expected year.
+
+**Hint:** Use `year()` and logical operators to check date consistency.
+
+```{r challenge4b}
+# Your code goes here
+```
+
+---
+
+## 🎯 Activity Wrap-up
+
+Congratulations on completing the data cleaning challenge! You have successfully practiced handling three of the most common data wrangling tasks:
+
+1.  **Date/Time Manipulation:** Converting messy date strings into usable formats.
+2.  **String Manipulation:** Extracting and cleaning specific information from text.
+3.  **Missing Value Handling:** Identifying, standardizing, and imputing missing data.
+
+### **Discussion:**
+
+Once everyone has finished, let's discuss your findings. Be prepared to answer the following questions:
+
+* Which part of the activity was the most challenging for you?
+* What was the most surprising thing you learned about working with messy data?
+* If this were a real dataset, what would be your next steps for analysis?
+* For those who completed the challenge activities: What additional insights did you gain about the data quality?
