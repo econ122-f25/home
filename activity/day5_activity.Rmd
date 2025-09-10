@@ -4,7 +4,7 @@ subtitle: "Exploring Data with ggplot2 and Basic Mapping"
 author: "Econ 122"
 date: "`r Sys.Date()`"
 output:
-  github_document:
+  html_document:
 ---
 
 ## Introduction 🚀

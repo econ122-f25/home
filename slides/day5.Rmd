@@ -44,10 +44,10 @@ Consider:
 * **Relationship:** How do variables interact? Correlation?
 * **Comparison:** How do groups compare on a metric?
 
-```{r, eval=FALSE}
-# Example: What is the distribution of ages? Is there a relationship between income and education?
-```
+Example:
 
+- We scrape a download a dataset on age, income, education 
+- First Qs: What is the distribution of ages? Is there a relationship between income and education?
 
 
 ## Introduction to `ggplot2` & Grammar of Graphics {.smaller}
