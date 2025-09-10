@@ -81,6 +81,7 @@ References:
 -   before class:
     -   Readings
 -   in class: 
+    -   **reminder:** Make sure your `.md` file is visible in your `ps1` github page. Click on it to make sure it looks like what you expect. If I can't see your output I can't grade it.
     -   day 5 [slides](https://econ122-f25.github.io/home/slides/day5.html){:target="_blank"}, [activity](activity/day5_activity.Rmd), [solutions](activity/sol/day5_activity_sol.md)
 
 ------------------------------------------------------------------------
