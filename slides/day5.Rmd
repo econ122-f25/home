@@ -46,8 +46,8 @@ Consider:
 
 Example:
 
-- We scrape a download a dataset on age, income, education 
-- First Qs: What is the distribution of ages? Is there a relationship between income and education?
+- We download a dataset on age, income, education 
+- First Qs: What is the distribution of each variable? Is there a relationship between age, income, and edcation?
 
 
 ## Introduction to `ggplot2` & Grammar of Graphics {.smaller}
@@ -315,4 +315,5 @@ Today, we covered:
     * `sf` for spatial data handling.
     * `ggplot2` for static maps (choropleth, points).
 * Common **Pitfalls** to avoid 
+* Useful `ggplot` cheat sheet in `RStudio`
 
