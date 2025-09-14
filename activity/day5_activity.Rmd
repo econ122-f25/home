@@ -171,7 +171,7 @@ Overlay major rivers onto your Continental US states map to visualize linear spa
 
 ```{r ex_2_3_us, fig.width=8, fig.height=4, eval=TRUE}
 # Hints for downloading and filtering river data:
-# 1. Use `ne_download()` from `rnaturalearth`. Look for `type = "rivers_lake_centerlines"` and `category = "physical"`. Remember to set `returnclass = "sf"`.
+# 1. Use `ne_download()` from `rnaturalearth`. Look for `type = "rivers_lake_centerlines"` and `category = "physical"`.Use `scale=10`. Remember to set `returnclass = "sf"`.
 #    Assign the result to a variable like `world_rivers_downloaded`.
 
 # 2. To filter these global rivers to only the continental US, use `st_intersection()` from `sf`.
