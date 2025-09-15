@@ -93,7 +93,7 @@ References:
 -   before class:
     - Readings
 -   in class: 
-    -   day 6 [slides](slides/day6.html){:target="_blank"}, [activity](activity/day6_activity.Rmd), [solutions](activity/sol/day6_activity_sol.md)
+    -   day 6 [slides](slides/day6.html){:target="_blank"}, [activity](activity/day6_activity.Rmd), [solutions](activity/sol/day6_activity_sol.html)
     
 **Wednesday** (Work on Team Project 1 **due 9/19**)
 -   before class:
