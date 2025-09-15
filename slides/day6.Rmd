@@ -100,7 +100,9 @@ ggplot(mtcars, aes(x = hp, y = mpg)) + geom_point() +   facet_wrap(~ cyl_factor)
 
 ```{r}
 # Calculate correlation matrix for numerical variables
-cor_matrix <- cor(mtcars[, c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb")])
+cor_matrix <- mtcars %>% 
+  select("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb") %>% 
+  cor()
 print(round(cor_matrix, 2))
 ```
 

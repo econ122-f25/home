@@ -9,7 +9,7 @@
 
 
 
-  <meta name="date" content="2025-08-22" />
+  <meta name="date" content="2025-09-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3205,7 +3205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2025-08-22</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2025-09-15</p>
           </hgroup>
   </slide>
 
@@ -3298,7 +3298,9 @@ ggplot(mtcars, aes(x = hp, y = mpg)) +
 </ul>
 
 <pre class = 'prettyprint lang-r'># Calculate correlation matrix for numerical variables
-cor_matrix &lt;- cor(mtcars[, c(&quot;mpg&quot;, &quot;cyl&quot;, &quot;disp&quot;, &quot;hp&quot;, &quot;drat&quot;, &quot;wt&quot;, &quot;qsec&quot;, &quot;vs&quot;, &quot;am&quot;, &quot;gear&quot;, &quot;carb&quot;)])
+cor_matrix &lt;- mtcars %&gt;% 
+  select(&quot;mpg&quot;, &quot;cyl&quot;, &quot;disp&quot;, &quot;hp&quot;, &quot;drat&quot;, &quot;wt&quot;, &quot;qsec&quot;, &quot;vs&quot;, &quot;am&quot;, &quot;gear&quot;, &quot;carb&quot;) %&gt;% 
+  cor()
 print(round(cor_matrix, 2))</pre>
 
 <pre >##        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
