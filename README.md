@@ -28,7 +28,7 @@ References:
 
 - [Problem Set 1](https://classroom.github.com/a/J4eNmuB-) (due **09/12**) [[Solutions](ps/ps1_sol.html)]
 - [Team Project 1](https://classroom.github.com/a/4_Pc2W__) (due **09/19**)
-- [Problem Set 2](https://classroom.github.com/a/lhr9a3Hi) (due **09/26**)
+- [Problem Set 2](https://classroom.github.com/a/GRFxBibn) (due **09/26**)
 
 ------------------------------------------------------------------------
 
@@ -114,13 +114,13 @@ References:
 -   before class:
     -   Readings
 -   in class: 
-    -   day 7 [slides](slides/day7.html){:target="_blank"}, [activity](activity/day7_activity.Rmd), [solutions](activity/sol/day7_activity_sol.md)
+    -   day 7 [slides](slides/day7.html){:target="_blank"}, [activity](activity/day7_activity.Rmd), [solutions](activity/sol/day7_activity_sol.html)
 
 **Wednesday** (feature engineering)
 -   before class:
     -   Readings
 -   in class: 
-    -   day 8 [slides](slides/day8.html){:target="_blank"}, [activity](activity/day8_activity.Rmd), [solutions](activity/sol/day8_activity_sol.md)
+    -   day 8 [slides](slides/day8.html){:target="_blank"}, [activity](activity/day8_activity.Rmd), [solutions](activity/sol/day8_activity_sol.html)
 
 ------------------------------------------------------------------------
 ### Week 6 (09/29)
