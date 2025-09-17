@@ -1,0 +1,303 @@
+---
+title: "Feature Engineering In-Class Activity"
+subtitle: "Predicting Student Performance"
+author: "Your Name Here"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center")
+```
+
+## Overview
+
+In this 40-minute activity, you'll apply feature engineering techniques to a student performance dataset. Your goal is to create new features that better predict a student's final grade using the techniques covered in today's lecture.
+
+## Learning Objectives
+
+By the end of this activity, you should be able to:
+
+- Create new features from existing variables using domain knowledge
+- Apply one-hot encoding to categorical variables
+- Generate interaction terms and polynomial features
+- Evaluate feature effectiveness using correlation analysis
+- Visualize relationships between engineered features and target variables
+
+## Setup
+
+First, let's load the required libraries and generate our dataset.
+
+```{r libraries}
+library(tidyverse)
+library(lubridate)
+library(fastDummies)
+
+# Set seed for reproducibility
+set.seed(456)
+```
+
+## The Dataset
+
+We'll work with a student performance dataset containing information about 400 students.
+
+```{r generate-data}
+# Generate student performance dataset
+n <- 400
+
+student_data <- tibble(
+  student_id = 1:n,
+  study_hours_per_week = round(runif(n, min = 2, max = 25)),
+  attendance_rate = round(runif(n, min = 60, max = 100)),
+  previous_grade = round(runif(n, min = 65, max = 95)),
+  major = sample(c("STEM", "Liberal Arts", "Business", "Arts"), n, replace = TRUE, 
+                 prob = c(0.3, 0.25, 0.25, 0.2)),
+  semester_start_date = ymd("2024-01-15") + days(round(runif(n, min = -10, max = 10))),
+  has_job = sample(c("Yes", "No"), n, replace = TRUE, prob = c(0.4, 0.6)),
+  class_level = sample(c("Freshman", "Sophomore", "Junior", "Senior"), n, replace = TRUE)
+) %>%
+  mutate(
+    # Create final_grade with complex relationships
+    final_grade = pmax(50, pmin(100,
+      70 + 
+      study_hours_per_week * 0.8 +
+      (attendance_rate - 80) * 0.15 +
+      (previous_grade - 80) * 0.2 +
+      case_when(
+        major == "STEM" ~ 2,
+        major == "Business" ~ 1,
+        major == "Liberal Arts" ~ 0,
+        major == "Arts" ~ -1
+      ) +
+      ifelse(has_job == "Yes", -3, 0) +
+      # Add interaction effects
+      (study_hours_per_week - mean(study_hours_per_week)) * 
+      (attendance_rate - mean(attendance_rate)) * 0.01 +
+      rnorm(n, mean = 0, sd = 5)
+    ))
+  )
+
+# Display the dataset
+head(student_data)
+```
+
+```{r dataset-summary}
+# Quick summary of the data
+summary(student_data)
+```
+
+## Task 1: Baseline Analysis (8 minutes)
+
+Before engineering any features, let's establish our baseline by examining correlations between existing numerical variables and `final_grade`.
+
+### 1.1 Calculate Baseline Correlations
+
+```{r baseline-correlations}
+# Calculate correlations between final_grade and numerical variables
+# YOUR CODE HERE
+
+```
+
+### 1.2 Create a Baseline Visualization
+
+Create a scatter plot showing the relationship between `study_hours_per_week` and `final_grade`.
+
+```{r baseline-plot}
+# Create scatter plot
+# YOUR CODE HERE
+
+```
+
+**Question:** Which existing numerical variable has the strongest correlation with `final_grade`?
+
+**Your Answer:** 
+
+## Task 2: Time-Based Feature Engineering (10 minutes)
+
+Create a new feature that captures how long each student has been in the current semester.
+
+### 2.1 Create Days Since Semester Start
+
+```{r time-feature}
+# Create a feature for days since semester start
+# Hint: Use today's date (Sys.Date()) and the semester_start_date
+# YOUR CODE HERE
+
+```
+
+### 2.2 Analyze the New Time Feature
+
+Calculate the correlation between your new time feature and `final_grade`, then compare it to the baseline correlations.
+
+```{r time-correlation}
+# Calculate correlation with new time feature
+# YOUR CODE HERE
+
+```
+
+**Question:** Does the time-based feature improve our predictive power compared to the original variables?
+
+**Your Answer:** 
+
+## Task 3: Categorical Feature Engineering (10 minutes)
+
+Apply one-hot encoding to the categorical variables and analyze their relationships with `final_grade`.
+
+### 3.1 One-Hot Encode Categorical Variables
+
+```{r one-hot-encoding}
+# Apply one-hot encoding to major, has_job, and class_level
+# YOUR CODE HERE
+
+```
+
+### 3.2 Analyze Categorical Feature Correlations
+
+Calculate correlations between all the new binary variables and `final_grade`.
+
+```{r categorical-correlations}
+# Calculate correlations for encoded categorical variables
+# YOUR CODE HERE
+
+```
+
+**Question:** Which major shows the strongest positive correlation with final grades? Which shows the strongest negative correlation?
+
+**Your Answer:** 
+
+## Task 4: Interaction and Polynomial Features (10 minutes)
+
+Create more complex features using interactions and polynomial transformations.
+
+### 4.1 Create an Interaction Term
+
+Create an interaction between `study_hours_per_week` and `attendance_rate`.
+
+```{r interaction-term}
+# Create interaction between study_hours_per_week and attendance_rate
+# YOUR CODE HERE
+
+```
+
+### 4.2 Create a Polynomial Feature
+
+Create a squared term for one of your numerical variables (choose the one you think might benefit most from a non-linear transformation).
+
+```{r polynomial-feature}
+# Create polynomial feature
+# YOUR CODE HERE
+
+```
+
+### 4.3 Evaluate Complex Features
+
+Compare the correlations of your interaction and polynomial features with `final_grade`.
+
+```{r complex-correlations}
+# Calculate correlations for complex features
+# YOUR CODE HERE
+
+```
+
+**Question:** Do the interaction or polynomial features show stronger correlations than the original variables?
+
+**Your Answer:** 
+
+## Task 5: Visualization and Interpretation (7 minutes)
+
+Create visualizations to better understand your engineered features.
+
+### 5.1 Visualize the Interaction Effect
+
+Create a plot that demonstrates why the interaction term (study_hours_x_attendance) is more powerful than individual variables. Show how the relationship between study hours and final grade varies by attendance levels.
+
+```{r interaction-plot}
+# First, create attendance level bins to show the interaction effect
+# Hint: Use case_when() to create categorical bins from continuous attendance_rate to create 3 different bins.
+# YOUR CODE HERE
+
+```
+
+### 5.2 Feature Importance Summary
+
+Create a summary table or visualization showing the correlation strengths of all your engineered features.
+
+```{r feature-summary}
+# Create summary of feature correlations
+# YOUR CODE HERE
+
+```
+
+## Reflection Questions (5 minutes)
+
+Answer these questions based on your analysis:
+
+1. **Which engineered feature was most effective?** 
+
+   *Your Answer:* 
+
+2. **What domain knowledge about student performance helped guide your feature engineering decisions?**
+
+   *Your Answer:* 
+
+3. **If you had more time, what additional features would you create and why?**
+
+   *Your Answer:* 
+
+4. **How might these engineered features improve a predictive model compared to using only the original variables?**
+
+   *Your Answer:* 
+
+## Bonus Challenges (If Time Permits)
+
+Choose one or more of these additional challenges:
+
+### Bonus 1: Grade Risk Categories
+
+Create a "grade risk" categorical feature that bins students into "High Risk" (final_grade < 70), "Medium Risk" (70-85), and "Low Risk" (>85) categories. Then analyze which of your engineered features best predict this risk level.
+
+```{r bonus-challenge-1}
+# Bonus 1: Create grade risk categories and analyze predictive features
+# YOUR CODE HERE
+
+```
+
+### Bonus 2: Advanced Interaction Terms
+
+Create a three-way interaction term combining `study_hours_per_week`, `attendance_rate`, and `previous_grade`. Compare its predictive power to your two-way interactions.
+
+```{r bonus-challenge-2}
+# Bonus 2: Create three-way interaction term
+# YOUR CODE HERE
+
+```
+
+### Bonus 3: Binning Continuous Variables
+
+Convert `study_hours_per_week` into categorical bins (e.g., "Low", "Medium", "High" study hours) and create dummy variables. Compare the correlation of these bins with the original continuous variable.
+
+```{r bonus-challenge-3}
+# Bonus 3: Create study hours bins and dummy variables
+# YOUR CODE HERE
+
+```
+
+### Bonus 4: Feature Scaling and Normalization
+
+Create standardized (z-score) versions of your numerical features and compare their correlations with the original features. Does scaling change the relationships?
+
+```{r bonus-challenge-4}
+# Bonus 4: Create standardized features
+# YOUR CODE HERE
+
+```
+
+### Bonus 5: Class Level Ordering
+
+Convert the `class_level` variable into an ordinal numeric variable (Freshman=1, Sophomore=2, etc.) and compare its correlation with `final_grade` to the one-hot encoded versions.
+
+```{r bonus-challenge-5}
+# Bonus 5: Create ordinal class level variable
+# YOUR CODE HERE
+
+```
