@@ -97,11 +97,13 @@ References:
     
 **Wednesday** (Work on Team Project 1 **due 9/19**)
 -   before class:
-    -   Make sure you have your Team Project 1 partners
+    -   make sure you have your Team Project 1 partners
 -   in class: 
-    -   Quick introduction of dates from `day 7`
-    -   Work with partners on Team Project 1
-    -   Ask any questions related to material up to this point
+    -   quick introduction of dates from `day 7`
+    -   work with partners on Team Project 1
+          - quick note about `github` and `figures`
+    -   **reminder** `ps2` posted and due next week
+    -   ask any questions related to material up to this point
 
 ------------------------------------------------------------------------
 ### Week 5 (09/22)
