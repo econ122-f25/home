@@ -35,6 +35,15 @@
 - Reading and interpreting visualization code
 - Plot customization and formatting
 
+### Data Quality and Preprocessing
+- Date formatting and parsing challenges
+- Missing data patterns and handling strategies
+
+### Feature Engineering
+- Interaction terms in modeling
+- Categorical variable encoding
+- Understanding when and why to transform variables
+
 ### Statistical Analysis and Outlier Detection
 - Descriptive statistics
 - Data distribution analysis
