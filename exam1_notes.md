@@ -3,7 +3,7 @@
 ### In class (75 mins but should take 60)
 - Electronic blue book
 - Closed book
-- Short/long answer
+- Multiple choice and short answer
 - No need to install or load packages
 - Need to know important commands but will not be too harsh on syntax
 
