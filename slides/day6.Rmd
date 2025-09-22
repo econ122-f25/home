@@ -6,7 +6,6 @@ date: "`r Sys.Date()`"
 output:
   ioslides_presentation:
     widescreen: true
-    css: styles.css # Optional: for custom CSS
 ---
 
 ```{r setup, include=FALSE}

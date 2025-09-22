@@ -114,6 +114,7 @@ References:
 -   before class:
     -   Readings
 -   in class: 
+    -  [exam 1 notes](exam1_notes.md)
     -   day 7 [slides](slides/day7.html){:target="_blank"}, [activity](activity/day7_activity.Rmd), [solutions](activity/sol/day7_activity_sol.html)
 
 **Wednesday** (feature engineering)
