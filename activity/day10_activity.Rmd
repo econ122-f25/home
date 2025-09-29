@@ -1,0 +1,145 @@
+---
+title: "Self-Directed Activity: Linear Regression with Diamonds" 
+author: "Econ 122" 
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE)
+
+library(ggplot2)
+library(broom) # For easily getting residuals and fitted values
+
+```
+
+This activity is designed to help you practice the concepts of linear regression we covered in the slides. This version focuses on practical application and code-based problem-solving using the `diamonds` dataset, a popular dataset for exploring relationships between variables.
+
+### Part 1: Visualizing and Modeling the Data
+
+**1.1** Let's start by exploring the relationship between `carat` (the weight of the diamond) and `price`. Write the R code to create a scatterplot of `price` versus `carat` from the `diamonds` dataset. Remember to use `ggplot2` and set appropriate axis labels.
+
+```{r scatterplot}
+# Your code here to create the scatterplot
+```
+
+**1.2** Now, write the R code to fit a simple linear regression model to predict `price` using `carat`. Assign the result to a variable named `fit_simple` and then use `summary()` to display the model's results.
+
+```{r fit_simple}
+# Your code here to fit the model and view the summary
+```
+
+### Part 2: Interpreting Model Output
+
+**2.1** Using the `summary()` output from your `fit_simple` model, identify the R-squared value. In a brief paragraph, explain what this value tells you about your model's ability to explain the variance in diamond prices.
+
+```{r r-squared-explanation}
+
+```
+
+**2.2** Locate the p-value for the `carat` coefficient in the `summary()` output. Based on this value, is `carat` a statistically significant predictor of `price`? Justify your answer using the p-value.
+
+```{r p-value-explanation}
+
+```
+
+**2.3** Using the `confint()` function, calculate the 95% confidence interval for the model's coefficients. In a brief paragraph, explain both the meaning of the standard error and the confidence interval for the `carat` coefficient. How are they related?
+
+```{r confidence-interval}
+# Your code and explanation here
+```
+
+### Part 3: Working with Multiple Predictors
+
+**3.1** What if we want to add another predictor? Let's add `depth` to our model. Write the R code to fit a new linear regression model (`fit_multiple`) that predicts `price` using **both** `carat` and `depth`.
+
+```{r fit_multiple}
+# Your code here to fit the multiple regression model
+```
+
+**3.2** Use `summary()` on your new model (`fit_multiple`). Based on the output, which of the two predictors (`carat` or `depth`) is a more statistically significant predictor of `price`? Justify your answer.
+
+```{r significance-comparison}
+
+```
+
+**3.3** Compare the R-squared value from your simple model (`fit_simple`) with the R-squared value from your multiple model (`fit_multiple`). What does this change in R-squared tell you about the benefit of adding `depth` as a predictor?
+
+```{r r-squared-comparison}
+
+```
+
+### Part 4: Model Diagnostics and Prediction
+
+**4.1** One of the key assumptions of linear regression is **linearity**, meaning the relationship between the predictors and the response is linear. We can check this by plotting the residuals against the fitted values.
+
+Write the R code to create this diagnostic plot for your `fit_multiple` model. Use a scatterplot with fitted values on the x-axis and residuals on the y-axis. Do you think the **linearity** assumption holds here?
+
+**Hint:** A good plot for a linear model should show a random scatter of points around the horizontal line at $y=0$. Patterns such as a U-shape, a curve, or a fan-like spread would suggest that the linearity assumption has been violated.
+
+```{r residual-plot}
+# Your code here to plot residuals vs. fitted values
+```
+
+**4.2** Using your `fit_multiple` model, predict the price for a new diamond with a `carat` of **1.5** and a `depth` of **60**. You'll need to create a new `data.frame` for the `predict()` function.
+
+```{r prediction}
+# Your code here to predict price for the new diamond
+```
+
+### Part 5: Challenge Task
+
+Using your simple linear model (`fit_simple`), plot the original scatterplot again. This time, add the line of best fit to the plot using `geom_smooth()` with `method = "lm"`. Additionally, add a segment for each point showing its residual (the vertical distance from the point to the line).
+
+```{r challenge-plot}
+# Your code here to create the plot with residuals
+```
+
+### Activity Wrap-up
+
+Once you have completed all the tasks and the code runs without errors, you've successfully worked through the major practical components of linear regression. Feel free to re-run any code chunks to check your work.
+
+
+### Part 6: Bonus Tasks
+
+**Bonus 1: Categorical Predictors**
+
+The `diamonds` dataset also includes categorical variables like `cut`, which has levels: Fair, Good, Very Good, Premium, and Ideal. Fit a new linear regression model (`fit_categorical`) that predicts `price` using `carat` and `cut`. 
+
+```{r bonus-categorical}
+# Your code here to fit the model with a categorical predictor
+```
+
+Examine the `summary()` output. How does R handle categorical variables in regression? How many coefficients does the `cut` variable produce, and why? Which cut level serves as the reference category?
+
+**Bonus 2: Interaction Effects**
+
+Perhaps the effect of `carat` on `price` differs depending on the diamond's `cut` quality. Fit a model (`fit_interaction`) that includes an interaction between `carat` and `cut`. Compare the R-squared of this model to your previous models.
+
+```{r bonus-interaction}
+# Your code here to fit a model with interaction terms
+# Hint: Use carat * cut in your formula
+```
+
+Does including the interaction improve the model's explanatory power? What does this tell you about how carat and cut jointly affect price?
+
+**Bonus 3: Residual Diagnostics**
+
+Create a Q-Q plot (quantile-quantile plot) of the residuals from your `fit_multiple` model to assess the **normality assumption** of linear regression. The residuals should approximately follow a normal distribution.
+
+A Q-Q plot compares the quantiles of your residuals to the quantiles of a theoretical normal distribution. If the residuals are normally distributed, the points should fall approximately along a straight diagonal line. Departures from this line indicate departures from normality: points curving above the line suggest heavy tails, while points curving below suggest light tails.
+
+```{r bonus-qq-plot}
+# Your code here to create a Q-Q plot
+# Hint: Use ggplot with stat_qq() and stat_qq_line()
+```
+
+Do the residuals appear normally distributed? What departures from normality, if any, do you observe?
+
+**Bonus 4: Log Transformation**
+
+Both `price` and `carat` are highly right-skewed. Fit a new model (`fit_log`) that predicts `log(price)` using `log(carat)`. Compare the residual plot and R-squared to your original `fit_simple` model.
+
+```{r bonus-log-transform}
+# Your code here to fit the log-transformed model
+```
+
+Does the log transformation improve the model fit? How would you interpret the coefficient on `log(carat)` in this model? (Hint: This relates to elasticity!)
