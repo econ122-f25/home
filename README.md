@@ -126,9 +126,17 @@ References:
 ------------------------------------------------------------------------
 ### Week 6 (09/29)
 
+**Readings:**  Ch 2,3 of ISL
+
 **Monday** 
 -   before class:
     -   study for exam 1
 -   in class:
     -   take exam 1
+
+**Wednesday** (statistical learning)
+-   before class:
+    -   Readings
+-   in class: 
+    -   day 9 [slides](slides/day9.html){:target="_blank"}, [activity](activity/day9_activity.Rmd), [solutions](activity/sol/day9_activity_sol.html)
 
