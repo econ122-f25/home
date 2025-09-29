@@ -126,7 +126,7 @@ References:
 ------------------------------------------------------------------------
 ### Week 6 (09/29)
 
-**Readings:**  Ch 2,3 of ISL
+**Readings:**  Ch 2 of ISL
 
 **Monday** 
 -   before class:
@@ -140,3 +140,20 @@ References:
 -   in class: 
     -   day 9 [slides](slides/day9.html){:target="_blank"}, [activity](activity/day9_activity.Rmd), [solutions](activity/sol/day9_activity_sol.html)
 
+------------------------------------------------------------------------
+### Week 7 (10/06)
+
+**Readings:**  Ch 3,4 of ISL
+
+**Monday** (linear regression)
+-   before class:
+    -   Readings
+-   in class: 
+    -   day 10 [slides](slides/day10.html){:target="_blank"}, [activity](activity/day10_activity.Rmd), [solutions](activity/sol/day10_activity_sol.html)
+
+**Wednesday** (classification)
+-   before class:
+    -   Readings
+-   in class: 
+    -  reminder about `ps3`
+    -   day 11 [slides](slides/day11.html){:target="_blank"}, [activity](activity/day11_activity.Rmd), [solutions](activity/sol/day11_activity_sol.html)
