@@ -1,0 +1,263 @@
+---
+title: "Self-Directed Activity: The Bias-Variance Trade-off"
+author: "Econ 122"
+date: "`r Sys.Date()`"
+output:
+  github_document:
+---
+
+## Activity Overview (50 minutes)
+
+The goal of this activity is to deepen your understanding of the bias-variance trade-off by applying it to a simple, hands-on simulation. You will be asked to answer a series of questions, run R code, and calculate and plot model errors to see the concepts in action.
+
+**Estimated Time:** 50 minutes
+
+* **Part 1: Data Setup and Model Fitting (5 minutes)**
+* **Part 2: Calculating and Plotting the Errors (30 minutes)**
+* **Part 3: Synthesis & Discussion (15 minutes)**
+
+---
+
+## Part 1: Data Setup and Model Fitting (5 minutes)
+
+To properly evaluate our models, we first need to split our data into a **training set** (which the models will learn from) and a **test set** (which we'll use to evaluate their performance on unseen data).
+
+### Task A: Split the Data
+
+Run the code chunk below to create our training and test sets.
+
+```{r data_split, message=FALSE, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(caret) # for easy data splitting
+
+# Simulate some data with a known, non-linear relationship
+set.seed(42)
+x <- seq(0, 1, by = 0.05)
+y_true <- sin(2 * pi * x)
+y <- y_true + rnorm(length(x), mean = 0, sd = 0.2)
+sim_df <- data.frame(x = x, y = y, y_true = y_true)
+
+# Split the data into training (70%) and testing (30%) sets
+index <- createDataPartition(sim_df$y, p = 0.7, list = FALSE)
+train_df <- sim_df[index, ]
+test_df <- sim_df[-index, ]
+```
+
+### Task B: Fit Three Models
+
+Now, we will fit three models with different levels of flexibility using only the **training data**.
+
+**Your task:** Run the code chunk below to fit a low-flexibility (degree 1), an optimal (degree 4), and a high-flexibility (degree 15) model.
+
+```{r fit_models}
+# Fit a low-flexibility model on the training data
+lm_1 <- lm(y ~ poly(x, 1), data = train_df)
+
+# Fit an optimal-flexibility model on the training data
+lm_4 <- lm(y ~ poly(x, 4), data = train_df)
+
+# Fit a high-flexibility model on the training data
+lm_15 <- lm(y ~ poly(x, 15), data = train_df)
+```
+
+### Task C: Visualize the Fit
+
+We can use the test data to see how well our models generalize. Run the code below to visualize the fit of all three models on the test data.
+
+```{r visualize_fit, message=FALSE, warning=FALSE}
+# Create a data frame for predictions
+pred_df <- data.frame(x = seq(0, 1, by = 0.01))
+
+# Add predictions from our three models
+pred_df$y_1 <- predict(lm_1, newdata = pred_df)
+pred_df$y_4 <- predict(lm_4, newdata = pred_df)
+pred_df$y_15 <- predict(lm_15, newdata = pred_df)
+
+# Reshape the data for plotting
+library(tidyr)
+plot_df <- pred_df %>%
+  pivot_longer(
+    cols = starts_with("y_"),
+    names_to = "model",
+    values_to = "y_pred"
+  )
+plot_df$model <- factor(plot_df$model, levels = c("y_1", "y_4", "y_15"))
+# Plot the original data and the three models
+ggplot(sim_df, aes(x = x)) +
+  geom_line(aes(y = y_true), color = "black", linetype = "dashed", size = 1) + # True relationship
+  geom_point(aes(y = y), color = "darkgray", size = 3) + # Simulated data with noise
+  geom_line(data = plot_df, aes(x = x, y = y_pred, color = model), size = 1.2) +
+  labs(title = "Visualizing the Bias-Variance Trade-off",
+       x = "Predictor (x)",
+       y = "Response (y)") +
+  scale_color_manual(values = c("y_1" = "firebrick", "y_4" = "steelblue", "y_15" = "goldenrod"),
+                     labels = c("Low", "Med", "High")) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom")
+```
+
+**Question:** Based on this plot, which model seems to have high bias, and which seems to have high variance? Explain your reasoning.
+
+* **Answer:** [Your answer here]
+
+---
+
+## Part 2: Calculating and Plotting the Errors (30 minutes)
+
+Now let's move from a visual understanding to a quantitative one. We will calculate the **Mean Squared Error (MSE)** for each of our models on both the training and test sets.
+
+**What is MSE?**
+The Mean Squared Error (MSE) is a common metric used to measure a model's performance. It quantifies the average squared difference between the predicted values from the model and the actual values. A lower MSE indicates a better-fitting model.
+
+The mathematical definition is:
+
+$$ MSE = \frac{1}{n} \sum_{i=1}^{n}(Y_i - \hat{Y_i})^2 $$
+
+where:
+
+* $n$ is the number of observations.
+* $Y_i$ is the actual value.
+* $\hat{Y_i}$ is the predicted value from the model.
+
+### Introduction to Functions in R
+
+Before we calculate the MSE, let's take a moment to understand **functions** in R. Functions are reusable pieces of code that take inputs (called **arguments**) and return an output. They help us avoid repeating code and make our analysis more organized.
+
+**Basic Function Structure:**
+```r
+function_name <- function(argument1, argument2, ...) {
+  # Code that does something with the arguments
+  result <- some_calculation
+  return(result)  # This line is optional - R returns the last line by default
+}
+```
+
+**Example:** Let's create a simple function that adds two numbers:
+```{r example_function}
+# Create a simple addition function
+add_numbers <- function(a, b) {
+  result <- a + b
+  return(result)
+}
+
+# Test our function
+add_numbers(5, 3)  # Should return 8
+add_numbers(10, -2)  # Should return 8
+```
+
+**Practice Exercise:** Before we create the MSE function, let's practice with a simpler function.
+
+```{r practice_function}
+# Create a function called `square_it` that takes one number and returns its square
+# Use the structure: square_it <- function(x) { ... }
+# Inside the function, calculate x squared and return the result
+# Your code here
+
+# Test your function - these should return 25 and 100 respectively
+# Uncomment the lines below to test after you write your function:
+# square_it(5)
+# square_it(10)
+```
+
+### Task A: Calculate the MSE
+
+Now that you understand how functions work, let's create our MSE function.
+
+**Your task:** Create a function to calculate the MSE and then use it to find the training and testing error for each of your three models.
+
+```{r calculate_mse}
+# Step 1: Create an MSE function
+# Use 'mse <- function(actual, predicted) {'
+# Inside the function, calculate the mean of the squared differences
+# Your code here
+
+# Test your MSE function with simple values to make sure it works
+# These test cases should help you verify your function is working correctly
+test_actual <- c(1, 2, 3, 4, 5)
+test_predicted <- c(1, 2, 3, 4, 5)  # Perfect predictions
+# print(paste("Perfect predictions MSE:", mse(test_actual, test_predicted)))  # Should be 0
+
+test_predicted_off <- c(2, 3, 4, 5, 6)  # Off by 1 each time
+# print(paste("Off-by-one MSE:", mse(test_actual, test_predicted_off)))  # Should be 1
+
+# Step 2: Calculate training MSE for each model
+# Get the predictions for each model on the training data using `predict(model, newdata = train_df)`
+# Use your new `mse()` function to calculate the training MSE for lm_1, lm_4, and lm_15.
+# Store each result in a new variable, like `train_mse_1`.
+# Your code here
+
+# Step 3: Calculate testing MSE for each model
+# Get the predictions for each model on the testing data using `predict(model, newdata = test_df)`
+# Use your `mse()` function to calculate the testing MSE for lm_1, lm_4, and lm_15.
+# Store each result in a new variable, like `test_mse_1`.
+# Your code here
+
+# Step 4: Organize your results in a data frame
+# Create a new data frame using `data.frame()`
+# Make three columns: `model` (e.g., "Degree 1"), `training_mse`, and `testing_mse`.
+# Fill the columns with the appropriate values you calculated above.
+# Your code here
+```
+
+### Task B: Plot the U-Shaped Curve
+
+**Your task:** Using the training and testing MSE values you just calculated, create a plot that visualizes the bias-variance trade-off.
+
+```{r plot_u_curve}
+# Step 1: Create a data frame for the plot
+# Create a new data frame with three columns: `model_flexibility`, `mse`, and `type`.
+# `model_flexibility`: a vector of the degrees, e.g., `c(1, 4, 15, 1, 4, 15)`
+# `mse`: a vector of all six of your calculated MSE values.
+# `type`: a vector of labels, e.g., `c(rep("Training Error", 3), rep("Testing Error", 3))`
+# Your code here
+
+# Step 2: Create the plot using ggplot()
+# Start with `ggplot(data = your_new_df, aes(x = model_flexibility, y = mse, color = type))`
+# Add a line layer: `+ geom_line(size = 1.2)`
+# Add a point layer: `+ geom_point(size = 3)`
+# Add labels: `+ labs(title = "The Bias-Variance Trade-off in Action", ...)`
+# Set x-axis breaks: `+ scale_x_continuous(breaks = c(1, 4, 15))`
+# Apply a theme: `+ theme_minimal()`
+# Your code here
+```
+
+---
+
+## Part 3: Synthesis & Discussion (15 minutes)
+
+Answer the following questions to consolidate your understanding.
+
+1.  Based on the final plot, which model minimizes the **testing error**? How does this relate to the concept of **overfitting**?
+
+    * **Answer:** [Your answer here]
+
+2.  What does the phrase **"bias-variance trade-off"** truly mean? How can we think about it as we choose a model for a real-world problem?
+
+    * **Answer:** [Your answer here]
+
+### Wrap-Up
+
+Be prepared to discuss your answers as a class. Pay special attention to your answers for the last two questions.
+
+---
+
+## Bonus Questions (Optional Challenge)
+
+If you finish early or want to deepen your understanding, try these additional exercises:
+
+
+
+1. **Alternative Metrics:** We used MSE, but there are other error metrics. Calculate the Mean Absolute Error (MAE = mean of absolute differences) and Root Mean Squared Error (RMSE = square root of MSE) for all three models on the test set. Do these metrics lead to the same conclusion about which model is best? Why might we prefer one metric over another?
+
+2. **Visualizing Residuals:** For each of the three models, create a residual plot showing the prediction errors (actual - predicted) on the y-axis versus the predicted values on the x-axis, using the test data. Which model shows the most random pattern? Which shows systematic patterns indicating poor fit?
+
+3. **Finding the Optimal Degree:** We tested degrees 1, 4, and 15, but what about everything in between? Write a loop to fit polynomial models for degrees 1 through 15, calculate their test MSE, and plot the results. At what degree does the test error start increasing? This is your empirical estimate of the optimal model complexity.
+
+4. **Different Train/Test Splits:** The specific train/test split depends on our random seed (currently set to 42). Try re-running the entire analysis with 3-5 different random seeds (e.g., 10, 25, 50, 75, 100), keeping the same 70/30 split proportion. Does the model with the lowest test MSE stay consistent across different splits? What does this tell you about the stability of model selection?
+
+5. **Changing the Noise Level:** In our simulation, we set the noise standard deviation to 0.2. Create new datasets with different noise levels (try sd = 0.1, 0.3, and 0.5). For each noise level, fit all three models and calculate their test MSE. How does increasing noise affect the bias-variance trade-off? Does the optimal model complexity change?
+
+6. **The Role of Sample Size:** Our training set has `r nrow(train_df)` observations. Create a new simulation where you vary the training set size (try 10, 20, 50 observations from the original data). For each sample size, fit all three models (degrees 1, 4, and 15) and calculate their test MSE. How does the bias-variance trade-off change with more training data? Which models are most affected by having less training data?
+
