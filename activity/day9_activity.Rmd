@@ -251,7 +251,7 @@ If you finish early or want to deepen your understanding, try these additional e
 
 1. **Alternative Metrics:** We used MSE, but there are other error metrics. Calculate the Mean Absolute Error (MAE = mean of absolute differences) and Root Mean Squared Error (RMSE = square root of MSE) for all three models on the test set. Do these metrics lead to the same conclusion about which model is best? Why might we prefer one metric over another?
 
-2. **Visualizing Residuals:** For each of the three models, create a residual plot showing the prediction errors (actual - predicted) on the y-axis versus the predicted values on the x-axis, using the test data. Which model shows the most random pattern? Which shows systematic patterns indicating poor fit?
+2. **Visualizing Residuals:** For each of the three models, create a residual plot showing the prediction errors (actual - predicted) on the y-axis versus the predicted values on the x-axis, using the train data. Which model shows the most random pattern? Which shows systematic patterns indicating poor fit?
 
 3. **Finding the Optimal Degree:** We tested degrees 1, 4, and 15, but what about everything in between? Write a loop to fit polynomial models for degrees 1 through 15, calculate their test MSE, and plot the results. At what degree does the test error start increasing? This is your empirical estimate of the optimal model complexity.
 

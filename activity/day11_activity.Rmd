@@ -1,0 +1,274 @@
+---
+title: "Classification Activity"
+author: "Econ 122"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+# Self-directed In-Class Activity: Classification Evaluation
+
+This activity will help you practice concepts from the lecture. Work through the steps in R. It should take about 40–45 minutes.
+
+---
+
+## Part 1 — Load and explore the data
+
+1. Load the necessary packages: `tidyverse` for data manipulation/visualization and `mlbench` for the dataset.
+```{r}
+# Add your code here to load packages
+```
+2. Load the dataset with `data(PimaIndiansDiabetes2)`.
+```{r}
+# Add your code here to load the dataset
+```
+3. Assign it to a variable, e.g., `df <- PimaIndiansDiabetes2`.
+```{r}
+# Add your code here to assign dataset to a variable
+```
+4. Learn about the dataset:
+   - Use `?PimaIndiansDiabetes2` to read the documentation.
+   - Check column names with `colnames(df)`.
+   - Examine data types using `str(df)`.
+   - Look at summary statistics with `summary(df)`.
+```{r}
+# Add your code here to explore the dataset
+```
+5. Inspect the first few rows with `head(df)`.
+```{r}
+# Add your code here to view the first rows
+```
+6. Identify which variable is the **response** (`diabetes`) and which are **continuous predictors** (`age`, `glucose`).
+```{r}
+# Add your code here to identify response and predictors
+```
+7. Check for class imbalance by computing the proportion of patients with diabetes.
+```{r}
+# Add your code here to check class imbalance
+```
+8. Compute simple descriptive statistics for two strong continuous predictor variables (`age` and `glucose`) by diabetes status.
+```{r}
+# Add your code here to compute descriptive statistics
+```
+9. Remove rows with missing values using `na.omit()`.
+```{r}
+# Add your code here to remove missing values
+```
+**Hint:** `na.omit()` removes any rows containing `NA`s so that calculations and visualizations work correctly.
+
+---
+
+## Part 2 — Visualize the data
+
+1. Make a boxplot of `age` by diabetes status.
+```{r}
+# Add your code here
+```
+2. Make a boxplot of `glucose` by diabetes status.
+```{r}
+# Add your code here
+```
+3. Create a scatter plot of `age` vs `glucose` colored by `diabetes`.
+```{r}
+# Add your code here
+```
+4. What patterns do you see?
+
+---
+
+## Part 3 — Baseline classifier
+
+1. Create a **naive classifier** that always predicts `neg` (no diabetes).
+```{r}
+# Add your code here
+```
+2. Build a confusion matrix comparing predictions to actual `diabetes`.
+```{r}
+# Add your code here
+```
+3. Compute accuracy, error rate, precision, recall, and specificity.
+```{r}
+# Add your code here
+```
+4. Compute balanced accuracy.
+```{r}
+# Add your code here
+```
+5. Comment: does this classifier perform better than random guessing? Why or why not?
+
+---
+
+## Part 4 — Rule-based classifier
+
+1. Define a rule: predict `pos` (diabetes) if `glucose > 125` or `age > 50`, otherwise `neg`.
+```{r}
+# Add your code here
+```
+2. Compute the confusion matrix and the same metrics as above.
+```{r}
+# Add your code here
+```
+3. Compare results to the baseline. Which improved? Which worsened?
+4. Modify your rule (e.g., use different thresholds for `glucose` or `age`) and test if it improves metrics.
+```{r}
+# Add your code here
+```
+
+---
+
+## Part 5 — Visualize the rule
+
+Make a scatter plot of `age` vs `glucose` with points colored by actual `diabetes`. Add **vertical and horizontal dashed lines** at your chosen thresholds. Then add another version with your modified rule.
+
+**Hints:**
+- Use the variable that stores your rule predictions (e.g., `Predicted_rule`) in `aes(color = Predicted_rule)`.
+- Add points with `geom_point(alpha = 0.6)` to adjust transparency.
+- Use `geom_vline(xintercept = threshold)` and `geom_hline(yintercept = threshold)` to add vertical/horizontal lines.
+- Make sure the legend clearly differentiates predicted positives and negatives.
+
+```{r}
+# Add your code here to create scatter plot highlighting predicted positives
+```
+
+---
+
+## Part 6 — F1 Score and Balanced Accuracy
+
+1. Compute the F1 score for both classifiers.
+```{r}
+# Add your code here
+```
+2. Compute the balanced accuracy for the rule-based classifier.
+```{r}
+# Add your code here
+```
+3. Why are these metrics especially useful with imbalanced data?
+
+---
+
+## Part 7 — Reflection
+
+Answer briefly:
+
+1. Why is accuracy misleading for this dataset?
+2. When would you prioritize **precision**? When would you prioritize **recall**?
+3. How could you improve on the rule-based classifier without jumping to complex models?
+4. If you were given more predictor variables, how might you extend your rule-based classifier?
+
+---
+
+## Part 8 — Bonus Questions
+
+### Bonus 1: Exploring Different Threshold Combinations
+
+Try at least 3 different combinations of thresholds for `glucose` and `age`. For each combination:
+- Compute all metrics (accuracy, precision, recall, specificity, F1 score, balanced accuracy)
+- Record your results in a table or data frame
+- Which threshold combination gives the best F1 score? Which gives the best balanced accuracy?
+
+```{r}
+# Add your code here to test multiple threshold combinations
+```
+
+---
+
+### Bonus 2: Sensitivity Analysis
+
+1. Keep your `glucose` threshold fixed and vary only the `age` threshold. Plot how precision and recall change as you adjust the age threshold. What trade-off do you observe?
+
+```{r}
+# Add your code here
+```
+
+2. Now keep `age` fixed and vary the `glucose` threshold. Create a similar plot. Which predictor has a stronger effect on classification performance?
+
+```{r}
+# Add your code here
+```
+
+---
+
+### Bonus 3: Alternative Rule Structures
+
+Instead of using "OR" logic (glucose > 125 **OR** age > 50), try "AND" logic (glucose > 125 **AND** age > 50). 
+
+1. Implement this rule and compute the confusion matrix and all metrics.
+```{r}
+# Add your code here
+```
+
+2. How do the metrics differ from your OR-based rule? When might AND logic be preferable to OR logic in medical screening?
+```{r}
+# Add your written answer as a comment here
+```
+
+---
+
+### Bonus 4: Cost-Sensitive Classification
+
+In medical screening, different types of errors have different costs. Suppose:
+- False Negative (missing diabetes) costs $1000 in delayed treatment
+- False Positive (unnecessary follow-up) costs $100 in testing
+
+1. Calculate the total cost for your baseline classifier and your rule-based classifier.
+```{r}
+# Add your code here to compute total costs
+```
+
+2. Adjust your thresholds to minimize total cost. What thresholds work best under this cost structure?
+```{r}
+# Add your code here
+```
+
+---
+
+### Bonus 5: Understanding Specificity vs Sensitivity Trade-offs
+
+1. Create a classifier that achieves **very high specificity** (>95%). What happens to sensitivity/recall? Show your confusion matrix.
+```{r}
+# Add your code here
+```
+
+2. Now create a classifier that achieves **very high sensitivity** (>90%). What happens to specificity? Show your confusion matrix.
+```{r}
+# Add your code here
+```
+
+3. Explain in your own words why it's difficult to achieve both high sensitivity and high specificity simultaneously in an imbalanced dataset.
+```{r}
+# Add your written answer as a comment here
+```
+
+---
+
+### Bonus 6: Multiple Predictor Rules
+
+The dataset has other variables like `pregnant`, `pressure`, `triceps`, `insulin`, `mass`. 
+
+1. Explore these variables and add one to your rule-based classifier. For example: predict `pos` if (glucose > 125) OR (age > 50) OR (insulin > X).
+```{r}
+# Add your code here to explore and incorporate another variable
+```
+
+2. Does adding this third predictor improve your F1 score or balanced accuracy? Why or why not?
+```{r}
+# Add your written answer as a comment here
+```
+
+---
+
+### Bonus 7: Comparing to Random Guessing
+
+1. Create a "random classifier" that predicts `pos` with probability equal to the proportion of positive cases in the dataset (i.e., ~34%). Use `sample()` with appropriate probabilities.
+```{r}
+# Add your code here to create random predictions
+```
+
+2. Compute accuracy, balanced accuracy, and F1 score for this random classifier. How does it compare to your baseline and rule-based classifiers?
+```{r}
+# Add your code here
+```
+
+3. Run the random classifier 10 times and compute the average metrics. Why do the metrics vary each time?
+```{r}
+# Add your code here
+```
