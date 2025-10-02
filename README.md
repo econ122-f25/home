@@ -29,6 +29,7 @@ References:
 - [Problem Set 1](https://classroom.github.com/a/J4eNmuB-) (due **09/12**) [[Solutions](ps/ps1_sol.html)]
 - [Team Project 1](https://classroom.github.com/a/4_Pc2W__) (due **09/19**)
 - [Problem Set 2](https://classroom.github.com/a/GRFxBibn) (due **09/26**) [[Solutions](ps/ps2_sol.html)]
+- [Problem Set 3](https://classroom.github.com/a/ia1RB2qo) (due **10/24**)
 
 ------------------------------------------------------------------------
 
@@ -56,13 +57,10 @@ References:
 **Readings:**  Ch 5 of R4DS
 
 **Monday** 
-- Labor day!!
+  - Labor day!!
 
 **Wednesday** (data wrangling with dplyr)
--   before class:
-    -   Readings
--   in class: 
-    -   day 3 [slides](slides/day3.html){:target="_blank"}, [activity](activity/day3_activity.Rmd), [solutions](activity/sol/day3_activity_sol.md)
+  -   day 3 [slides](slides/day3.html){:target="_blank"}, [activity](activity/day3_activity.Rmd), [solutions](activity/sol/day3_activity_sol.md)
   
 ------------------------------------------------------------------------
 ### Week 3 (09/08)
@@ -70,19 +68,12 @@ References:
 **Readings:**  Ch 3, 7, 12, 13 of R4DS
 
 **Monday** (reshaping/joining)
--   before class:
-    - Readings
-    - Reminder `ps1` due 9/12
--   in class: 
-    -   day 4 [slides](slides/day4.html){:target="_blank"}, [activity](activity/day4_activity.Rmd), [solutions](activity/sol/day4_activity_sol.md)
-    -   discuss [team project 1](https://github.com/econ122/tp1)
+  -   day 4 [slides](slides/day4.html){:target="_blank"}, [activity](activity/day4_activity.Rmd), [solutions](activity/sol/day4_activity_sol.md)
+  -   discuss [team project 1](https://github.com/econ122/tp1)
 
 **Wednesday** (exploratory data analysis (EDA))
--   before class:
-    -   Readings
--   in class: 
-    -   **reminder:** Make sure your `.md` file is visible in your `ps1` github page. Click on it to make sure it looks like what you expect. If I can't see your output I can't grade it.
-    -   day 5 [slides](slides/day5.html){:target="_blank"}, [activity](activity/day5_activity.Rmd), [solutions](activity/sol/day5_activity_sol.html)
+  -   **reminder:** Make sure your `.md` file is visible in your `ps1` github page. Click on it to make sure it looks like what you expect. If I can't see your output I can't grade it.
+  -   day 5 [slides](slides/day5.html){:target="_blank"}, [activity](activity/day5_activity.Rmd), [solutions](activity/sol/day5_activity_sol.html)
 
 ------------------------------------------------------------------------
 ### Week 4 (09/15)
@@ -90,20 +81,14 @@ References:
 **Readings:**  Ch 7, 14-16 of R4DS
 
 **Monday** (advanced EDA)
--   before class:
-    - Readings
--   in class: 
-    -   day 6 [slides](slides/day6.html){:target="_blank"}, [activity](activity/day6_activity.Rmd), [solutions](activity/sol/day6_activity_sol.html)
+  -   day 6 [slides](slides/day6.html){:target="_blank"}, [activity](activity/day6_activity.Rmd), [solutions](activity/sol/day6_activity_sol.html)
     
 **Wednesday** (Work on Team Project 1 **due 9/19**)
--   before class:
-    -   make sure you have your Team Project 1 partners
--   in class: 
-    -   quick introduction of dates from `day 7`
-    -   work with partners on Team Project 1
-          - quick note about `github` and `figures`
-    -   **reminder** `ps2` posted and due next week
-    -   ask any questions related to material up to this point
+  -   quick introduction of dates from `day 7`
+  -   work with partners on Team Project 1
+      - quick note about `github` and `figures`
+  -   **reminder** `ps2` posted and due next week
+  -   ask any questions related to material up to this point
 
 ------------------------------------------------------------------------
 ### Week 5 (09/22)
@@ -111,17 +96,11 @@ References:
 **Readings:**  Ch 14-16 of R4DS
 
 **Monday** (advanced wrangling)
--   before class:
-    -   Readings
--   in class: 
-    -  [exam 1 notes](exam1_notes.md)
-    -   day 7 [slides](slides/day7.html){:target="_blank"}, [activity](activity/day7_activity.Rmd), [solutions](activity/sol/day7_activity_sol.html)
+  -  [exam 1 notes](exam1_notes.md)
+  -   day 7 [slides](slides/day7.html){:target="_blank"}, [activity](activity/day7_activity.Rmd), [solutions](activity/sol/day7_activity_sol.html)
 
 **Wednesday** (feature engineering)
--   before class:
-    -   Readings
--   in class: 
-    -   day 8 [slides](slides/day8.html){:target="_blank"}, [activity](activity/day8_activity.Rmd), [solutions](activity/sol/day8_activity_sol.html)
+  -   day 8 [slides](slides/day8.html){:target="_blank"}, [activity](activity/day8_activity.Rmd), [solutions](activity/sol/day8_activity_sol.html)
 
 ------------------------------------------------------------------------
 ### Week 6 (09/29)
@@ -129,16 +108,10 @@ References:
 **Readings:**  Ch 2 of ISL
 
 **Monday** 
--   before class:
-    -   study for exam 1
--   in class:
-    -   take exam 1
+  -   take exam 1
 
 **Wednesday** (statistical learning)
--   before class:
-    -   Readings
--   in class: 
-    -   day 9 [slides](slides/day9.html){:target="_blank"}, [activity](activity/day9_activity.Rmd), [solutions](activity/sol/day9_activity_sol.html)
+  -   day 9 [slides](slides/day9.html){:target="_blank"}, [activity](activity/day9_activity.Rmd), [solutions](activity/sol/day9_activity_sol.html)
 
 ------------------------------------------------------------------------
 ### Week 7 (10/06)
@@ -146,14 +119,17 @@ References:
 **Readings:**  Ch 3,4 of ISL
 
 **Monday** (linear regression)
--   before class:
-    -   Readings
--   in class: 
-    -   day 10 [slides](slides/day10.html){:target="_blank"}, [activity](activity/day10_activity.Rmd), [solutions](activity/sol/day10_activity_sol.html)
+  -   day 10 [slides](slides/day10.html){:target="_blank"}, [activity](activity/day10_activity.Rmd), [solutions](activity/sol/day10_activity_sol.html)
 
 **Wednesday** (classification)
--   before class:
-    -   Readings
--   in class: 
-    -  reminder about `ps3`
-    -   day 11 [slides](slides/day11.html){:target="_blank"}, [activity](activity/day11_activity.Rmd), [solutions](activity/sol/day11_activity_sol.html)
+  -  reminder about `ps3`
+  -   day 11 [slides](slides/day11.html){:target="_blank"}, [activity](activity/day11_activity.Rmd), [solutions](activity/sol/day11_activity_sol.html)
+    
+------------------------------------------------------------------------
+### Week 8 (10/13)
+
+**Monday**
+  - Fall Break!!
+  
+**Wednesday** (logistic regression)
+  -   day 12 [slides](slides/day12.html){:target="_blank"}, [activity](activity/day12_activity.Rmd), [solutions](activity/sol/day12_activity_sol.html)
