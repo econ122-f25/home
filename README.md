@@ -133,3 +133,25 @@ References:
   
 **Wednesday** (logistic regression)
   -   day 12 [slides](slides/day12.html){:target="_blank"}, [activity](activity/day12_activity.Rmd), [solutions](activity/sol/day12_activity_sol.html)
+
+------------------------------------------------------------------------
+### Week 9 (10/20)
+
+**Readings:**  Ch 5 of ISL
+
+**Monday** (k nearest neighbors)
+  -   day 13 [slides](slides/day13.html){:target="_blank"}, [activity](activity/day13_activity.Rmd), [solutions](activity/sol/day13_activity_sol.html)
+  
+**Wednesday** (cross-validation)
+  -   day 14 [slides](slides/day14.html){:target="_blank"}, [activity](activity/day14_activity.Rmd), [solutions](activity/sol/day14_activity_sol.html)
+
+------------------------------------------------------------------------
+### Week 10 (10/27)
+
+**Readings:**  Ch 8 of ISL
+
+**Monday** (decision tree intro)
+  -   day 15 [slides](slides/day15.html){:target="_blank"}, [activity](activity/day15_activity.Rmd), [solutions](activity/sol/day15_activity_sol.html)
+  
+**Wednesday** (pruning)
+  -   day 16 [slides](slides/day16.html){:target="_blank"}, [activity](activity/day16_activity.Rmd), [solutions](activity/sol/day16_activity_sol.html)
