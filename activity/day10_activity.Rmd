@@ -60,6 +60,8 @@ This activity is designed to help you practice the concepts of linear regression
 
 **3.2** Use `summary()` on your new model (`fit_multiple`). Based on the output, which of the two predictors (`carat` or `depth`) is a more statistically significant predictor of `price`? Justify your answer.
 
+**Hint:** Use `summary(fit_multiple)$coefficients[, "Pr(>|t|)"]` to extract the p-values with more precision
+
 ```{r significance-comparison}
 
 ```
