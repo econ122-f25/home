@@ -73,7 +73,13 @@ This activity is designed to help you practice the concepts of linear regression
 
 Write the R code to create this diagnostic plot for your `fit_multiple` model. Use a scatterplot with fitted values on the x-axis and residuals on the y-axis. Do you think the **linearity** assumption holds here?
 
-**Hint:** A good plot for a linear model should show a random scatter of points around the horizontal line at $y=0$. Patterns such as a U-shape, a curve, or a fan-like spread would suggest that the linearity assumption has been violated.
+**Hints:** 
+
+- A good plot for a linear model should show a random scatter of points around the horizontal line at $y=0$. Patterns such as a U-shape, a curve, or a fan-like spread would suggest that the linearity assumption has been violated.
+- To get fitted values from your model, use the `fitted()` function: `fitted(fit_multiple)`
+- To get residuals from your model, use the `resid()` function: `resid(fit_multiple)`
+- In your `ggplot()`, map the fitted values to the x-axis and residuals to the y-axis
+- Consider adding `geom_hline(yintercept = 0, linetype = "dashed", color = "red")` to show the zero line clearly
 
 ```{r residual-plot}
 # Your code here to plot residuals vs. fitted values

@@ -3209,12 +3209,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 <slide class=""><hgroup><h2>Introduction and Motivation</h2></hgroup><article  id="introduction-and-motivation" class="smaller">
 
 <ul>
-<li><strong>Why Start with Linear Regression?</strong>
+<li><strong>Recap of Day 9:</strong>
 
 <ul>
-<li>Most interpretable supervised learning method—easy to understand and explain</li>
-<li>Introduces core concepts: fitting models, evaluating predictions, understanding error</li>
-<li>Despite its simplicity, remains one of the most widely used tools in data science</li>
+<li>Introduced the <strong>statistical learning framework</strong>: finding a function \(f\) to model \(Y = f(X) + \epsilon\)</li>
+<li>Distinguished between <strong>supervised</strong> (labeled \(Y\)) and <strong>unsupervised</strong> (no \(Y\)) learning</li>
+<li>Contrasted <strong>regression</strong> (quantitative \(Y\)) with <strong>classification</strong> (categorical \(Y\))</li>
+<li>Discussed the tradeoff between <strong>model flexibility</strong> and <strong>interpretability</strong></li>
+</ul></li>
+<li><strong>Today’s Transition:</strong>
+
+<ul>
+<li>Linear regression is our <strong>first concrete supervised learning method</strong></li>
+<li>It’s a <strong>regression technique</strong> for quantitative outcomes (e.g., mpg, price, test scores)</li>
+<li>As a <strong>less flexible model</strong>, it prioritizes interpretability—we can clearly explain relationships</li>
+<li>We’ll learn how to actually <strong>estimate</strong> \(f\) using the least squares approach</li>
 </ul></li>
 <li><strong>Real-World Applications:</strong>
 
@@ -3222,13 +3231,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 <li>Predict sales from advertising spend</li>
 <li>Estimate exam scores from study hours</li>
 <li>Forecast housing prices from property features</li>
-</ul></li>
-<li><strong>Today’s Learning Goals:</strong>
-
-<ul>
-<li>Fit a line that captures relationships in data</li>
-<li>Interpret model outputs and assess fit quality</li>
-<li>Make predictions using R</li>
 </ul></li>
 </ul>
 
@@ -3298,7 +3300,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 <li>\(y_i\): observed value</li>
 <li>\(\hat{y}_i\): predicted value (denoted with a hat)</li>
 </ul></li>
-<li>Minimize sum of squared residuals (Least Squares)</li>
+<li>Minimize sum of squared residuals (Least Squares)
+
+<ul>
+<li>\(\sum (y_i - \hat{y}_i)^2\)</li>
+<li>why squared?</li>
+<li>why the sum?</li>
+</ul></li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Visualizing Fit with Residuals</h2></hgroup><article  id="visualizing-fit-with-residuals" class="smaller">
@@ -3319,6 +3327,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 <li>Take partial derivatives w.r.t \(\beta_0\) and \(\beta_1\), set them to zero → <strong>normal equations</strong></li>
 <li>Solving gives least squares estimates \(\hat{\beta}_0\) and \(\hat{\beta}_1\)</li>
 <li>Minimization ensures residuals are as small as possible in squared sense</li>
+<li>Solution: \(\beta_0=37.29\), \(\beta_1=-5.34\)</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Parameter confidence</h2></hgroup><article  id="parameter-confidence" class="smaller">
