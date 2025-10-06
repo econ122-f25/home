@@ -51,6 +51,9 @@ This activity is designed to help you practice the concepts of linear regression
 
 **3.1** What if we want to add another predictor? Let's add `depth` to our model. Write the R code to fit a new linear regression model (`fit_multiple`) that predicts `price` using **both** `carat` and `depth`.
 
+**Hint:** To add multiple predictors in a linear model, use the `+` operator in your formula. For example, if you wanted to predict `y` using both `x1` and `x2`, you would write: `lm(y ~ x1 + x2, data = your_data)`
+
+
 ```{r fit_multiple}
 # Your code here to fit the multiple regression model
 ```
