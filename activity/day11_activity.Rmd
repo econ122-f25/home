@@ -108,6 +108,7 @@ This activity will help you practice concepts from the lecture. Work through the
 # Add your code here
 ```
 3. Compare results to the baseline. Which improved? Which worsened?
+
 4. Modify your rule (e.g., use different thresholds for `glucose` or `age`) and test if it improves metrics.
 ```{r}
 # Add your code here
@@ -120,6 +121,7 @@ This activity will help you practice concepts from the lecture. Work through the
 Make a scatter plot of `age` vs `glucose` with points colored by actual `diabetes`. Add **vertical and horizontal dashed lines** at your chosen thresholds. Then add another version with your modified rule.
 
 **Hints:**
+
 - Use the variable that stores your rule predictions (e.g., `Predicted_rule`) in `aes(color = Predicted_rule)`.
 - Add points with `geom_point(alpha = 0.6)` to adjust transparency.
 - Use `geom_vline(xintercept = threshold)` and `geom_hline(yintercept = threshold)` to add vertical/horizontal lines.
@@ -161,6 +163,7 @@ Answer briefly:
 ### Bonus 1: Exploring Different Threshold Combinations
 
 Try at least 3 different combinations of thresholds for `glucose` and `age`. For each combination:
+
 - Compute all metrics (accuracy, precision, recall, specificity, F1 score, balanced accuracy)
 - Record your results in a table or data frame
 - Which threshold combination gives the best F1 score? Which gives the best balanced accuracy?
@@ -206,6 +209,7 @@ Instead of using "OR" logic (glucose > 125 **OR** age > 50), try "AND" logic (gl
 ### Bonus 4: Cost-Sensitive Classification
 
 In medical screening, different types of errors have different costs. Suppose:
+
 - False Negative (missing diabetes) costs $1000 in delayed treatment
 - False Positive (unnecessary follow-up) costs $100 in testing
 
