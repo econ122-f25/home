@@ -1,6 +1,5 @@
 ## Summary statistics
 
-<div style="width: 400px;">
 
 | Statistic | Value |
 |:---------:|:-----:|
@@ -15,7 +14,7 @@
 | 90th percentile | 93.60 |
 | Max | 96 |
 
-</div>
+
 
 
 ## Common Mistakes by Question
