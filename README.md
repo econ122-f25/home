@@ -108,7 +108,7 @@ References:
 **Readings:**  Ch 2 of ISL
 
 **Monday** 
-  -   take exam 1
+  -   take [exam 1](MT1_summary.md)
 
 **Wednesday** (statistical learning)
   -   day 9 [slides](slides/day9.html){:target="_blank"}, [activity](activity/day9_activity.Rmd), [solutions](activity/sol/day9_activity_sol.html)
