@@ -87,13 +87,15 @@ results_long <- results_df %>%
   pivot_longer(cols = -Split, names_to = "Polynomial_Degree", values_to = "Test_MSE") %>%
   mutate(Degree = as.numeric(str_extract(Polynomial_Degree, "\\d+")))
 
-ggplot(results_long, aes(x = Degree, y = Test_MSE, group = Split)) +
-  geom_line(alpha = 0.6, color = "steelblue") +
-  geom_point(alpha = 0.6, color = "steelblue") +
+ggplot(results_long, aes(x = Degree, y = Test_MSE, group = Split, color = factor(Split))) +
+  geom_line(alpha = 0.8, size = 1) +
+  geom_point(alpha = 0.8, size = 2) +
   labs(title = "High Variability in Train-Test Split Results",
        subtitle = "Each line represents a different random split",
-       x = "Polynomial Degree", y = "Test MSE") +
-  theme_minimal()
+       x = "Polynomial Degree", 
+       y = "Test MSE") +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
 **Question 1.1**: What do you notice about the variability? Which polynomial degree would you choose as "best" if you only did one split?
@@ -250,17 +252,24 @@ k_values <- c(1, 3, 5, 7, 9, 11, 15, 21, 31, 41, 51)
 Let's visualize the results:
 
 ```{r knn-cv-plot}
-# Create a plot of CV error vs k (you'll need to create cv_errors first)
-# plot(k_values, cv_errors, type = "b", 
-#      xlab = "k (Number of Neighbors)", 
-#      ylab = "LOOCV Error Rate",
-#      main = "k-NN Cross-Validation Results")
-# 
-# # Add vertical line at optimal k
-# best_k <- k_values[which.min(cv_errors)]
-# abline(v = best_k, col = "red", lty = 2)
-# text(best_k + 5, min(cv_errors) + 0.01, 
-#      paste("Best k =", best_k), col = "red")
+# Create a plot of CV error vs k
+knn_results <- data.frame(
+  k = k_values,
+  cv_error = cv_errors
+)
+
+best_k <- k_values[which.min(cv_errors)]
+
+ggplot(knn_results, aes(x = k, y = cv_error)) +
+  geom_line(color = "steelblue", size = 1.2) +
+  geom_point(color = "steelblue", size = 3) +
+  geom_vline(xintercept = best_k, color = "red", linetype = "dashed", size = 1) +
+  annotate("text", x = best_k + 5, y = min(cv_errors) + 0.01, 
+           label = paste("Best k =", best_k), color = "red", size = 4) +
+  labs(title = "k-NN Cross-Validation Results",
+       x = "k (Number of Neighbors)",
+       y = "LOOCV Error Rate") +
+  theme_minimal()
 ```
 
 **Question 4.1**: What's the optimal k value for k-NN classification? How does this compare to what you might expect?
@@ -279,20 +288,38 @@ Let's visualize the results:
 
 Based on your results, fill out this comparison:
 
-```{r comparison-table}
-# Create a summary of your findings
-method_comparison <- data.frame(
-  Method = c("Validation Set (Polynomial)", "10-fold CV (Polynomial)", "LOOCV (Polynomial)", "k-NN LOOCV (Classification)"),
-  `Best_Model_Complexity` = c("", "", "", ""),  # Fill these in (degree for polynomial, k for k-NN)
-  `Error_Rate_or_MSE` = c("", "", "", ""),      # Fill these in (MSE for regression, error rate for classification)
-  `Computational_Cost` = c("Low", "Medium", "High", "High"),
-  `Primary_Use_Case` = c("Quick estimates", "General purpose", "Small datasets", "Nonparametric classification"),
+```{r comparison-tables}
+# Create regression methods comparison
+regression_comparison <- data.frame(
+  Method = c("Validation Set", 
+             "10-fold CV", 
+             "LOOCV"),
+  `Best_Model_Complexity` = c("", "", ""),  # Fill in (e.g., "Degree 2")
+  `Test_MSE` = c("", "", ""),                # Fill in with MSE values
+  `Computational_Cost` = c("Low", "Medium", "High"),
   stringsAsFactors = FALSE
 )
 
-# Print the table
-knitr::kable(method_comparison, 
-             caption = "Cross-Validation Method Comparison")
+# Create classification methods comparison
+classification_comparison <- data.frame(
+  Method = c("Logistic Regression (Linear)", 
+             "Logistic Regression (Polynomial)",
+             "k-NN LOOCV"),
+  `Best_Model_Complexity` = c("", "", ""),   # Fill in (e.g., "Linear terms", "k = 21")
+  `Error_Rate` = c("", "", ""),              # Fill in with error rates
+  `Accuracy` = c("", "", ""),                # Fill in with accuracy percentages
+  `Computational_Cost` = c("Medium", "Medium", "High"),
+  stringsAsFactors = FALSE
+)
+
+# Print both tables
+knitr::kable(regression_comparison, 
+             caption = "Regression Methods Comparison (Auto dataset - predicting MPG)")
+
+cat("\n\n")
+
+knitr::kable(classification_comparison, 
+             caption = "Classification Methods Comparison (Default dataset - predicting default)")
 ```
 
 **Question 5.1**: Which method would you recommend for this dataset and why?
