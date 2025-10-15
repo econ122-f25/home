@@ -160,7 +160,7 @@ References:
   -   day 16 [slides](slides/day16.html){:target="_blank"}, [activity](activity/day16_activity.Rmd), [solutions](activity/sol/day16_activity_sol.html)
 
 ------------------------------------------------------------------------
-### Week 10 (11/03)
+### Week 11 (11/03)
 
 **Readings:**  Ch 8 of ISL
 
@@ -171,7 +171,7 @@ References:
   -   day 18 [slides](slides/day18.html){:target="_blank"}, [activity](activity/day18_activity.Rmd), [solutions](activity/sol/day18_activity_sol.html)
 
 ------------------------------------------------------------------------
-### Week 11 (11/10)
+### Week 12 (11/10)
 
 **Readings:**  Ch 12 of ISL
 
