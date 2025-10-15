@@ -1,6 +1,5 @@
 ---
 title: "Cross-Validation In-Class Activity"
-subtitle: "Econ 122 - Day 14 Activity"
 author: "Your Name Here"
 date: "`r Sys.Date()`"
 output: github_document
