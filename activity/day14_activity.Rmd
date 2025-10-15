@@ -1,0 +1,343 @@
+---
+title: "Cross-Validation In-Class Activity"
+subtitle: "Econ 122 - Day 14 Activity"
+author: "Your Name Here"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      fig.width = 8, fig.height = 5)
+
+# Load required libraries
+library(tidyverse)
+library(ISLR2)
+library(boot)      # for cv.glm
+library(class)     # for k-NN and knn.cv
+library(gridExtra)
+
+# Set seed for reproducibility
+set.seed(42)
+```
+
+# Learning Objectives
+
+By the end of this activity, you will be able to:
+
+1. Implement different cross-validation methods in R
+2. Compare validation set approach vs k-fold cross-validation
+3. Perform cross-validation for both regression and classification
+4. Use cross-validation with k-NN models
+5. Select optimal model complexity using CV results
+
+---
+
+## Part 1: The Problem with Simple Train-Test Split (10 minutes)
+
+Let's start by exploring why a simple train-test split can be unreliable.
+
+### Exercise 1.1: Variable Results from Train-Test Split
+
+Using the `Auto` dataset, we'll fit polynomial models of different degrees and see how much the results vary with different random splits.
+
+```{r exercise-1-1}
+# Load the Auto dataset
+data(Auto)
+
+# Function to perform one train-test split and return test MSE for different polynomial degrees
+single_split_mse <- function(split_seed, max_degree = 8) {
+  set.seed(split_seed)
+  
+  # YOUR CODE HERE: 
+  # 1. Create a random train-test split (use 70% for training)
+  # 2. For each polynomial degree from 1 to max_degree:
+  #    - Fit a model: lm(mpg ~ poly(horsepower, degree), data = train_data)
+  #    - Calculate test MSE
+  # 3. Return a vector of test MSE values
+  
+  # Hint: Use sample() to create training indices
+  
+}
+
+# Test your function (remove # to run)
+# test_mse <- single_split_mse(123)
+# print(test_mse)
+```
+
+**Your Task**: Complete the `single_split_mse` function above.
+
+Now let's see how much the results vary:
+
+```{r variability-demo}
+# Try 10 different random splits
+n_splits <- 10
+degrees <- 1:8
+results_matrix <- matrix(NA, nrow = n_splits, ncol = length(degrees))
+
+for(i in 1:n_splits) {
+  results_matrix[i, ] <- single_split_mse(i * 10)
+}
+
+# Create a plot showing the variability
+results_df <- as.data.frame(results_matrix)
+colnames(results_df) <- paste("Degree", degrees)
+results_df$Split <- 1:n_splits
+
+results_long <- results_df %>%
+  pivot_longer(cols = -Split, names_to = "Polynomial_Degree", values_to = "Test_MSE") %>%
+  mutate(Degree = as.numeric(str_extract(Polynomial_Degree, "\\d+")))
+
+ggplot(results_long, aes(x = Degree, y = Test_MSE, group = Split)) +
+  geom_line(alpha = 0.6, color = "steelblue") +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  labs(title = "High Variability in Train-Test Split Results",
+       subtitle = "Each line represents a different random split",
+       x = "Polynomial Degree", y = "Test MSE") +
+  theme_minimal()
+```
+
+**Question 1.1**: What do you notice about the variability? Which polynomial degree would you choose as "best" if you only did one split?
+
+**Your Answer**: 
+
+---
+
+## Part 2: k-Fold Cross-Validation for Regression (10 minutes)
+
+Now let's use k-fold cross-validation to get more stable results.
+
+### Exercise 2.1: Implementing k-Fold CV
+
+```{r exercise-2-1}
+# Function to perform k-fold CV for polynomial regression
+polynomial_cv <- function(data, max_degree = 8, k = 10) {
+  cv_errors <- numeric(max_degree)
+  
+  for(degree in 1:max_degree) {
+    # YOUR CODE HERE:
+    # 1. Fit a glm model: glm(mpg ~ poly(horsepower, degree), data = data)
+    # 2. Use cv.glm() to perform k-fold cross-validation
+    # 3. Store the CV error in cv_errors[degree]
+    
+  }
+  
+  return(cv_errors)
+}
+
+# Test your function
+# cv_results <- polynomial_cv(Auto, max_degree = 8, k = 10)
+# print(cv_results)
+```
+
+### Exercise 2.2: Compare Different k Values
+
+```{r exercise-2-2}
+# Compare k = 5, k = 10, and LOOCV
+k_values <- c(5, 10, nrow(Auto))  # LOOCV uses n folds
+k_names <- c("5-fold", "10-fold", "LOOCV")
+
+# YOUR CODE HERE:
+# Create a data frame to store results for different k values
+# For each k value, run polynomial_cv and store results
+# Note: For LOOCV, don't specify K parameter in cv.glm()
+
+```
+
+Let's visualize the results:
+
+```{r cv-comparison-plot}
+ggplot(cv_comparison, aes(x = Degree, y = CV_MSE, color = Method)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2.5) +
+  labs(title = "Cross-Validation Comparison: Different k Values",
+       x = "Polynomial Degree", y = "Cross-Validation MSE") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+**Question 2.1**: Which polynomial degree appears optimal? Do the different CV methods agree?
+
+**Your Answer**: 
+
+**Question 2.2**: What are the computational tradeoffs between 5-fold, 10-fold, and LOOCV?
+
+**Your Answer**: 
+
+---
+
+## Part 3: Cross-Validation for Classification (8 minutes)
+
+Now let's work with the `Default` dataset for classification.
+
+### Exercise 3.1: CV for Logistic Regression
+
+```{r exercise-3-1}
+# Load Default dataset
+data(Default)
+
+# Look at the dataset structure
+str(Default)
+
+# Define cost function for classification error rate
+cost_function <- function(r, pi) {
+  # r: actual response (0/1), pi: predicted probabilities
+  mean(abs(r - (pi > 0.5)))
+}
+
+# YOUR CODE HERE:
+# 1. Fit a logistic regression model: default ~ balance + income
+# 2. Use cv.glm with the cost function to get 10-fold CV error rate
+# 3. Try adding polynomial terms: default ~ poly(balance, 2) + poly(income, 2)
+# 4. Compare the CV error rates
+
+```
+
+**Question 3.1**: Which model performs better? Is the improvement substantial?
+
+**Your Answer**: 
+
+---
+
+## Part 4: Cross-Validation with k-NN (12 minutes)
+
+k-NN uses the `class` package which has a built-in LOOCV function `knn.cv()`. Let's explore this!
+
+### Exercise 4.1: Understanding k-NN Data Preparation
+
+```{r knn-setup}
+# For k-NN, we need to prepare our data differently
+# k-NN requires numeric predictors and works with matrices
+
+# Prepare data for k-NN classification (Default dataset)
+knn_data <- Default %>%
+  select(balance, income, default) %>%
+  na.omit()
+
+# Separate predictors and response
+X <- knn_data[, c("balance", "income")]
+y <- knn_data$default
+
+# Scale the predictors (important for k-NN!)
+X_scaled <- scale(X)
+
+# Look at the data
+head(X_scaled)
+summary(X_scaled)
+table(y)
+```
+
+### Exercise 4.2: k-NN LOOCV with knn.cv()
+
+The `knn.cv()` function automatically performs leave-one-out cross-validation for k-NN classification.
+
+```{r exercise-4-2}
+# Test different k values using LOOCV
+k_values <- c(1, 3, 5, 7, 9, 11, 15, 21, 31, 41, 51)
+
+# YOUR CODE HERE:
+# 1. Create a vector to store CV error rates for each k
+# 2. For each k value:
+#    - Use knn.cv(train = X_scaled, cl = y, k = k_value)
+#    - Calculate error rate by comparing predictions to actual y
+#    - Store the error rate
+# 3. Find the optimal k value
+
+# Hint: knn.cv returns predicted classes, so you can calculate:
+# error_rate <- mean(predictions != y)
+
+```
+
+Let's visualize the results:
+
+```{r knn-cv-plot}
+# Create a plot of CV error vs k (you'll need to create cv_errors first)
+# plot(k_values, cv_errors, type = "b", 
+#      xlab = "k (Number of Neighbors)", 
+#      ylab = "LOOCV Error Rate",
+#      main = "k-NN Cross-Validation Results")
+# 
+# # Add vertical line at optimal k
+# best_k <- k_values[which.min(cv_errors)]
+# abline(v = best_k, col = "red", lty = 2)
+# text(best_k + 5, min(cv_errors) + 0.01, 
+#      paste("Best k =", best_k), col = "red")
+```
+
+**Question 4.1**: What's the optimal k value for k-NN classification? How does this compare to what you might expect?
+
+**Your Answer**: 
+
+**Question 4.2**: Why is scaling the predictors (`scale()`) crucial for k-NN but not for linear regression?
+
+**Your Answer**: 
+
+---
+
+## Part 5: Synthesis and Comparison
+
+### Exercise 5.1: Method Comparison Table
+
+Based on your results, fill out this comparison:
+
+```{r comparison-table}
+# Create a summary of your findings
+method_comparison <- data.frame(
+  Method = c("Validation Set (Polynomial)", "10-fold CV (Polynomial)", "LOOCV (Polynomial)", "k-NN LOOCV (Classification)"),
+  `Best_Model_Complexity` = c("", "", "", ""),  # Fill these in (degree for polynomial, k for k-NN)
+  `Error_Rate_or_MSE` = c("", "", "", ""),      # Fill these in (MSE for regression, error rate for classification)
+  `Computational_Cost` = c("Low", "Medium", "High", "High"),
+  `Primary_Use_Case` = c("Quick estimates", "General purpose", "Small datasets", "Nonparametric classification"),
+  stringsAsFactors = FALSE
+)
+
+# Print the table
+knitr::kable(method_comparison, 
+             caption = "Cross-Validation Method Comparison")
+```
+
+**Question 5.1**: Which method would you recommend for this dataset and why?
+
+**Your Answer**: 
+
+### Exercise 5.2: Key Takeaways
+
+**Question 5.2**: What are the three most important things you learned about cross-validation today?
+
+**Your Answers**: 
+1. 
+2. 
+3. 
+
+### Bonus Challenge (if time permits)
+
+Try one of these extensions to deepen your understanding:
+
+1. **Implement k-fold CV for k-NN classification** manually using the `knn()` function
+2. **Add more predictors** to the k-NN model and see how it affects the optimal k value
+3. **Compare k-NN LOOCV results** with the logistic regression CV results from Part 3
+
+```{r bonus-challenge}
+# YOUR CODE HERE (optional)
+
+```
+
+---
+
+## Summary
+
+Today you've learned to:
+
+✓ Implement validation set approach and see its limitations  
+✓ Use `cv.glm()` for k-fold cross-validation and LOOCV  
+✓ Apply CV to both regression and classification problems  
+✓ Use `knn.cv()` for k-NN LOOCV and implement custom k-fold CV for k-NN  
+✓ Compare different CV methods and choose appropriate k values  
+✓ Understand the bias-variance tradeoff in cross-validation  
+
+**Key Functions to Remember**:
+- `cv.glm(data, model, K = k)` - for linear/logistic regression
+- `knn.cv(train, cl, k)` - for k-NN classification with LOOCV
+- `knn(train, test, cl, k)` - for k-NN prediction in custom CV loops
+- Always use `set.seed()` for reproducible results!
+- Always `scale()` your predictors for k-NN!

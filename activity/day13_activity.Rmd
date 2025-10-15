@@ -1,0 +1,460 @@
+---
+title: "k-NN Explorer: Building Intuition Through Practice"
+subtitle: "Day 13"
+author: "Your Name Here"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      fig.width = 8, fig.height = 6)
+```
+
+```{r packages, message=FALSE}
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(class)
+library(gridExtra)
+
+# Set random seed for reproducibility
+set.seed(123)
+```
+
+## Learning Objectives
+
+By the end of this activity, you will:
+
+1. **Build intuition** for how k affects k-NN predictions
+2. **Experience firsthand** why scaling matters
+3. **Compare k-NN vs logistic regression** across different data patterns
+4. **Practice** model evaluation and interpretation
+
+---
+
+## Part 1: The k Parameter Deep Dive (15 minutes)
+
+### Task 1.1: Create and Explore Data
+
+Create a dataset with overlapping clusters where the choice of k will matter:
+
+```{r}
+# Your task: Create two overlapping normal clusters
+# Cluster 1: center at (1, 1), sd = 0.8, class = "A", n = 100
+# Cluster 2: center at (-0.5, -0.5), sd = 0.7, class = "B", n = 100
+# Store in a dataframe called 'overlap_data' with columns: x1, x2, class
+
+set.seed(42)
+# Cluster 1
+cluster1_x1 <- rnorm(100, mean = 1, sd = 0.8)
+cluster1_x2 <- rnorm(100, mean = 1, sd = 0.8)
+cluster1_class <- rep("A", 100)
+
+# Cluster 2
+cluster2_x1 <- rnorm(100, mean = -0.5, sd = 0.7)
+cluster2_x2 <- rnorm(100, mean = -0.5, sd = 0.7)
+cluster2_class <- rep("B", 100)
+
+# Combine
+overlap_data <- data.frame(
+  x1 = c(cluster1_x1, cluster2_x1),
+  x2 = c(cluster1_x2, cluster2_x2),
+  class = factor(c(cluster1_class, cluster2_class))
+)
+
+# Plot your data
+ggplot(overlap_data, aes(x = x1, y = x2, color = class)) +
+  geom_point(size = 2, alpha = 0.7) +
+  labs(title = "Overlapping Clusters Dataset") +
+  theme_minimal() +
+  coord_fixed()
+```
+
+### Task 1.2: Manual k-NN Prediction
+
+Add this test point and manually predict its class for k=1, k=3, and k=5:
+
+```{r}
+test_point <- data.frame(x1 = 0.2, x2 = 0.3)
+
+# Add test point to your plot
+ggplot(overlap_data, aes(x = x1, y = x2, color = class)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_point(data = test_point, aes(x = x1, y = x2), 
+             color = "black", size = 6, shape = "X") +
+  labs(title = "Predict the X!") +
+  theme_minimal() +
+  coord_fixed()
+```
+
+**Challenge**: Before using R, calculate distances manually and predict:
+- For k=1: My prediction is ____
+- For k=3: My prediction is ____  
+- For k=5: My prediction is ____
+
+### Task 1.3: Test Your Intuition
+
+Now implement k-NN to check your manual predictions:
+
+```{r}
+# Your task: Test k values 1, 3, 5, 7, 10, 15, 20, 50
+# Create a loop to get predictions for each k
+# Store results in a dataframe
+
+k_values <- c(1, 3, 5, 7, 10, 15, 20, 50)
+
+# Write your code here to test different k values:
+
+
+# Display your results
+```
+
+**Analysis Questions:**
+1. At what k value do the predictions stabilize?
+2. What does k=50 predict and why? (Total n = 200)
+3. Which k would you choose for this problem?
+
+---
+
+## Part 2: The Scaling Disaster (10 minutes)
+
+### Task 2.1: Create Scaled Data Problem
+
+```{r}
+# Given data with extreme scaling issues
+set.seed(200)
+n <- 180
+
+# Feature 1: Test scores (0-100 scale)
+test_scores <- rnorm(n, mean = 75, sd = 12)
+test_scores <- pmax(0, pmin(100, test_scores))  # Bound between 0-100
+
+# Feature 2: Income (in cents!) - this is the trap
+income_cents <- rnorm(n, mean = 4500000, sd = 1200000)  # ~$45k in cents
+
+# Target: High achiever if high test score OR high income
+high_achiever <- ifelse(test_scores > 80 | income_cents > 5000000, "High", "Low")
+
+scaling_data <- data.frame(
+  test_score = test_scores,
+  income_cents = income_cents,
+  achiever = factor(high_achiever)
+)
+
+# Check the scale difference
+summary(scaling_data[, 1:2])
+```
+
+### Task 2.2: Compare Scaled vs Unscaled Performance
+
+Your task: Complete this analysis comparing performance with and without scaling:
+
+```{r}
+# Create train/test split (70/30)
+train_idx <- sample(1:n, size = round(0.7 * n))
+
+# Write code to:
+# 1. Create train/test sets
+# 2. Run k-NN with k=5 WITHOUT scaling
+# 3. Run k-NN with k=5 WITH scaling  
+# 4. Calculate accuracy for both
+# 5. Show the difference
+
+# Your code here:
+
+
+
+
+# Challenge question: Which feature is dominating the unscaled version and why?
+```
+
+---
+
+## Part 3: k-NN vs Logistic Regression Showdown (15 minutes)
+
+We'll create three datasets and compare both methods.
+
+### Task 3.1: Generate Three Challenging Datasets
+
+```{r}
+# Dataset A: Linear boundary with noise
+set.seed(300)
+n <- 250
+# Create linearly separable data with some noise
+# Boundary should be roughly: x1 + 2*x2 > 1
+x1_a <- runif(n, -2, 3)
+x2_a <- runif(n, -2, 2)
+y_a <- ifelse(x1_a + 2*x2_a > 1, "Class1", "Class2")
+
+# Add 15% noise (flip some labels randomly)
+noise_indices <- sample(1:n, size = floor(0.15 * n))
+y_a[noise_indices] <- ifelse(y_a[noise_indices] == "Class1", "Class2", "Class1")
+
+data_a <- data.frame(x1 = x1_a, x2 = x2_a, class = factor(y_a))
+
+# Dataset B: Circular/ring pattern  
+set.seed(400)
+x1_b <- runif(n, -3, 3)
+x2_b <- runif(n, -3, 3)
+radius <- sqrt(x1_b^2 + x2_b^2)
+y_b <- ifelse(radius < 1, "Class1", 
+              ifelse(radius < 2.2, "Class2", "Class1"))
+
+data_b <- data.frame(x1 = x1_b, x2 = x2_b, class = factor(y_b))
+
+# Dataset C: XOR pattern (most challenging!)
+set.seed(500)
+x1_c <- runif(n, -2, 2)
+x2_c <- runif(n, -2, 2)
+# XOR logic: same sign = Class1, different signs = Class2
+y_c <- ifelse((x1_c > 0 & x2_c > 0) | (x1_c < 0 & x2_c < 0), "Class1", "Class2")
+
+# Add gaussian noise to make it more realistic
+x1_c <- x1_c + rnorm(n, 0, 0.1)
+x2_c <- x2_c + rnorm(n, 0, 0.1)
+
+data_c <- data.frame(x1 = x1_c, x2 = x2_c, class = factor(y_c))
+
+# Plot all three datasets
+p1 <- ggplot(data_a, aes(x = x1, y = x2, color = class)) +
+  geom_point(alpha = 0.6) + labs(title = "Dataset A: Linear + Noise") +
+  theme_minimal() + coord_fixed()
+
+p2 <- ggplot(data_b, aes(x = x1, y = x2, color = class)) +
+  geom_point(alpha = 0.6) + labs(title = "Dataset B: Circular") +
+  theme_minimal() + coord_fixed()
+
+p3 <- ggplot(data_c, aes(x = x1, y = x2, color = class)) +
+  geom_point(alpha = 0.6) + labs(title = "Dataset C: XOR") +
+  theme_minimal() + coord_fixed()
+
+grid.arrange(p1, p2, p3, ncol = 1)
+```
+
+### Task 3.2: Model Comparison Function
+
+Complete this function to compare k-NN and logistic regression:
+
+```{r}
+compare_methods <- function(data, dataset_name) {
+  # Your task: Complete this function
+  # 1. Create 70/30 train/test split
+  # 2. Scale features for k-NN
+  # 3. Fit logistic regression (use glm with family=binomial)
+  # 4. Fit k-NN with k=5
+  # 5. Calculate accuracy for both methods
+  # 6. Return a dataframe with results
+  
+  n <- nrow(data)
+  train_idx <- sample(1:n, round(0.7 * n))
+  
+  # Complete the function:
+  
+  
+  
+  # Return results dataframe with columns: Method, Dataset, Accuracy
+  
+}
+```
+
+### Task 3.3: Run the Competition
+
+```{r}
+# Test all three datasets
+results_a <- compare_methods(data_a, "Linear")
+results_b <- compare_methods(data_b, "Circular")  
+results_c <- compare_methods(data_c, "XOR")
+
+# Combine results
+all_results <- rbind(results_a, results_b, results_c)
+print(all_results)
+
+# Create comparison plot
+ggplot(all_results, aes(x = Dataset, y = Accuracy, fill = Method)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "k-NN vs Logistic Regression Performance") +
+  theme_minimal() +
+  ylim(0, 1)
+```
+
+### Task 3.4: Visualize Decision Boundaries (Advanced)
+
+**Challenge Task**: For one of your datasets, create a grid and visualize the decision boundaries for both methods. Choose the dataset that showed the biggest performance difference between k-NN and logistic regression.
+
+---
+
+#### Step 1: Re-fit Models on Full Dataset
+```{r step1}
+# You'll need to re-fit both models on the complete dataset (not just training data)
+# This ensures smooth boundaries across the entire space
+
+# For logistic regression:
+# - Use glm() with your chosen dataset
+# - Store the fitted model object
+
+# Your code here:
+# log_model <- 
+
+# For k-NN setup:
+# - No scaling needed since x1 and x2 are already on similar scales
+# - Just store your chosen dataset for k-NN predictions
+
+# Your code here:
+# knn_data <- 
+
+```
+
+**Think about**: Why do we refit on the full dataset instead of using our train/test models?
+
+---
+
+#### Step 2: Create the Prediction Grid
+```{r step2}
+# Template provided in the assignment:
+# x1_seq <- seq(min(data$x1), max(data$x1), length.out = 100)
+# x2_seq <- seq(min(data$x2), max(data$x2), length.out = 100)  
+# grid <- expand.grid(x1 = x1_seq, x2 = x2_seq)
+
+# Pro tip: Extend the range slightly beyond your data
+# x1_seq <- seq(min(data$x1) - 0.5, max(data$x1) + 0.5, length.out = 100)
+
+# Your code here:
+# x1_seq <- 
+# x2_seq <- 
+# grid <- 
+
+```
+
+**Think about**: What does `expand.grid()` do? How many total points will you have?
+
+---
+
+#### Step 3: Generate Predictions on the Grid
+
+```{r step3a}
+# For Logistic Regression:
+# Use predict() function on your grid
+# Set type="response" to get probabilities
+# Convert probabilities to class predictions using a 0.5 threshold
+# Use ifelse() to assign class labels
+
+# Your code here:
+# log_grid_pred <- 
+# log_grid_class <- 
+
+```
+
+```{r step3b}
+# For k-NN:
+# Use knn() function 
+# First argument: your original data features (no scaling needed)
+# Second argument: your grid 
+# Third argument: class labels from original data
+# Fourth argument: k=5 (or your chosen k)
+
+# Your code here:
+# knn_grid_class <- 
+
+```
+
+**Think about**: Since we don't need scaling, what makes k-NN different from logistic regression in terms of the prediction process?
+
+---
+
+#### Step 4: Add Predictions to Grid and Visualize
+```{r step4}
+# Add prediction columns to your grid dataframe
+# grid$logistic_pred <- ...
+# grid$knn_pred <- ...
+
+# Your code here:
+# grid$logistic_pred <- 
+# grid$knn_pred <- 
+
+# Create base plot for logistic regression:
+# - Use geom_point() or geom_tile() for the grid predictions (background)
+# - Set alpha low (0.3) so grid points don't overpower data points
+# - Overlay your original data points with geom_point()
+# - Use different colors for predicted classes vs actual classes
+
+# Your code here:
+# p_logistic <- ggplot() +
+#   geom_point(data = grid, aes(x = x1, y = x2, color = logistic_pred), alpha = 0.3, size = 0.5) +
+#   geom_point(data = chosen_data, aes(x = x1, y = x2, color = class), size = 2) +
+#   labs(title = "Logistic Regression Decision Boundary") +
+#   theme_minimal() +
+#   coord_fixed()
+
+# Create similar plot for k-NN
+# Your code here:
+# p_knn <- 
+
+# Use grid.arrange() to display side by side
+# Your code here:
+# grid.arrange(p_logistic, p_knn, ncol = 2)
+
+```
+
+**Visualization Options:**
+- `geom_point()` with small size and low alpha for grid
+- `geom_tile()` for smoother decision regions
+- Use `scale_color_manual()` for consistent colors between plots
+
+**Think about**: How do you distinguish between predicted regions (background) and actual data points?
+
+---
+
+#### Step 5: Compare and Analyze
+```{r step5}
+# Calculate where methods disagree:
+# disagreements <- sum(grid$logistic_pred != grid$knn_pred)
+# disagreement_rate <- disagreements / nrow(grid)
+
+# Your code here:
+# disagreements <- 
+# disagreement_rate <- 
+
+# Print analysis
+# cat("Methods disagree on", disagreements, "out of", nrow(grid), "grid points\n")
+# cat("Disagreement rate:", round(disagreement_rate * 100, 1), "%\n")
+
+# Create analysis comments about:
+# - Boundary shape differences (linear vs flexible)
+# - Which method captures the true pattern better
+# - Computational complexity differences
+# - Overfitting vs underfitting tendencies
+
+```
+
+**Analysis Questions to Address:**
+1. How do the boundary shapes differ between methods?
+2. Which method better captures the underlying pattern?
+3. Where do the methods disagree most?
+4. What does this tell you about each algorithm's assumptions?
+
+**Your analysis here:**
+
+---
+
+## Reflection and Analysis (5 minutes)
+
+Based on your results, answer these questions:
+
+1. **Pattern Dependency**: Which patterns favor k-NN vs logistic regression? Why?
+
+2. **Flexibility Trade-off**: What do you notice about k-NN's ability to capture complex boundaries vs logistic regression's simplicity?
+
+3. **Practical Considerations**: 
+   - When would you choose k-NN over logistic regression in practice?
+   - What are the computational trade-offs?
+
+4. **Scaling Impact**: Calculate the percentage improvement from scaling in Part 2. Why was it so dramatic?
+
+5. **Model Selection Challenge**: If you had to choose ONE method for each pattern type (linear, circular, XOR), what would you choose and why?
+
+**Advanced Challenge**: What do you think would happen if you had 1000 features but only 50 observations? Test this hypothesis if time permits.
+
+---
+
+*You've now experienced the power and limitations of k-NN compared to parametric methods. Understanding when each method excels is crucial for real-world machine learning success!*
