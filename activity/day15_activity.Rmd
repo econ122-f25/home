@@ -1,0 +1,358 @@
+---
+title: "Day 15: Single Decision Trees - Wage Prediction"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+**Self-Directed In-Class Activity (50 minutes)**  
+**Theme:** Building Your First Prediction Model
+
+---
+
+## Learning Objectives
+
+By the end of this activity, you will:
+
+- Understand how decision trees partition the predictor space
+- Build and visualize decision trees using `rpart`
+- Identify the most important variables for predictions
+- Explore how tree parameters affect model complexity
+- Recognize the interpretability advantage and limitations of single trees
+
+---
+
+## Scenario
+
+You're a data scientist for a labor economics research firm. Your task is to build an initial model that predicts hourly wages based on worker characteristics like age, education level, job type, and health insurance status.
+
+**Your boss wants:** A model that's easy to explain to policy makers and HR professionals - they need to understand WHICH factors drive wages and by how much.
+
+---
+
+## Part 1: Data Exploration (10 minutes)
+
+Before building any model, let's understand our data!
+
+### Task 1.1: Load and Examine the Data
+
+```{r load-data}
+# Load required packages
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+library(ISLR2)
+
+# Load the Wage dataset
+data(Wage)
+
+# YOUR CODE: Look at the first few rows
+
+
+# YOUR CODE: Check the structure of the data
+
+
+# YOUR CODE: Get summary statistics for all variables
+
+
+# YOUR CODE: How many observations and variables do we have?
+
+```
+
+### Task 1.2: Explore the Outcome Variable
+
+```{r explore-wage}
+# YOUR CODE: Create a histogram of wage
+# Use breaks = 50 for more detail
+# Add appropriate title and labels
+
+
+# YOUR CODE: Calculate key statistics for wage
+# Mean, median, min, max, standard deviation
+
+
+# YOUR CODE: What percentage of workers earn more than $150/hour?
+
+
+# YOUR CODE: Create a boxplot of wage
+# HINT: Use boxplot() or ggplot with geom_boxplot()
+
+```
+
+**Questions:**
+
+- Is the wage distribution normal or skewed?
+- Are there outliers? Should we be concerned about them?
+- What's a typical wage in this dataset?
+
+### Task 1.3: Explore Relationships with Predictors
+
+```{r explore-relationships}
+# YOUR CODE: Create boxplots of wage by education level
+# HINT: Use boxplot(wage ~ education, data = Wage) or ggplot
+
+
+# YOUR CODE: Create a scatterplot of wage vs age
+# Add a smooth trend line
+
+
+# YOUR CODE: Create boxplots of wage by jobclass
+
+
+# YOUR CODE: Calculate mean wage by education level
+# HINT: Use group_by() and summarize()
+
+```
+
+**Questions:**
+
+- Which education level has the highest average wage?
+- Is the relationship between age and wage linear?
+- Does job class (Industrial vs Information) matter?
+
+---
+
+## Part 2: Build Your First Decision Tree (10 minutes)
+
+### Task 2.1: Create Train/Test Split
+
+```{r train-test-split}
+# YOUR CODE: Set seed for reproducibility
+set.seed(2024)
+
+# YOUR CODE: Create a 50/50 train/test split
+# Hint: Use sample() to create row indices
+
+
+# YOUR CODE: Create training and test datasets
+
+
+# YOUR CODE: Check how many observations are in each set and confirm the 50/50 split
+
+```
+
+### Task 2.2: Build a Moderate Complexity Tree
+
+```{r build-tree}
+# YOUR CODE: Build a regression tree for wage
+# Use predictors: age, education, jobclass, health_ins, maritl
+# Set cp = 0.01 (complexity parameter) for moderate pruning
+# Set maxdepth = 5 to limit tree depth
+
+
+# YOUR CODE: Print the tree summary
+
+```
+
+### Task 2.3: Visualize Your Tree
+
+```{r visualize-tree}
+# YOUR CODE: Create a nice plot of your tree using rpart.plot
+# Use extra = 1 to show number of observations
+# Add a title
+
+
+# YOUR CODE: How many terminal nodes (leaves) does your tree have?
+# Hint: Count rows where frame$var == "<leaf>"
+
+```
+
+**Questions:**
+
+- What is the first split in the tree? Why might this be chosen first?
+- How many terminal nodes (leaves) does your tree have?
+- Can you trace one decision path from root to a leaf?
+
+---
+
+## Part 3: Evaluate Your Model (10 minutes)
+
+### Task 3.1: Make Predictions
+
+```{r make-predictions}
+# YOUR CODE: Make predictions on training data
+
+
+# YOUR CODE: Make predictions on test data
+
+```
+
+### Task 3.2: Calculate Performance Metrics
+
+```{r calculate-metrics}
+# YOUR CODE: Calculate training MSE (Mean Squared Error)
+
+
+# YOUR CODE: Calculate test MSE
+
+
+# YOUR CODE: Calculate training R-squared
+# R-squared = 1 - (RSS / TSS)
+# RSS = sum of squared residuals = sum((actual - predicted)^2)
+# TSS = total sum of squares = sum((actual - mean(actual))^2)
+
+
+# YOUR CODE: Calculate test R-squared
+
+```
+
+**Questions:**
+
+- Is there a big difference between training and test MSE? What might this indicate?
+- What does the test MSE value mean in practical terms?
+- How well does the model explain the variation in wages based on the R² value?
+
+### Task 3.3: Visualize Predictions
+
+```{r visualize-predictions}
+# YOUR CODE: Create a scatter plot of actual vs predicted wages on TEST data
+# Add a 45-degree line (perfect predictions)
+# Add appropriate labels and title
+
+```
+
+**Questions:**
+
+- Are there systematic errors (e.g., underpredicting high wages)?
+- For which wage ranges does the model perform best?
+
+---
+
+## Part 4: Experiment with Tree Complexity (10 minutes)
+
+### Task 4.1: Build a Deep (Complex) Tree
+
+```{r deep-tree}
+# YOUR CODE: Build a very deep tree
+# Set cp = 0.001 (allow more splits)
+# Set maxdepth = 10
+
+
+# YOUR CODE: Plot the deep tree
+
+
+# YOUR CODE: Calculate test MSE for deep tree
+
+
+# YOUR CODE: Calculate test R-squared for deep tree
+
+```
+
+### Task 4.2: Build a Shallow (Simple) Tree
+
+```{r shallow-tree}
+# YOUR CODE: Build a very shallow tree
+# Set cp = 0.05 (fewer splits allowed)
+# Set maxdepth = 3
+
+
+# YOUR CODE: Plot the shallow tree
+
+
+# YOUR CODE: Calculate test MSE for shallow tree
+
+
+# YOUR CODE: Calculate test R-squared for shallow tree
+
+```
+
+### Task 4.3: Compare Tree Complexities
+
+```{r compare-trees}
+# YOUR CODE: Create a comparison table of:
+# - Number of leaves
+# - Training MSE
+# - Test MSE
+# - Test R-squared
+# For all three trees (moderate, deep, shallow)
+
+```
+
+**Questions:**
+
+- Which tree has the best test performance?
+- Does the deepest tree have the best test performance? Why or why not?
+- At what age do predictions change?
+- How realistic are these step functions?
+
+---
+
+## Part 5: Interpretation and Reflection (10 minutes)
+
+### Task 5.1: Extract Variable Importance
+
+```{r variable-importance}
+# YOUR CODE: Get variable importance from your moderate tree
+# Use tree_model$variable.importance
+
+
+# YOUR CODE: Create a bar plot of variable importance
+# Sort variables by importance
+# Use horizontal bars (barplot with horiz = TRUE)
+
+```
+
+**Questions:**
+
+- Which variable is most important?
+- Does this surprise you based on your EDA?
+- Why might some variables not appear in importance?
+
+### Task 5.2: Extract Decision Rules
+
+```{r decision-rules}
+# YOUR CODE: Print the tree rules in text format
+# Use print() on your tree object
+
+
+# YOUR CODE: Write out 2-3 example decision rules in plain English
+# Example: "If education is Advanced Degree, predict $X per hour"
+
+```
+
+### Task 5.3: Strengths and Weaknesses Analysis
+
+**Your Task:** Write a brief report (bullet points) answering:
+
+1. **What are the key predictors of wage according to your tree?**
+   - YOUR ANSWER:
+
+2. **What are 3 strengths of using a decision tree for this problem?**
+   - Strength 1:
+   - Strength 2:
+   - Strength 3:
+
+3. **What are 3 limitations you observed?**
+   - Limitation 1:
+   - Limitation 2:
+   - Limitation 3:
+
+4. **Would you recommend deploying this model? Why or why not?**
+   - YOUR ANSWER:
+
+---
+
+## Reflection Questions
+
+**For Discussion or Written Response:**
+
+1. **Interpretability vs. Accuracy**: Based on your tree's R² value, is this model good enough for making policy decisions?
+
+2. **The Variance Problem**: Run your tree code with set.seed(123) instead of 2024. How different is the resulting tree?
+
+3. **Missing Patterns**: Look at your residual plots. What patterns do you see that the tree is missing?
+
+4. **Real-World Application**: What ethical concerns might arise from wage prediction?
+
+---
+
+## Key Takeaways
+
+After completing this activity, you should understand:
+
+✓ How to explore data before modeling  
+✓ How decision trees make predictions through binary splits  
+✓ How to evaluate model performance with multiple metrics  
+✓ How tree complexity affects overfitting  
+✓ The interpretability advantage of trees  
+✓ The high variance limitation of single trees

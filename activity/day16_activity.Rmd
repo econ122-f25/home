@@ -1,0 +1,404 @@
+---
+title: "Day 16: Pruning Decision Trees with Cross-Validation"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+**Self-Directed In-Class Activity (50 minutes)**  
+**Theme:** Finding the Optimal Tree Complexity
+
+---
+
+## Learning Objectives
+
+By the end of this activity, you will:
+
+- Understand the bias-variance tradeoff in tree complexity
+- Use cross-validation to select optimal tree complexity
+- Prune decision trees using the complexity parameter (cp)
+- Visualize and interpret cross-validation results
+- Build a final optimized decision tree model
+
+---
+
+## Recap from Day 15
+
+Yesterday, you built decision trees and discovered:
+
+- **Deep trees** (low cp, high maxdepth) tend to **overfit** the training data
+- **Shallow trees** (high cp, low maxdepth) might **underfit** and miss important patterns
+- Single trees have **high variance** - small changes in data lead to different trees
+
+**Today's Question:** How do we find the "just right" tree complexity?
+
+**Answer:** Cross-validation + Pruning!
+
+---
+
+## Part 1: Understanding Tree Complexity (10 minutes)
+
+### Task 1.1: Load Data and Build an Unpruned Tree
+
+```{r setup}
+# Load required packages
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+library(ISLR2)
+
+# Load the Wage dataset
+data(Wage)
+
+# Set seed for reproducibility
+set.seed(2024)
+
+# Create 50/50 train/test split
+train_indices <- sample(1:nrow(Wage), size = nrow(Wage) * 0.5)
+wage_train <- Wage[train_indices, ]
+wage_test <- Wage[-train_indices, ]
+
+# YOUR CODE: Build a very complex (unpruned) tree
+# Set cp = 0 (no pruning at all)
+# Use predictors: age, education, jobclass, health_ins, maritl
+
+
+# YOUR CODE: Print the complexity parameter table
+# Use printcp() function
+
+
+# YOUR CODE: Plot the tree
+# How many leaves does it have?
+
+```
+
+**Questions:**
+
+- How many terminal nodes (leaves) does this unpruned tree have?
+- Does this tree look interpretable?
+- Do you think this tree is overfitting? Why or why not?
+
+### Task 1.2: Examine the CP Table
+
+```{r examine-cp}
+# YOUR CODE: Look at the cp table more carefully
+# What does each column mean?
+# - CP: complexity parameter
+# - nsplit: number of splits
+# - rel error: relative error (training error)
+# - xerror: cross-validation error
+# - xstd: standard deviation of xerror
+
+
+# YOUR CODE: Which row has the minimum xerror?
+# This is often our best tree size!
+
+```
+
+**Questions:**
+
+- As the number of splits increases, what happens to the training error (rel error)?
+- What happens to the cross-validation error (xerror)?
+- At what point does xerror start increasing? What does this suggest?
+
+---
+
+## Part 2: Visualizing Cross-Validation Results (10 minutes)
+
+### Task 2.1: Plot CV Error vs Tree Size
+
+```{r plot-cv-error}
+# YOUR CODE: Plot the CP table using plotcp()
+# This shows xerror vs tree size
+
+
+# YOUR CODE: Extract the CP value with minimum xerror
+# Hint: Look at the cp table and find the row with min(xerror)
+
+
+# YOUR CODE: Extract the CP value using the 1-SE rule
+# The 1-SE rule chooses the simplest model within 1 std error of the minimum
+# This is typically: min(xerror) + xstd at the minimum
+
+```
+
+**Questions:**
+
+- What is the optimal CP value based on minimum xerror?
+- What is the optimal CP value using the 1-SE rule?
+- Why might we prefer the 1-SE rule over just choosing the minimum?
+- For this activity, we'll use the minimum xerror approach, but it's good to know both methods!
+
+### Task 2.2: Understanding the 1-SE Rule
+
+The **1-SE rule** is a heuristic that says:
+
+*"Choose the simplest model whose error is within 1 standard error of the best model."*
+
+**Why?**
+
+- Cross-validation error estimates have uncertainty
+- A simpler model with similar CV error is often better
+- Reduces overfitting and improves interpretability
+- More stable predictions on new data
+
+**Note:** For this activity, we'll use the minimum CV error approach (simpler to implement), but it's valuable to understand both methods!
+
+```{r visualize-1se}
+# YOUR CODE: Create a custom plot showing:
+# - CP on x-axis (or number of splits)
+# - xerror on y-axis
+# - Error bars showing +/- xstd
+# - Horizontal line at min(xerror)
+# - Horizontal line at min(xerror) + 1 SE
+# - Mark both the min xerror CP and the 1-SE rule CP
+
+```
+
+---
+
+## Part 3: Pruning the Tree (10 minutes)
+
+### Task 3.1: Prune Using Optimal CP
+
+```{r prune-tree}
+# YOUR CODE: Prune the tree using the CP with minimum xerror
+# Use prune() function with cp = [your optimal cp from min xerror]
+
+
+# YOUR CODE: Plot the pruned tree
+
+
+# YOUR CODE: How many leaves does the pruned tree have?
+# Compare this to the unpruned tree
+
+```
+
+**Questions:**
+
+- How many splits were removed by pruning?
+- Does the pruned tree look more interpretable?
+- Which variables remain in the pruned tree?
+
+### Task 3.2: Alternative - Build Tree with Optimal CP
+
+Instead of building then pruning, we can build the tree directly with the optimal cp:
+
+```{r build-optimal-tree}
+# YOUR CODE: Build a new tree using the optimal cp with minimum xerror
+# Set cp = [your optimal cp from min xerror]
+# This should give the same result as pruning
+
+
+# YOUR CODE: Verify this matches your pruned tree
+# Compare number of leaves and structure
+
+```
+
+---
+
+## Part 4: Compare Performance (10 minutes)
+
+### Task 4.1: Evaluate Unpruned vs Pruned Trees
+
+```{r compare-performance}
+# YOUR CODE: Make predictions with unpruned tree on test data
+
+
+# YOUR CODE: Make predictions with pruned tree on test data
+
+
+# YOUR CODE: Calculate test MSE for unpruned tree
+
+
+# YOUR CODE: Calculate test MSE for pruned tree
+
+
+# YOUR CODE: Calculate test R-squared for unpruned tree
+
+
+# YOUR CODE: Calculate test R-squared for pruned tree
+
+
+# YOUR CODE: Create a comparison table with:
+# - Model name (unpruned vs pruned)
+# - Number of leaves
+# - Training MSE
+# - Test MSE
+# - Test R-squared
+
+```
+
+**Questions:**
+
+- Which model performs better on the test set?
+- Is the difference in test MSE substantial?
+- Did we sacrifice much accuracy by pruning?
+- Which model would you prefer to present to stakeholders? Why?
+
+### Task 4.2: Visualize Predictions
+
+```{r compare-predictions}
+# YOUR CODE: Create a scatter plot with:
+# - Test set actual wages on x-axis
+# - Predicted wages on y-axis
+# - Different colors for unpruned vs pruned predictions
+# - 45-degree reference line
+
+
+# YOUR CODE: Calculate the difference in predictions
+# For each observation, compute: |unpruned_pred - pruned_pred|
+# What is the mean absolute difference?
+# What is the maximum difference?
+
+```
+
+**Questions:**
+
+- Are the predictions from pruned vs unpruned trees very different?
+- For which observations do they differ most?
+- Does this give you confidence in the pruned model?
+
+---
+
+## Part 5: Building Your Final Model (10 minutes)
+
+### Task 5.1: Full Workflow with Different Seeds
+
+To test stability, let's run the entire workflow with different random seeds:
+
+```{r test-stability}
+# Function to build and evaluate a pruned tree with a given seed
+evaluate_tree <- function(seed_value) {
+  set.seed(seed_value)
+  
+  # Split data
+  train_idx <- sample(1:nrow(Wage), size = nrow(Wage) * 0.5)
+  train <- Wage[train_idx, ]
+  test <- Wage[-train_idx, ]
+  
+  # Build tree with low cp to get full tree
+  tree_full <- rpart(wage ~ age + education + jobclass + health_ins + maritl,
+                     data = train, method = "anova",
+                     control = rpart.control(cp = 0))
+  
+  # Get optimal cp using minimum xerror
+  cp_table <- tree_full$cptable
+  min_row <- which.min(cp_table[, "xerror"])
+  optimal_cp <- cp_table[min_row, "CP"]
+  
+  # Prune tree
+  tree_pruned <- prune(tree_full, cp = optimal_cp)
+  
+  # Evaluate
+  pred_test <- predict(tree_pruned, test)
+  test_mse <- mean((test$wage - pred_test)^2)
+  n_leaves <- sum(tree_pruned$frame$var == "<leaf>")
+  
+  return(list(
+    seed = seed_value,
+    n_leaves = n_leaves,
+    test_mse = test_mse,
+    optimal_cp = optimal_cp
+  ))
+}
+
+# YOUR CODE: Run the function with seeds: 2024, 123, 456, 789, 2025
+
+
+# YOUR CODE: Create a data frame of results and examine them
+
+```
+
+**Questions:**
+
+- How consistent is the optimal CP across different seeds?
+- How consistent is the number of leaves?
+- How consistent is the test MSE?
+- Is pruning helping with the variance problem?
+
+### Task 5.2: Final Model Selection
+
+```{r final-model}
+# YOUR CODE: Using seed 2024, build your final pruned model
+set.seed(2024)
+
+# Recreate the train/test split
+
+
+# Build full tree with cp = 0
+
+
+# Get optimal cp (minimum xerror)
+
+
+# Create final pruned tree
+
+
+# YOUR CODE: Create a professional visualization of your final tree
+
+
+# YOUR CODE: Extract and display variable importance
+
+
+# YOUR CODE: Print final model statistics:
+# - Number of leaves
+# - Training MSE and R-squared  
+# - Test MSE and R-squared
+
+```
+
+### Task 5.3: Write Your Model Report
+
+**Your Task:** Summarize your final model:
+
+1. **Model Description:**
+   - Number of terminal nodes:
+   - Key splitting variables:
+   - Optimal CP value:
+
+2. **Performance Metrics:**
+   - Test MSE:
+   - Test R²:
+   - How does this compare to your unpruned tree from Day 15?
+
+3. **Interpretation:**
+   - What are the 2-3 most important predictors?
+   - Write out one complete decision rule from root to leaf
+   - Is this model easier to explain than the unpruned tree?
+
+4. **Recommendation:**
+   - Would you deploy this model? Why or why not?
+   - What improvements would you suggest for future iterations?
+
+---
+
+## Reflection Questions
+
+**For Discussion or Written Response:**
+
+1. **Cross-Validation Benefits**: How does cross-validation help us avoid overfitting compared to just looking at training error?
+
+2. **The 1-SE Rule**: We learned about the 1-SE rule but used minimum CV error for this activity. What are the tradeoffs between these two approaches? When might you prefer one over the other?
+
+3. **Pruning vs Building**: We learned two approaches - (a) build a full tree then prune, vs (b) build with optimal cp (from min xerror) from the start. Which do you prefer and why?
+
+4. **Interpretability Gains**: Compare your Day 16 pruned tree to your Day 15 unpruned tree. Is the pruned tree substantially easier to explain to non-technical stakeholders?
+
+5. **Remaining Limitations**: Even with pruning and CV, single decision trees still have high variance. What might we do to address this further? (Hint: Think about using multiple trees...)
+
+---
+
+## Key Takeaways
+
+After completing this activity, you should understand:
+
+✓ How to use cross-validation to select optimal tree complexity  
+✓ The meaning and use of the complexity parameter (cp)  
+✓ How to prune decision trees to prevent overfitting  
+✓ Understanding both minimum CV error and 1-SE rule approaches  
+✓ How to compare model performance systematically  
+✓ How pruning improves interpretability without sacrificing much accuracy  
+✓ That even pruned trees still have variance - motivating ensemble methods!
+
+**Looking ahead:** We've optimized a single tree, but single trees are still unstable. Next, we'll learn how to combine MANY trees to reduce variance (bagging and random forests) and bias (boosting)!
