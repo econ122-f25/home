@@ -31,7 +31,7 @@ References:
 - [Problem Set 2](https://classroom.github.com/a/GRFxBibn) (due **09/26**) [[Solutions](ps/ps2_sol.html)]
 - [Problem Set 3](https://classroom.github.com/a/hggzh6-a) (due **10/24**)
 - [Problem Set 4](https://classroom.github.com/a/IoRETG7H) (due **11/07**)
-- [Team Project 2]() (due **11/14**)
+- [Team Project 2](https://classroom.github.com/a/RT9EUgiQ) (due **11/14**)
 - [Problem Set 5]() (due **11/21**)
 
 ------------------------------------------------------------------------
@@ -157,6 +157,7 @@ References:
   -   day 15 [slides](slides/day15.html){:target="_blank"}, [activity](activity/day15_activity.Rmd), [solutions](activity/sol/day15_activity_sol.html)
   
 **Wednesday** (pruning)
+  -   [TP2](https://github.com/econ122/tp2) explanation
   -   day 16 [slides](slides/day16.html){:target="_blank"}, [activity](activity/day16_activity.Rmd), [solutions](activity/sol/day16_activity_sol.html)
 
 ------------------------------------------------------------------------
