@@ -3447,23 +3447,31 @@ test_mse &lt;- mean((test_predictions - hitters_test$Salary)^2)</pre>
 <li><code>rpart.plot()</code> for advanced visualization</li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Next Steps and Preview</h2></hgroup><article  id="next-steps-and-preview" class="smaller ">
+</article></slide><slide class=""><hgroup><h2>If Pruning Solves Overfitting, Are We Done?</h2></hgroup><article  id="if-pruning-solves-overfitting-are-we-done" class="smaller ">
 
-<p><strong>What We Accomplished Today:</strong></p>
+<p><strong>Unfortunately, No!</strong> Even optimally pruned trees have significant limitations:</p>
+
+<p><strong>The Core Problem: High Variance</strong></p>
 
 <ul>
-<li>Understood cost complexity pruning theory</li>
-<li>Applied cross-validation for tree selection</li>
-<li>Mastered advanced visualization techniques</li>
-<li>Learned practical pruning with Hitters data</li>
+<li><strong>Instability:</strong> Small changes in training data → completely different tree structure</li>
+<li><strong>Example:</strong> Remove just 5 observations and you might get a totally different optimal tree!</li>
+<li><strong>Low Reliability:</strong> Hard to trust predictions when the model is so unstable</li>
 </ul>
 
-<p><strong>Coming Up:</strong></p>
+<p><strong>Other Limitations of Single Trees:</strong></p>
 
 <ul>
-<li><strong>Day 17:</strong> Bagging and Random Forests</li>
-<li><strong>Day 18:</strong> Boosting and Gradient Boosting</li>
-</ul></article></slide>
+<li><strong>Accuracy Ceiling:</strong> Even the best pruned tree may not predict as well as we need</li>
+<li><strong>Binary Splits Only:</strong> Trees struggle with smooth, continuous relationships</li>
+<li><strong>Limited by Single Model:</strong> We’re putting all our eggs in one basket</li>
+</ul>
+
+<p><strong>The Big Question:</strong> Can we keep the interpretability benefits of trees while improving their predictive accuracy and stability?</p>
+
+<p><strong>Good News:</strong> Yes! We just need to think differently about how to use trees…</p>
+
+<p><strong>Coming Up:</strong> Methods that dramatically improve tree performance while maintaining their core strengths!</p></article></slide>
 
 
   <slide class="backdrop"></slide>
