@@ -24,7 +24,7 @@ By the end of this activity, you will:
 
 ## Recap from Day 15
 
-Yesterday, you built decision trees and discovered:
+Last class, you built decision trees and discovered:
 
 - **Deep trees** (low cp, high maxdepth) tend to **overfit** the training data
 - **Shallow trees** (high cp, low maxdepth) might **underfit** and miss important patterns
