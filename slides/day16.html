@@ -3403,7 +3403,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 </article></slide><slide class=""><hgroup><h2>Pruning in Practice: Step-by-Step</h2></hgroup><article  id="pruning-in-practice-step-by-step" class="smaller ">
 
 <pre class = 'prettyprint lang-r'># Step 1: Build initial tree
-my_tree &lt;- rpart(Salary ~ . - LogSalary, data = hitters_train, method = &quot;anova&quot;)
+my_tree &lt;- rpart(Salary ~ . , data = hitters_train, method = &quot;anova&quot;)
 
 # Step 2: Examine cross-validation results
 plotcp(my_tree)
