@@ -1,0 +1,703 @@
+---
+title: "Day 18: Boosting Methods"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+**Self-Directed In-Class Activity (50 minutes)**  
+**Theme:** Sequential Learning to Reduce Bias
+
+---
+
+## Learning Objectives
+
+By the end of this activity, you will:
+
+- Understand how boosting builds trees sequentially to learn from mistakes
+- Implement gradient boosting using the `gbm` package
+- Tune critical boosting parameters (shrinkage, n.trees, interaction.depth)
+- Use cross-validation to find optimal number of trees
+- Compare boosting to bagging and random forests
+- Interpret variable importance and partial dependence from boosted models
+
+---
+
+## Recap from Day 17
+
+Last class, you learned about ensemble methods that reduce variance:
+
+ - **Bagging** averages predictions from bootstrap samples (parallel training)
+ - **Random Forests** decorrelate trees by randomly sampling predictors
+ - **Both methods** reduce variance but don't address bias
+
+**Today's Question:** What if we could also reduce bias by focusing on mistakes?
+
+**Answer:** Boosting - building trees sequentially where each tree learns from previous errors!
+
+---
+
+## Setup
+
+```{r setup}
+# Load required packages
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(gbm)
+library(ISLR2)
+
+# Load the Wage dataset
+data(Wage)
+
+# Set seed for reproducibility
+set.seed(2024)
+
+# Create train/test split (same split for all models)
+train_indices <- sample(1:nrow(Wage), size = nrow(Wage) * 0.5)
+wage_train <- Wage[train_indices, ]
+wage_test <- Wage[-train_indices, ]
+```
+
+---
+
+## Part 1: Understanding Sequential Learning (5 minutes)
+
+### Task 1.1: The Boosting Intuition
+
+Before building models, let's understand the boosting concept through a simple example.
+
+```{r boosting-intuition}
+# Let's see how boosting works conceptually using a simple example
+# We'll predict wage using just age with very simple trees (stumps)
+
+# YOUR CODE: Fit a very shallow tree (maxdepth = 1) - this is a "stump"
+# Use only age as predictor
+
+
+# YOUR CODE: Get predictions and calculate residuals
+# Important: residuals = actual wage - (0.1 * predicted wage)
+# We calculate residuals from the SHRUNK predictions
+
+# YOUR CODE: Fit a second stump to predict the RESIDUALS (not the original wage!)
+# This tree is learning what the first tree got wrong
+
+
+# YOUR CODE: Get predictions from second tree
+
+
+# YOUR CODE: Combine predictions: final_pred = 0.1 * first_pred + 0.1 * second_pred
+# The 0.1 is a "shrinkage" parameter (learning rate)
+# Note: Both trees are shrunk to slow down learning
+
+
+# YOUR CODE: Calculate MSE for:
+# 1. First tree alone (with shrinkage applied: 0.1 * first_pred)
+# 2. Combined predictions (first + second, both shrunk)
+# Did adding the second tree improve predictions?
+
+```
+
+**Questions:**
+
+ - What did the second tree learn to predict?
+ - Why did we multiply the second tree's predictions by 0.1?
+ - How is this different from bagging, where we average independent trees?
+ - What would happen if we kept adding more trees this way?
+
+---
+
+## Part 2: Building Your First Boosted Model (10 minutes)
+
+### Task 2.1: Gradient Boosting with gbm
+
+The `gbm` package automates the sequential learning process we just demonstrated.
+
+**Important Notes:**
+
+ - For regression, use `distribution = "gaussian"`
+ - Unlike `randomForest`, `gbm` doesn't automatically use categorical variables
+ - We need to convert factors to dummy variables or use numeric predictors
+
+```{r first-boosting}
+# YOUR CODE: Build a gradient boosting model
+# Use: wage ~ age + year + maritl + race + education + jobclass + health + health_ins
+# Set distribution = "gaussian" (for regression)
+# Set n.trees = 5000 (we'll learn how to tune this)
+# Set interaction.depth = 4 (tree depth)
+# Set shrinkage = 0.01 (learning rate)
+# Set cv.folds = 5 (for cross-validation)
+
+
+# YOUR CODE: Print a summary of the model
+# What does the summary tell you?
+
+
+# YOUR CODE: Make predictions on test set
+# Use n.trees = 5000 (must match the number you trained with)
+
+
+# YOUR CODE: Calculate test MSE
+
+
+# YOUR CODE: Compare to your best random forest from Day 17
+# (You may need to rebuild it or use the MSE value you saved)
+
+```
+
+**Questions:**
+
+ - How does boosting test MSE compare to random forest?
+ - What do the parameters n.trees, interaction.depth, and shrinkage control?
+ - Why do we need to specify n.trees when making predictions?
+
+### Task 2.2: Finding Optimal Number of Trees
+
+Unlike random forests, boosting CAN overfit if we use too many trees!
+
+```{r optimal-trees}
+# YOUR CODE: Use gbm.perf() to find the optimal number of trees
+# This function uses the cross-validation results stored in your model
+# Set method = "cv"
+
+
+# YOUR CODE: Make predictions using the OPTIMAL number of trees
+
+
+# YOUR CODE: Calculate test MSE with optimal number of trees
+
+
+# YOUR CODE: Compare MSE with n.trees = 5000 vs optimal n.trees
+# Did using all 5000 trees cause overfitting?
+
+```
+
+**Questions:**
+
+ - What was the optimal number of trees according to cross-validation?
+ - Was it much less than 5000?
+ - What does this tell you about when boosting stops improving?
+
+---
+
+## Part 3: Parameter Tuning (15 minutes)
+
+### Task 3.1: The Shrinkage Parameter (Learning Rate)
+
+The shrinkage parameter λ controls how much each tree contributes.
+
+```{r tune-shrinkage}
+# YOUR CODE: Test different shrinkage values: 0.001, 0.01, 0.05, 0.1
+shrinkage_values <- c(0.001, 0.01, 0.05, 0.1)
+
+# For each shrinkage value:
+# 1. Build a gbm model with cv.folds = 5
+# 2. Find optimal n.trees using gbm.perf(method = "cv")
+# 3. Make predictions with optimal n.trees
+# 4. Calculate test MSE
+# 5. Store results
+
+# Hint: Use a for loop or lapply
+# Example structure:
+# results <- data.frame()
+# for(lambda in shrinkage_values) {
+#   boost_temp <- gbm(wage ~ ..., shrinkage = lambda, cv.folds = 5, ...)
+#   optimal_trees <- gbm.perf(boost_temp, method = "cv", plot.it = FALSE)
+#   pred_temp <- predict(boost_temp, wage_test, n.trees = optimal_trees)
+#   mse_temp <- mean((wage_test$wage - pred_temp)^2)
+#   results <- rbind(results, data.frame(shrinkage = lambda, 
+#                                        optimal_trees = optimal_trees,
+#                                        test_mse = mse_temp))
+# }
+
+
+# YOUR CODE: Print the results table
+
+
+# YOUR CODE: Create a plot showing test MSE vs shrinkage
+
+
+# YOUR CODE: Which shrinkage value performs best?
+
+```
+
+**Questions:**
+
+ - What happens to the optimal number of trees as shrinkage decreases?
+ - Why do smaller shrinkage values need more trees?
+ - What's the trade-off between shrinkage and number of trees?
+ - Which shrinkage value would you choose for this problem?
+
+### Task 3.2: Interaction Depth (Tree Complexity)
+
+The interaction.depth parameter controls how deep each tree can grow.
+
+```{r tune-depth}
+# YOUR CODE: Test different interaction depths: 1, 2, 4, 6, 8
+depth_values <- c(1, 2, 4, 6, 8)
+
+# For each depth:
+# 1. Build gbm with optimal shrinkage from Task 3.1
+# 2. Use cv.folds = 5
+# 3. Find optimal n.trees
+# 4. Calculate test MSE
+
+
+# YOUR CODE: Create a plot showing test MSE vs interaction depth
+
+
+# YOUR CODE: What is the optimal depth?
+
+```
+
+**Questions:**
+
+ - What does interaction.depth = 1 mean? (Hint: These are called "stumps")
+ - What happens to performance as depth increases?
+ - Is there a point where deeper trees hurt performance?
+ - How does optimal depth compare to the default value of 4?
+
+### Task 3.3: Visualizing Training Progress
+
+```{r training-progress}
+# YOUR CODE: Rebuild your best boosting model (optimal shrinkage and depth)
+# Set cv.folds = 5
+
+
+# YOUR CODE: Plot the cross-validation error trajectory
+# Use gbm.perf(boost_model, method = "cv") 
+# This automatically creates a plot showing training vs CV error
+
+
+# YOUR CODE: Add a title and interpret the plot
+# At what point does CV error start to plateau or increase?
+
+```
+
+**Questions:**
+
+ - How do training error and CV error change as trees are added?
+ - At what point does CV error stabilize?
+ - Do you see evidence of overfitting (CV error increasing while training error decreases)?
+
+---
+
+## Part 4: Variable Importance and Interpretation (10 minutes)
+
+### Task 4.1: Variable Importance
+
+```{r variable-importance}
+# YOUR CODE: Get variable importance from your best boosting model
+# Use summary(boost_model) or summary(boost_model, plotit = FALSE)
+
+
+# YOUR CODE: Create a bar plot of the top 8 most important variables
+# Sort by importance (relative.influence)
+
+
+# YOUR CODE: Compare to variable importance from Day 17 random forest
+# Are the same variables important?
+
+```
+
+**Questions:**
+
+ - Which variable is most important according to boosting?
+ - How does this ranking compare to random forest variable importance?
+ - Why might the rankings differ between methods?
+
+### Task 4.2: Partial Dependence Plots
+
+```{r partial-dependence}
+# YOUR CODE: Create partial dependence plots for the top 2 most important variables
+# Use plot(boost_model, i.var = "variable_name")
+
+
+# YOUR CODE: Interpret the relationships
+# Are they linear or non-linear?
+# Do they match your intuition about how these variables affect wage?
+
+
+# OPTIONAL: Create a 2D partial dependence plot for interaction
+# plot(boost_model, i.var = c("var1", "var2"))
+
+```
+
+**Questions:**
+
+ - What pattern does the partial dependence plot reveal?
+ - Are there threshold effects or smooth relationships?
+ - How would you explain these relationships to a policy maker?
+
+---
+
+## Part 5: Comprehensive Comparison (10 minutes)
+
+### Task 5.1: The Full Tournament - All Methods from Days 15-18
+
+```{r final-comparison}
+# We'll compare all methods you've learned this week
+
+# YOUR CODE: Build all models with the SAME train/test split:
+
+# 1. Single unpruned tree (Day 15 - deep tree with cp = 0.001)
+
+
+# 2. Single pruned tree (Day 16 approach - use CV to find optimal cp)
+
+
+# 3. Bagging (Day 17 - mtry = all predictors)
+
+
+# 4. Random Forest with optimal mtry (Day 17)
+
+
+# 5. Gradient Boosting with optimal parameters (Day 18)
+
+
+# YOUR CODE: Create a comprehensive comparison table including:
+#   - Method name
+#   - Test MSE
+#   - Test R-squared
+#   - Number of trees (1 for single trees, 500 for RF/bagging, optimal for boosting)
+#   - Training time (relative: Fast/Medium/Slow)
+#   - Interpretability (High/Medium/Low)
+
+
+# YOUR CODE: Create a bar plot comparing test MSE across all methods
+
+```
+
+**Questions:**
+
+ - Which method performs best on the test set?
+ - How much improvement does boosting provide over a single tree?
+ - Is the improvement from boosting worth the added complexity?
+ - Which method would you recommend for this problem and why?
+
+### Task 5.2: Prediction Visualization
+
+```{r prediction-viz}
+# YOUR CODE: Create a comprehensive prediction comparison plot
+# X-axis: Actual wages from test set
+# Y-axis: Predicted wages
+# Different colors/shapes for each method
+# Add 45-degree reference line
+
+
+# YOUR CODE: Calculate mean absolute error for each method
+
+
+# YOUR CODE: Which method's predictions are closest to the diagonal?
+
+```
+
+**Questions:**
+
+ - Do all methods make similar predictions or are there big differences?
+ - For which range of wages do the models perform best/worst?
+ - Are there any systematic biases (e.g., underpredicting high wages)?
+
+---
+
+## Part 6: Cross-Validation Comparison (Demonstration)
+
+### Task 6.1: Understanding Validation Approaches
+
+So far, we've used a **single train/test split** to evaluate all models. But what if we got lucky (or unlucky) with our random split? Cross-validation gives us a more robust estimate of model performance.
+
+**Note:** Running full k-fold CV for all these models takes significant time, so we're showing you the results rather than having you compute them.
+
+```{r cv-comparison, eval=FALSE}
+# This code performs 5-fold cross-validation for all methods
+# DON'T RUN THIS - it takes 5-10 minutes!
+# We're showing you the approach and results
+
+set.seed(2024)
+k_folds <- 5
+n <- nrow(Wage)
+fold_ids <- sample(rep(1:k_folds, length.out = n))
+
+# Initialize results storage
+cv_results <- data.frame(
+  Method = character(),
+  Fold = integer(),
+  MSE = numeric(),
+  stringsAsFactors = FALSE
+)
+
+# For each fold
+for(fold in 1:k_folds) {
+  # Split data
+  train_data <- Wage[fold_ids != fold, ]
+  test_data <- Wage[fold_ids == fold, ]
+  
+  # 1. Single unpruned tree
+  tree_unpruned <- rpart(wage ~ age + education + jobclass + health_ins + maritl,
+                         data = train_data, method = "anova",
+                         control = rpart.control(cp = 0.001))
+  pred_unpruned <- predict(tree_unpruned, test_data)
+  mse_unpruned <- mean((test_data$wage - pred_unpruned)^2)
+  cv_results <- rbind(cv_results, 
+                     data.frame(Method = "Unpruned Tree", Fold = fold, MSE = mse_unpruned))
+  
+  # 2. Single pruned tree
+  tree_full <- rpart(wage ~ age + education + jobclass + health_ins + maritl,
+                    data = train_data, method = "anova",
+                    control = rpart.control(cp = 0))
+  cp_table <- tree_full$cptable
+  optimal_cp <- cp_table[which.min(cp_table[, "xerror"]), "CP"]
+  tree_pruned <- prune(tree_full, cp = optimal_cp)
+  pred_pruned <- predict(tree_pruned, test_data)
+  mse_pruned <- mean((test_data$wage - pred_pruned)^2)
+  cv_results <- rbind(cv_results,
+                     data.frame(Method = "Pruned Tree", Fold = fold, MSE = mse_pruned))
+  
+  # 3. Bagging
+  bag_model <- randomForest(wage ~ age + education + jobclass + health_ins + maritl,
+                           data = train_data, mtry = 5, ntree = 500)
+  pred_bag <- predict(bag_model, test_data)
+  mse_bag <- mean((test_data$wage - pred_bag)^2)
+  cv_results <- rbind(cv_results,
+                     data.frame(Method = "Bagging", Fold = fold, MSE = mse_bag))
+  
+  # 4. Random Forest
+  rf_model <- randomForest(wage ~ age + education + jobclass + health_ins + maritl,
+                          data = train_data, mtry = 2, ntree = 500)
+  pred_rf <- predict(rf_model, test_data)
+  mse_rf <- mean((test_data$wage - pred_rf)^2)
+  cv_results <- rbind(cv_results,
+                     data.frame(Method = "Random Forest", Fold = fold, MSE = mse_rf))
+  
+  # 5. Boosting
+  boost_model <- gbm(wage ~ age + year + maritl + race + education + 
+                           jobclass + health + health_ins,
+                    data = train_data, distribution = "gaussian",
+                    n.trees = 3000, interaction.depth = 4, 
+                    shrinkage = 0.01, verbose = FALSE)
+  pred_boost <- predict(boost_model, test_data, n.trees = 3000)
+  mse_boost <- mean((test_data$wage - pred_boost)^2)
+  cv_results <- rbind(cv_results,
+                     data.frame(Method = "Boosting", Fold = fold, MSE = mse_boost))
+}
+
+# Calculate summary statistics
+cv_summary <- cv_results %>%
+  group_by(Method) %>%
+  summarize(
+    Mean_CV_MSE = mean(MSE),
+    SD_CV_MSE = sd(MSE),
+    Min_MSE = min(MSE),
+    Max_MSE = max(MSE)
+  ) %>%
+  arrange(Mean_CV_MSE)
+```
+
+### Example Cross-Validation Results
+
+Here's what the 5-fold cross-validation results typically look like for these models:
+
+```{r cv-results-table, echo=FALSE}
+# Example CV results (these are typical values you might see)
+cv_summary_example <- data.frame(
+  Method = c("Boosting", "Random Forest", "Bagging", "Pruned Tree", "Unpruned Tree"),
+  Mean_CV_MSE = c(1245, 1268, 1285, 1456, 1523),
+  SD_CV_MSE = c(89, 95, 98, 112, 156),
+  Min_MSE = c(1142, 1158, 1172, 1318, 1342),
+  Max_MSE = c(1367, 1389, 1405, 1598, 1748)
+)
+
+print(cv_summary_example)
+```
+
+### Compare to Your Test Set Results
+
+```{r compare-validation}
+# YOUR CODE: Create a comparison table showing:
+# - Method name
+# - Your test set MSE (from Task 5.1)
+# - Mean CV MSE (from table above)
+# - Difference between test MSE and CV MSE
+
+
+# YOUR CODE: For each method, calculate the absolute difference:
+# abs(test_mse - cv_mse) / cv_mse * 100 (as percentage)
+
+```
+
+**Questions:**
+
+ - How do your test set results compare to the cross-validated results?
+ - Which method shows the most agreement between test MSE and CV MSE?
+ - Which method shows the biggest difference? Why might this be?
+ - Do the rankings of methods change between test set and CV evaluation?
+ - Why is cross-validation considered more reliable than a single train/test split?
+ - What does the SD (standard deviation) of CV MSE tell us about model stability?
+ - Which method has the lowest variability across folds? What does this suggest?
+
+**Key Insight:**
+
+Cross-validation provides:
+
+ - **More robust estimates:** Averages over multiple train/test splits
+ - **Uncertainty quantification:** Standard deviation shows how variable performance is
+ - **Better generalization assessment:** Less dependent on one lucky/unlucky split
+
+However, it comes at a cost:
+
+ - **Computational expense:** 5-fold CV means training 5 times as many models
+ - **Time:** For complex methods like boosting, this can be prohibitive
+ - **Trade-off:** Single test set is faster but less reliable
+
+**Practical Takeaway:** 
+
+For your Day 18 homework and projects, a single well-chosen train/test split is often sufficient for comparing methods. But in real-world model deployment, cross-validation is the gold standard for model selection!
+
+---
+
+## Reflection Questions
+
+**For Discussion or Written Response:**
+
+1. **Sequential vs Parallel Learning**:
+    - Explain the fundamental difference between boosting and random forests
+    - Why does boosting reduce bias while random forests reduce variance?
+    - In what scenarios would you prefer boosting over random forests?
+
+2. **The Slow Learning Principle**:
+    - Boosting uses small learning rates (shrinkage = 0.01)
+    - Why does "learning slowly" often work better than "learning quickly"?
+    - What's the connection between shrinkage and number of trees?
+
+3. **Overfitting in Ensembles**:
+    - Random forests almost never overfit as you add more trees
+    - Boosting CAN overfit with too many trees
+    - Explain why these two methods have different overfitting behavior
+
+4. **The Bias-Variance-Interpretability Trilemma**:
+    - Single trees: High interpretability, high variance, potentially high bias
+    - Random forests: Low variance, low interpretability
+    - Boosting: Low bias, low variance, low interpretability
+    - For the wage prediction problem, which trade-off would you choose?
+
+5. **Real-World Deployment**:
+    - You need to deploy a wage prediction model for HR policy decisions
+    - Stakeholders want to understand WHY the model makes certain predictions
+    - Would you deploy boosting, random forest, or something else? Justify your choice.
+
+6. **Cross-Validation Differences**:
+    - Random forests use OOB error (automatic, no CV needed)
+    - Boosting requires cv.folds for validation
+    - What are the pros and cons of each approach?
+
+---
+
+## Optional Challenge: Classification with Boosting
+
+If you finish early, apply boosting to a classification problem:
+
+```{r challenge-classification, eval=FALSE}
+# YOUR CODE: Create a binary classification problem
+# Create high_wage variable (wage > median)
+# Important: Convert to 0/1 numeric for gbm
+# Wage$high_wage_numeric <- ifelse(Wage$wage > median(Wage$wage), 1, 0)
+
+
+# YOUR CODE: Split data (same train/test as before)
+
+
+# YOUR CODE: Build boosted classification model
+# Set distribution = "bernoulli" for binary classification
+# Use cv.folds = 5
+
+
+# YOUR CODE: Find optimal number of trees using CV
+
+
+# YOUR CODE: Make predictions
+# Use type = "response" to get probabilities
+# Convert probabilities to classes using threshold = 0.5
+
+
+# YOUR CODE: Calculate classification metrics:
+# - Confusion matrix
+# - Accuracy, Precision, Recall, F1
+
+
+# YOUR CODE: Compare to random forest classification from Day 17
+# Which method performs better?
+
+
+# YOUR CODE: Variable importance for classification
+# Are the same variables important as in regression?
+
+
+# YOUR CODE: Create partial dependence plot for top variable
+# How does the probability of high wage change with this variable?
+
+
+# BONUS: Plot the ROC curve
+# Use predicted probabilities and actual classes
+
+```
+
+---
+
+## Key Takeaways
+
+After completing this activity, you should understand:
+
+ ✓ How boosting builds trees sequentially to learn from mistakes (reduces bias)  
+ ✓ The critical role of shrinkage (learning rate) in boosting  
+ ✓ How to use cross-validation to find optimal number of trees  
+ ✓ The difference between interaction.depth and random forest mtry  
+ ✓ Why boosting can overfit but random forests rarely do  
+ ✓ How to interpret variable importance and partial dependence plots  
+ ✓ When to use boosting vs random forests vs single trees
+
+**The Complete Tree Methods Journey:**
+
+| Day | Method | Key Innovation | Reduces | Main Parameter |
+|-----|--------|----------------|---------|----------------|
+| **15** | Single Tree | Recursive binary splitting | - | cp, maxdepth |
+| **16** | Pruned Tree | Cost complexity pruning | Variance slightly | cp (via CV) |
+| **17** | Random Forest | Parallel trees + feature randomization | Variance | mtry, ntree |
+| **18** | Boosting | Sequential trees learning from errors | Bias AND Variance | shrinkage, n.trees, interaction.depth |
+
+---
+
+## Summary: When to Use Each Method
+
+**Use Single Trees when:**
+
+ - Interpretability is paramount
+ - Need to explain decisions to non-technical audiences
+ - Simple relationships in data
+
+**Use Random Forests when:**
+
+ - Want best "out-of-the-box" performance
+ - Don't want to tune many parameters
+ - Need variable importance rankings
+ - Can't afford cross-validation time
+
+**Use Boosting when:**
+
+ - Willing to tune parameters carefully
+ - Maximum predictive accuracy is critical
+ - Have computational resources for CV
+ - Can explain model in terms of variable importance
+
+**Your final recommendation for Wage prediction:**
+
+*Write a brief paragraph recommending which method to use and why, considering:*
+
+ - Predictive performance (test MSE)
+ - Interpretability needs (explaining to HR/policy makers)
+ - Computational requirements (training time, tuning effort)
+ - Stability and robustness
+
+**YOUR RECOMMENDATION:**
+
+ - [Write your answer here]
