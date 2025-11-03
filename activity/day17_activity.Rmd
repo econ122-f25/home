@@ -1,0 +1,537 @@
+---
+title: "Day 17: Bagging and Random Forests"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+**Self-Directed In-Class Activity (50 minutes)**  
+**Theme:** Reducing Variance Through Ensemble Methods
+
+---
+
+## Learning Objectives
+
+By the end of this activity, you will:
+
+- Understand how bagging reduces variance through bootstrap aggregation
+- Build and evaluate bagged decision trees
+- Implement random forests with optimal parameter tuning
+- Compare single trees vs ensemble methods
+- Interpret variable importance from random forests
+- Use out-of-bag (OOB) error for model validation
+
+---
+
+## Recap from Day 16
+
+Last class, you learned to prune decision trees using cross-validation:
+
+- **Cross-validation** helps find optimal tree complexity
+- **Pruned trees** balance interpretability and accuracy
+- **Single trees still have high variance** - small data changes lead to very different trees
+
+**Today's Challenge:** Can we reduce variance while maintaining (or improving) accuracy?
+
+**Answer:** Yes! Ensemble methods like bagging and random forests!
+
+---
+
+## Setup
+
+```{r setup}
+# Load required packages
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(ISLR2)
+
+# Load the Wage dataset
+data(Wage)
+
+# Set seed for reproducibility
+set.seed(2024)
+```
+
+---
+
+## Part 1: Understanding the Variance Problem (5 minutes)
+
+### Task 1.1: Demonstrate Tree Instability
+
+Let's see how unstable single trees can be by building the same model with different random seeds.
+
+**Goal:** Show that small changes in the training data (due to different random splits) lead to different tree structures and performance.
+
+```{r tree-instability}
+# We've provided a function that builds a pruned tree with a given seed
+# This function does everything from Day 16: build full tree, find optimal cp, prune
+build_tree_with_seed <- function(seed_value) {
+  set.seed(seed_value)
+  
+  # Create train/test split
+  train_idx <- sample(1:nrow(Wage), size = nrow(Wage) * 0.5)
+  train <- Wage[train_idx, ]
+  test <- Wage[-train_idx, ]
+  
+  # Build pruned tree (using Day 16 approach)
+  tree_full <- rpart(wage ~ age + education + jobclass + health_ins + maritl,
+                     data = train, method = "anova",
+                     control = rpart.control(cp = 0))
+  
+  # Get optimal cp
+  cp_table <- tree_full$cptable
+  optimal_cp <- cp_table[which.min(cp_table[, "xerror"]), "CP"]
+  
+  # Prune tree
+  tree_pruned <- prune(tree_full, cp = optimal_cp)
+  
+  # Evaluate
+  pred_test <- predict(tree_pruned, test)
+  test_mse <- mean((test$wage - pred_test)^2)
+  n_leaves <- sum(tree_pruned$frame$var == "<leaf>")
+  
+  return(list(tree = tree_pruned, test_mse = test_mse, n_leaves = n_leaves))
+}
+
+# YOUR CODE: Use the function above to build trees with 5 different seeds
+seeds <- c(2024, 123, 456, 789, 2025)
+
+# Hint: Use a for loop or lapply to call build_tree_with_seed() for each seed
+# Example structure:
+# results_list <- list()
+# for(i in 1:length(seeds)) {
+#   results_list[[i]] <- build_tree_with_seed(seeds[i])
+# }
+
+
+# YOUR CODE: Extract the results into a data frame with columns:
+# - seed, test_mse, n_leaves
+# Hint: Create a data frame with one row per seed
+# Example: results_df <- data.frame(
+#            seed = seeds,
+#            test_mse = c(results_list[[1]]$test_mse, ...),
+#            n_leaves = c(results_list[[1]]$n_leaves, ...)
+#          )
+
+
+# YOUR CODE: Print the results table
+# Also calculate and print:
+# - Range of test MSE (max - min)
+# - Range of number of leaves (max - min)
+# - Standard deviation of test MSE
+
+
+# OPTIONAL: Plot two of the trees side-by-side to see structural differences
+# par(mfrow = c(1, 2))
+# rpart.plot(results_list[[1]]$tree, main = paste("Seed:", seeds[1]))
+# rpart.plot(results_list[[2]]$tree, main = paste("Seed:", seeds[2]))
+# par(mfrow = c(1, 1))
+
+```
+
+**Questions:**
+
+- How much does test MSE vary across different seeds?
+- How much does tree structure (number of leaves) vary?
+- What does this tell you about the stability of single decision trees?
+
+---
+
+## Part 2: Bootstrap Aggregating (Bagging) (15 minutes)
+
+### Task 2.1: Understanding Bootstrap Samples
+
+Before we bag trees, let's understand bootstrapping:
+
+```{r bootstrap-demo}
+# YOUR CODE: Create a simple example dataset
+example_data <- data.frame(id = 1:10, value = c(5, 8, 3, 9, 2, 7, 4, 6, 1, 10))
+
+# YOUR CODE: Generate 3 bootstrap samples using sample() with replace = TRUE
+# Set different seeds for each sample
+set.seed(100)
+
+
+set.seed(200)
+
+
+set.seed(300)
+
+
+# YOUR CODE: For each bootstrap sample:
+# - Count how many times each original ID appears
+# - Which IDs are missing (appear 0 times)?
+
+```
+
+**Questions:**
+
+- What proportion of original observations appear in each bootstrap sample?
+- What happens to observations that don't appear? (Hint: Think about validation!)
+- Why is sampling WITH replacement important for bagging?
+
+### Task 2.2: Build Your First Bagged Model
+
+```{r first-bagging}
+# Set seed for reproducibility
+set.seed(2024)
+
+# YOUR CODE: Create 50/50 train/test split
+train_indices <- sample(1:nrow(Wage), size = nrow(Wage) * 0.5)
+wage_train <- Wage[train_indices, ]
+wage_test <- Wage[-train_indices, ]
+
+# YOUR CODE: Build a single pruned tree for comparison (from Day 16)
+# Use predictors: age, education, jobclass, health_ins, maritl
+
+
+# YOUR CODE: Calculate test MSE for single tree
+
+
+# YOUR CODE: Build a bagged model using randomForest
+# Set mtry = number of predictors (this makes it bagging, not random forest)
+# Set ntree = 500
+# Set importance = TRUE
+
+
+# YOUR CODE: Make predictions with bagged model
+
+
+# YOUR CODE: Calculate test MSE for bagged model
+
+
+# YOUR CODE: Compare the two MSEs
+
+```
+
+**Questions:**
+
+- How much did bagging improve the test MSE?
+- Why does bagging reduce variance?
+- Does bagging sacrifice interpretability compared to a single tree?
+
+### Task 2.3: Understanding Out-of-Bag (OOB) Error
+
+```{r oob-error}
+# YOUR CODE: Extract the OOB MSE from your bagged model
+# Use bag_model$mse to get MSE for each tree
+# The final value is the OOB MSE
+
+
+# YOUR CODE: Compare OOB MSE to test MSE
+
+
+# YOUR CODE: Plot OOB MSE trajectory
+# Create a line plot showing how OOB error changes as trees are added
+
+
+```
+
+**Questions:**
+
+- How close is the OOB error to the test error?
+- At approximately how many trees does the OOB error stabilize?
+- Why is OOB error useful in practice? (Hint: Think about validation sets!)
+
+---
+
+## Part 3: Random Forests (15 minutes)
+
+### Task 3.1: Build a Random Forest Model
+
+```{r random-forest}
+# YOUR CODE: Build a random forest model
+# For regression, default mtry = p/3 where p is number of predictors
+# Calculate the appropriate mtry value
+# Set ntree = 500
+# Set importance = TRUE
+
+
+# YOUR CODE: Make predictions with random forest
+
+
+# YOUR CODE: Calculate test MSE for random forest
+
+
+# YOUR CODE: Create a comparison table
+# Include: Single Tree, Bagging, Random Forest
+# Show: Test MSE, Number of trees (1 vs 500), mtry value
+
+```
+
+**Questions:**
+
+- Did random forest improve upon bagging?
+- What's the difference between bagging and random forests?
+- Why might random forest perform better than bagging?
+
+### Task 3.2: Tuning mtry Parameter
+
+The `mtry` parameter controls how many variables are randomly sampled at each split.
+
+```{r tune-mtry}
+# YOUR CODE: Test different mtry values
+# Try mtry = 1, 2, 3, 4, 5 (there are 5 predictors total)
+mtry_values <- 1:5
+
+
+# YOUR CODE: For each mtry value:
+# - Build a random forest model
+# - Calculate test MSE
+# - Store results
+
+
+# YOUR CODE: Create a plot showing test MSE vs mtry
+
+
+# YOUR CODE: Which mtry gives the best performance?
+
+```
+
+**Questions:**
+
+- What happens when mtry = 1? (Very small subset)
+- What happens when mtry = 5? (All predictors - this is bagging!)
+- What is the optimal mtry for this problem?
+- How does this compare to the default mtry = p/3?
+
+### Task 3.3: Visualizing Convergence
+
+```{r convergence}
+# YOUR CODE: Plot OOB error vs number of trees for your best random forest
+# This helps determine if 500 trees was enough
+
+
+# YOUR CODE: Add a horizontal line for the test MSE
+
+
+# YOUR CODE: How many trees are needed before performance stabilizes?
+
+```
+
+---
+
+## Part 4: Variable Importance (10 minutes)
+
+### Task 4.1: Extract and Visualize Variable Importance
+
+```{r variable-importance}
+# YOUR CODE: Extract variable importance from your random forest model
+# Use importance() function
+
+
+# YOUR CODE: Create a professional bar plot of variable importance
+# Show %IncMSE (percentage increase in MSE when variable is permuted)
+# Sort variables by importance
+
+
+# YOUR CODE: Which variable is most important? Does this make sense?
+
+```
+
+**Questions:**
+
+- What does %IncMSE mean?
+- Why is [top variable] the most important?
+- How does this ranking compare to what you saw in your single tree splits?
+
+### Task 4.2: Partial Dependence Plot
+
+Let's visualize how predictions change with the most important variable:
+
+```{r partial-dependence}
+# Function to create partial dependence plot
+create_partial_dependence <- function(rf_model, data, var_name, n_points = 20) {
+  var_range <- range(data[[var_name]], na.rm = TRUE)
+  grid <- seq(var_range[1], var_range[2], length.out = n_points)
+  predictions <- numeric(length(grid))
+  
+  for(i in seq_along(grid)) {
+    temp_data <- data
+    temp_data[[var_name]] <- grid[i]
+    predictions[i] <- mean(predict(rf_model, temp_data))
+  }
+  
+  return(data.frame(x = grid, y = predictions))
+}
+
+# YOUR CODE: Create partial dependence plot for the most important variable
+
+
+# YOUR CODE: Interpret the plot
+# How does wage change as this variable increases?
+# Is the relationship linear or non-linear?
+
+```
+
+**Questions:**
+
+- What pattern does the partial dependence plot reveal?
+- Is this relationship linear or non-linear?
+- How would you explain this relationship to a non-technical audience?
+
+---
+
+## Part 5: Comprehensive Comparison (5 minutes)
+
+### Task 5.1: Final Performance Comparison
+
+```{r final-comparison}
+# YOUR CODE: Create a comprehensive comparison table including:
+# 1. Single Tree (Day 16 pruned tree)
+# 2. Bagging (mtry = all predictors)
+# 3. Random Forest (optimal mtry)
+# 
+# For each method, show:
+# - Test MSE
+# - Test R-squared
+# - OOB estimate (where available)
+# - Interpretability (High/Medium/Low)
+# - Training time (relative: Fast/Medium/Slow)
+
+```
+
+### Task 5.2: Prediction Comparison
+
+```{r prediction-comparison}
+# YOUR CODE: Create a scatter plot comparing predictions
+# X-axis: Actual wages from test set
+# Y-axis: Predicted wages
+# Use different colors for Single Tree, Bagging, and Random Forest
+# Add a 45-degree reference line
+
+
+# YOUR CODE: Calculate mean absolute error for each method
+
+
+# YOUR CODE: Which method has predictions closest to the diagonal?
+
+```
+
+**Questions:**
+
+- Which method performs best on test data?
+- Is the improvement substantial or marginal?
+- Given the performance gains, would you sacrifice interpretability?
+- When might you still prefer a single tree despite lower accuracy?
+
+---
+
+## Reflection Questions
+
+**For Discussion or Written Response:**
+
+1. **The Bias-Variance Tradeoff**: 
+   - Explain how bagging and random forests reduce variance
+   - Do they increase bias? Why or why not?
+   - What's the practical implication for model selection?
+
+2. **Interpretability vs Accuracy**:
+   - Your single tree from Day 16 was easy to explain
+   - Your random forest is more accurate but harder to interpret
+   - In a real-world scenario (predicting wages for HR policy), which would you choose and why?
+
+3. **Variable Importance**:
+   - Compare the variable importance from your random forest to the splits in your Day 16 tree
+   - Are they consistent? If not, why might they differ?
+   - How would you communicate variable importance to stakeholders?
+
+4. **Out-of-Bag Error**:
+   - Explain in your own words what OOB error is and why it's useful
+   - Compare OOB error to the cross-validation approach from Day 16
+   - What are the advantages of OOB error?
+
+5. **Practical Considerations**:
+   - Random forests take longer to train than single trees. Is it worth it?
+   - How would you decide on the number of trees (ntree) in practice?
+   - What would you tell a stakeholder who asks "Why can't you just show me the tree?"
+
+---
+
+## Optional Challenge: Classification Task
+
+If you finish early, try applying random forests to a classification problem:
+
+```{r challenge-classification, eval=FALSE}
+# YOUR CODE: Create a binary classification problem
+# Create a new variable: high_wage (wage > median wage)
+# Hint: Wage$high_wage <- factor(ifelse(Wage$wage > median(Wage$wage), "High", "Low"))
+
+
+# YOUR CODE: Create train/test split (same as before)
+
+
+# YOUR CODE: Build three models:
+# 1. Single classification tree (using rpart with method = "class")
+
+
+# 2. Bagged classification tree (randomForest with mtry = all predictors)
+
+
+# 3. Random forest (randomForest with default mtry for classification)
+
+
+# YOUR CODE: For each model, calculate test set performance:
+# - Confusion matrix
+# - Accuracy, Precision, Recall, F1-score
+
+
+# YOUR CODE: Extract and compare OOB error rates
+# For bagging: bag_model$err.rate[500, "OOB"]
+# For random forest: rf_model$err.rate[500, "OOB"]
+# The OOB error rate is the misclassification rate on out-of-bag observations
+
+
+# YOUR CODE: Compare OOB error to test error
+# Are they similar? Does OOB provide a good estimate?
+
+
+# YOUR CODE: Plot OOB error trajectory for random forest
+# matplot(1:500, rf_model$err.rate, type = "l")
+# This shows how error changes as trees are added
+
+
+# YOUR CODE: Variable importance for classification
+# Which variables are most important for predicting high vs low wage?
+
+
+# BONUS: Compare variable importance between regression (Part 4) and classification
+# Are the same variables important for both tasks?
+
+```
+
+---
+
+## Key Takeaways
+
+After completing this activity, you should understand:
+
+✓ How bootstrap aggregating (bagging) reduces variance through averaging  
+✓ The difference between bagging and random forests (randomizing predictors)  
+✓ How to use OOB error for model validation without a separate validation set  
+✓ How to interpret variable importance from random forests  
+✓ The trade-off between interpretability and predictive accuracy  
+✓ When to use ensemble methods vs single trees  
+✓ How to tune the mtry parameter for optimal performance
+
+**Looking ahead to Day 18:** Random forests reduce variance by averaging parallel trees. But what if we could build trees *sequentially*, where each tree learns from the mistakes of previous trees? That's boosting - coming next!
+
+---
+
+## Summary: Model Selection Guide
+
+| Method | When to Use | Pros | Cons |
+|--------|-------------|------|------|
+| **Single Tree** | Need interpretability, simple rules | Easy to explain, fast | High variance, lower accuracy |
+| **Bagging** | Want better accuracy, can sacrifice some interpretability | Reduces variance, stable | Less interpretable, slower |
+| **Random Forest** | Want best accuracy, have many predictors | Best accuracy, variable importance, OOB error | "Black box", slowest, hard to explain |
+
+**Your recommendation for the wage prediction problem:**
+
+- YOUR ANSWER HERE:
+
+**Justification:**
+
+- YOUR REASONING HERE:
