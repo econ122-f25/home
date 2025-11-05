@@ -3389,11 +3389,9 @@ boost_mse &lt;- mean((boost_pred - boston_test$medv)^2)</pre>
 <li>Weighted by the number of observations at each split</li>
 </ul>
 
-<p><strong>Key Difference:</strong></p>
+<p><strong>Summary</strong></p>
 
 <ul>
-<li>Random Forest: Based on <strong>Gini impurity reduction</strong> or <strong>permutation</strong></li>
-<li>Gradient Boosting: Based on <strong>loss function improvement</strong> (residual reduction)</li>
 <li>Both aim to quantify &ldquo;how useful is this variable,&rdquo; but calculate it differently</li>
 <li>In practice, they often (but not always) agree on which variables are most important</li>
 </ul>
