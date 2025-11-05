@@ -198,7 +198,7 @@ shrinkage_values <- c(0.001, 0.01, 0.05, 0.1)
 # 4. Calculate test MSE
 # 5. Store results
 
-# Hint: Use a for loop or lapply
+# Hint: Use a for loop 
 # Example structure:
 # results <- data.frame()
 # for(lambda in shrinkage_values) {
@@ -536,24 +536,6 @@ print(cv_summary_example)
  - What does the SD (standard deviation) of CV MSE tell us about model stability?
  - Which method has the lowest variability across folds? What does this suggest?
 
-**Key Insight:**
-
-Cross-validation provides:
-
- - **More robust estimates:** Averages over multiple train/test splits
- - **Uncertainty quantification:** Standard deviation shows how variable performance is
- - **Better generalization assessment:** Less dependent on one lucky/unlucky split
-
-However, it comes at a cost:
-
- - **Computational expense:** 5-fold CV means training 5 times as many models
- - **Time:** For complex methods like boosting, this can be prohibitive
- - **Trade-off:** Single test set is faster but less reliable
-
-**Practical Takeaway:** 
-
-For your Day 18 homework and projects, a single well-chosen train/test split is often sufficient for comparing methods. But in real-world model deployment, cross-validation is the gold standard for model selection!
-
 ---
 
 ## Reflection Questions
@@ -590,6 +572,48 @@ For your Day 18 homework and projects, a single well-chosen train/test split is 
     - Random forests use OOB error (automatic, no CV needed)
     - Boosting requires cv.folds for validation
     - What are the pros and cons of each approach?
+
+
+
+## Summary: When to Use Each Method
+
+**Your final recommendation for Wage prediction:**
+
+*Write a brief paragraph recommending which method to use and why, considering:*
+
+ - Predictive performance (test MSE)
+ - Interpretability needs (explaining to HR/policy makers)
+ - Computational requirements (training time, tuning effort)
+ - Stability and robustness
+
+**YOUR RECOMMENDATION:**
+
+ - [Write your answer here]
+ 
+ 
+---
+
+## Key Takeaways
+
+After completing this activity, you should understand:
+
+ ✓ How boosting builds trees sequentially to learn from mistakes (reduces bias)  
+ ✓ The critical role of shrinkage (learning rate) in boosting  
+ ✓ How to use cross-validation to find optimal number of trees  
+ ✓ The difference between interaction.depth and random forest mtry  
+ ✓ Why boosting can overfit but random forests rarely do  
+ ✓ How to interpret variable importance and partial dependence plots  
+ ✓ When to use boosting vs random forests vs single trees
+
+**The Complete Tree Methods Journey:**
+
+| Day | Method | Key Innovation | Reduces | Main Parameter |
+|-----|--------|----------------|---------|----------------|
+| **15** | Single Tree | Recursive binary splitting | - | cp, maxdepth |
+| **16** | Pruned Tree | Cost complexity pruning | Variance slightly | cp (via CV) |
+| **17** | Random Forest | Parallel trees + feature randomization | Variance | mtry, ntree |
+| **18** | Boosting | Sequential trees learning from errors | Bias AND Variance | shrinkage, n.trees, interaction.depth |
+
 
 ---
 
@@ -641,63 +665,3 @@ If you finish early, apply boosting to a classification problem:
 # Use predicted probabilities and actual classes
 
 ```
-
----
-
-## Key Takeaways
-
-After completing this activity, you should understand:
-
- ✓ How boosting builds trees sequentially to learn from mistakes (reduces bias)  
- ✓ The critical role of shrinkage (learning rate) in boosting  
- ✓ How to use cross-validation to find optimal number of trees  
- ✓ The difference between interaction.depth and random forest mtry  
- ✓ Why boosting can overfit but random forests rarely do  
- ✓ How to interpret variable importance and partial dependence plots  
- ✓ When to use boosting vs random forests vs single trees
-
-**The Complete Tree Methods Journey:**
-
-| Day | Method | Key Innovation | Reduces | Main Parameter |
-|-----|--------|----------------|---------|----------------|
-| **15** | Single Tree | Recursive binary splitting | - | cp, maxdepth |
-| **16** | Pruned Tree | Cost complexity pruning | Variance slightly | cp (via CV) |
-| **17** | Random Forest | Parallel trees + feature randomization | Variance | mtry, ntree |
-| **18** | Boosting | Sequential trees learning from errors | Bias AND Variance | shrinkage, n.trees, interaction.depth |
-
----
-
-## Summary: When to Use Each Method
-
-**Use Single Trees when:**
-
- - Interpretability is paramount
- - Need to explain decisions to non-technical audiences
- - Simple relationships in data
-
-**Use Random Forests when:**
-
- - Want best "out-of-the-box" performance
- - Don't want to tune many parameters
- - Need variable importance rankings
- - Can't afford cross-validation time
-
-**Use Boosting when:**
-
- - Willing to tune parameters carefully
- - Maximum predictive accuracy is critical
- - Have computational resources for CV
- - Can explain model in terms of variable importance
-
-**Your final recommendation for Wage prediction:**
-
-*Write a brief paragraph recommending which method to use and why, considering:*
-
- - Predictive performance (test MSE)
- - Interpretability needs (explaining to HR/policy makers)
- - Computational requirements (training time, tuning effort)
- - Stability and robustness
-
-**YOUR RECOMMENDATION:**
-
- - [Write your answer here]
