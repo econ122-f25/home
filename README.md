@@ -180,3 +180,29 @@ References:
 
 **Wednesday** (k-means clustering)
   -   day 19 [slides](slides/day19.html){:target="_blank"}, [activity](activity/day19_activity.Rmd), [solutions](activity/sol/day19_activity_sol.html)
+
+------------------------------------------------------------------------
+### Week 13 (11/17)
+
+**Readings:**  Ch 12 of ISL
+
+**Monday** (hierarchical clustering)
+  -   discuss final projects
+  -   day 20 [slides](slides/day20.html){:target="_blank"}, [activity](activity/day20_activity.Rmd), [solutions](activity/sol/day20_activity_sol.html)
+
+**Wednesday** (principal component analysis)
+  -   day 21 [slides](slides/day21.html){:target="_blank"}, [activity](activity/day21_activity.Rmd), [solutions](activity/sol/day21_activity_sol.html)
+
+------------------------------------------------------------------------
+### Week 14 (11/24)
+
+**Monday** (exam 2)
+  
+**Wednesday** (thanksgiving -- eat turkey!)
+
+------------------------------------------------------------------------
+### Week 15 (12/01)
+
+**Monday** (guest speaker)
+  
+**Wednesday** (work on final projects)
