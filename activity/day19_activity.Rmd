@@ -1,0 +1,319 @@
+---
+title: "Day 19 Activity: Clustering Colleges"
+author: "Your Name"
+date: "ECON 122"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Introduction
+
+In this activity, you'll use K-means clustering to group colleges based on their characteristics. Unlike supervised learning where we have labeled outcomes, clustering is an **unsupervised learning** method that finds natural groupings in data.
+
+**Learning Goals:**
+
+- Apply K-means clustering to real data
+- Determine the optimal number of clusters
+- Interpret and visualize cluster assignments
+- Understand the importance of standardizing variables
+
+**Time:** Approximately 40 minutes
+
+## Setup
+
+Load the necessary packages:
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tidyr)
+```
+
+## Part 1: Load and Explore the Data (5 minutes)
+
+We'll use college data from a CSV file with various institutional characteristics and create several derived variables:
+
+```{r}
+# Load the college data from CSV
+colleges <- read_csv("https://raw.githubusercontent.com/mgelman/data/master/Colleges.csv")
+
+# Create derived variables and select variables of interest
+college_data <- colleges %>%
+  mutate(
+    avg_sat = (SATM + SATV) / 2,           # Average SAT score
+    adm_rate = AppsAccept / AppsReceive,   # Admission rate
+    cost = Tuition + RoomBoard + Books      # Total cost
+  ) %>%
+  # Select our variables of interest
+  select(College, State, 
+         avg_sat,        # Average SAT score
+         adm_rate,       # Admission rate  
+         HStop10,        # % of students from top 10% of HS class
+         cost,           # Total cost
+         Ratio,          # Student/faculty ratio
+         Donate,         # % of alumni who donate
+         AvgSalary,      # Average alumni salary
+         FullTime        # Number of full-time students
+  ) %>%
+  # Remove rows with missing data
+  filter(complete.cases(.))
+
+# How many colleges remain after removing missing data?
+nrow(college_data)
+```
+
+**Q1: Calculate summary statistics (mean, median, min, max, standard deviation) for the key numeric variables across all colleges. What do you notice about the typical values and variability?**
+
+```{r}
+# Using summary()
+# Your code here - use summary() on the numeric variables from college_data
+
+```
+
+**Your answer:**
+
+
+**Q2: Filter the data to include only Claremont Colleges (Pomona College, Claremont McKenna College, Harvey Mudd College, Scripps College, and Pitzer College). Calculate the same summary statistics for just these schools. Are these values what you would expect for the Claremont Colleges? How do they compare to the overall distribution? Based on these characteristics, what other types of schools do you think the Claremont Colleges would get clustered with?**
+
+```{r}
+# Your code here
+# Hint: Use filter() with %in% to select multiple college names
+
+# Summary statistics for Claremont Colleges
+# Your code here - calculate summary statistics for the Claremont colleges
+
+```
+**Your answer:**
+
+
+## Part 2: Your First K-means Clustering (10 minutes)
+
+For clustering, we only need the numeric variables (not school names or state):
+
+```{r}
+# Create a dataset with only the clustering variables
+```
+
+**Q3: Use the `kmeans()` function to cluster the data (`cluster_vars`) into K=3 clusters. Use `nstart=20` and set a seed for reproducibility.**
+
+```{r}
+set.seed(122)
+# Your code here
+
+```
+
+**Q4: Add these cluster assignments to your `college_data` dataframe as a new column called `cluster_3`.**
+
+```{r}
+# Your code here
+
+```
+
+**Q5: Create a scatter plot of SAT scores vs. admission rates, colored by your cluster assignments. Do the clusters make sense based on these two variables?**
+
+```{r}
+# Your code here
+
+```
+
+**Your answer:**
+
+
+## Part 3: Now Try Clustering WITH Scaling (10 minutes)
+
+Before we re-run the clustering, let's think about what might have gone wrong.
+
+**Q6: Look back at the summary statistics for `cluster_vars` from Part 2. Which variables have very different scales (i.e., much larger or smaller ranges of values)? Given what you observed in Q5, why do you think these scale differences might have caused problems for the clustering algorithm?**
+
+**Your answer:**
+
+
+**Q7: Create a standardized version of the clustering variables using the `scale()` function. Save it as `cluster_vars_scaled`.**
+
+```{r}
+# Your code here
+
+
+# You can check that it worked by looking at the means (should be ~0) and SDs (should be 1)
+```
+
+**Q8: Now use the `kmeans()` function to cluster the SCALED data into K=3 clusters. Use `nstart=20` and set the same seed.**
+
+```{r}
+set.seed(122)
+# Your code here
+
+```
+
+**Q9: Add the scaled cluster assignments to your original `college_data` dataframe as a new column called `cluster_scaled`.**
+
+```{r}
+# Your code here
+
+```
+
+**Q10: Create the same scatter plot (SAT scores vs. admission rates), but now colored by your cluster assignments from the SCALED data. Also add labels for the Claremont Colleges to see which cluster they ended up in. Do these clusters make more sense than your results from Q5? Were the Claremont Colleges clustered with the types of schools you predicted in Q2?**
+
+```{r}
+# Your code here
+# Hint: You can use geom_text() or geom_label() to add labels for Claremont colleges
+# You might want to filter for just those schools or use ifelse() to create labels
+
+# Step 1: Create a label column (only label Claremont Colleges)
+# Hint: Use mutate() with ifelse() to create claremont_label
+# If College is in the Claremont list, use College name, otherwise use ""
+
+
+# Step 2: Create the plot
+# Hint: Similar to Q5 but use cluster_scaled and add geom_text for labels
+
+```
+
+**Your answer:**
+
+
+**Q11: Looking at Q10, you should notice that even with scaling, the clusters capture multiple dimensions. Why do you think this is happening? Create a scatter plot of admission rate vs. cost, colored by your scaled cluster assignments. Does this help explain the patterns in the clusters? After creating the plot, categorize each of the 3 clusters based on what you observe (e.g., "low-cost selective schools", "high-cost selective schools", etc.).**
+
+```{r}
+# Your code here
+# Color by cluster_scaled and add labels for Claremont colleges
+
+```
+
+**Your answer:**
+
+
+**Categorizing the 3 clusters:**
+
+
+**Key insight:**
+
+**Q12: Compare your two clustering results (from Q5 vs. Q10). What changed with scaling, and what problem still remained?**
+
+**Your answer:**
+
+**Before scaling (Q5):** 
+
+**After scaling (Q10):** 
+
+**The key lesson**:
+
+
+## Part 4: Choosing the Optimal K (10 minutes)
+
+How do we know if K=3 is the best choice? We'll use the "elbow method" with our scaled data.
+
+**Q13: Run K-means for K values from 1 to 10 on the SCALED data, storing the total within-cluster sum of squares for each. Create an elbow plot.**
+
+```{r}
+set.seed(122)
+# Create a vector of K values to try
+k_values <- 1:10
+
+# Your code here: calculate total within SS for each K
+# Hint: Use a for loop to iterate through k_values
+# For each k, run kmeans() and extract $tot.withinss
+
+# Initialize an empty vector to store results
+total_wss <- numeric(length(k_values))
+
+# Loop through each k value
+for (i in 1:length(k_values)) {
+  # Your code here - run kmeans on cluster_vars_scaled with k_values[i]
+  # Store the tot.withinss value in total_wss[i]
+  
+}
+
+# Create a data frame for plotting
+elbow_data <- data.frame(
+  k = k_values,
+  total_wss = total_wss
+)
+
+# Plot the elbow curve
+# Your code here
+# Hint: Use ggplot with geom_line() and geom_point()
+# x = k, y = total_wss
+
+```
+
+**Q14: Based on the elbow plot, what value of K would you choose? Why?**
+
+**Your answer:**
+
+
+## Part 5: Interpreting Your Clusters (10 minutes)
+
+Now let's understand what distinguishes the clusters you found.
+
+**Q15: Re-run K-means with your chosen value of K (from Q14) on the SCALED data, and add these cluster assignments to `college_data` as `cluster_final`.**
+
+```{r}
+set.seed(122)
+# Your code here
+# Hint: Run kmeans with your chosen K value from Q14 on cluster_vars_scaled
+# Then add the cluster assignments to college_data as cluster_final
+
+
+```
+
+
+**Q16: Now that you've clustered the colleges, examine which schools ended up in the same cluster as the Claremont Colleges. Find 5-10 schools in this cluster and verify whether they match the types of schools you predicted in Q2.**
+
+```{r}
+# Your code here
+# Hint: First, find which cluster contains the Claremont Colleges
+# Then, filter for other schools in that same cluster
+
+# Step 1: Find the cluster number for Claremont Colleges
+# Hint: Filter for Claremont colleges, pull the cluster_final column, and get unique value
+
+
+# Step 2: Show a sample of schools in the same cluster
+
+```
+
+**Your answer:**
+
+
+## Part 6: Reflection Questions
+
+**Q17: Would you expect clustering results to be identical if you ran the algorithm with a different random seed? Why or why not?**
+
+**Your answer:**
+
+
+**Q18: Why is it important to standardize variables before performing K-means clustering? What did you observe when comparing your clustering results before and after scaling (Q5 vs. Q10)? Even with scaling, what issue remained (Q11)?**
+
+**Your answer:**
+
+Standardization is crucial for K-means clustering because:
+
+1. 
+
+2. 
+
+**What we observed:**
+- **Before scaling (Q5)**: 
+  
+- **After scaling (Q10)**: 
+
+- **The remaining issue (Q11)**: 
+
+**Key lesson**:
+
+
+**Q19: Name one advantage and one disadvantage of K-means clustering compared to supervised learning methods (like decision trees or random forests).**
+
+**Your answer:**
+
+**Advantage of K-means clustering:**
+
+
+**Disadvantage of K-means clustering:**
+
+
