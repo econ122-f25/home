@@ -204,6 +204,6 @@ References:
 ------------------------------------------------------------------------
 ### Week 15 (12/01)
 
-**Monday** (guest speaker)
+**Monday** (Ben Thompson Data scientist @ Pinterest will discuss his journey and the evolving data science landscape)
   
 **Wednesday** (work on final projects)
