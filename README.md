@@ -33,6 +33,7 @@ References:
 - [Problem Set 4](https://classroom.github.com/a/IoRETG7H) (due **11/07**) [[Solutions](ps/ps4_sol.html)]
 - [Team Project 2](https://classroom.github.com/a/RT9EUgiQ) (due **11/14**)
 - [Problem Set 5]() (due **11/21**)
+- [Final Project]() (due **12/12**)
 
 ------------------------------------------------------------------------
 
@@ -187,7 +188,7 @@ References:
 **Readings:**  Ch 12 of ISL
 
 **Monday** (hierarchical clustering)
-  -   discuss final projects
+  -   discuss [final project](FinalProject.md)
   -   day 20 [slides](slides/day20.html){:target="_blank"}, [activity](activity/day20_activity.Rmd), [solutions](activity/sol/day20_activity_sol.html)
 
 **Wednesday** (principal component analysis)
