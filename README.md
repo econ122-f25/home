@@ -32,7 +32,7 @@ References:
 - [Problem Set 3](https://classroom.github.com/a/hggzh6-a) (due **10/24**) [[Solutions](ps/ps3_sol.html)]
 - [Problem Set 4](https://classroom.github.com/a/IoRETG7H) (due **11/07**) [[Solutions](ps/ps4_sol.html)]
 - [Team Project 2](https://classroom.github.com/a/RT9EUgiQ) (due **11/14**)
-- [Problem Set 5]() (due **11/21**)
+- [Problem Set 5](https://classroom.github.com/a/t5OThFe2) (due **11/21**)
 - [Final Project]() (due **12/12**)
 
 ------------------------------------------------------------------------
