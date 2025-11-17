@@ -20,8 +20,8 @@ There are minimal criteria for the final project. My conditions are
 
 1. `.md` presentation of results
     - Here are some examples of what a successful project looks like:
-        - https://samuel-shlee.com/econ122_sqf/
-        - https://cs109hubway.github.io/classp/
+        - [https://samuel-shlee.com/econ122_sqf/](https://samuel-shlee.com/econ122_sqf/)
+        - [https://cs109hubway.github.io/classp/](https://cs109hubway.github.io/classp/)
 2. code pushed to GitHub
     - Data: make sure to provide your data. If it is too large and you need to store in Dropbox, Box, or Google drive, provide the path in your repo's README file
     - .Rmd files: in the README, provide a list of file names in your repo along with a brief description of their content or use in your project. Please do not include files that aren't needed to complete your project.
