@@ -1,0 +1,285 @@
+---
+title: "Day 20 Activity: Hierarchical Clustering of Colleges"
+author: "Your Name"
+date: "ECON 122"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Introduction
+
+In this activity, you'll use hierarchical clustering to group colleges based on their characteristics. Unlike K-means clustering which requires you to specify the number of clusters beforehand, hierarchical clustering produces a dendrogram (tree) that shows the relationships between all cases, allowing you to choose the number of clusters after exploring the data structure.
+
+**Learning Goals:**
+
+- Apply hierarchical clustering to real data
+- Interpret and visualize dendrograms
+- Understand different linkage methods
+- Cut dendrograms to create cluster assignments
+- Compare hierarchical clustering to K-means
+
+**Time:** Approximately 40 minutes
+
+## Setup
+
+Load the necessary packages:
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tidyr)
+```
+
+**Note:** This activity uses the `dendextend` package for coloring dendrograms. If you don't have it installed, you can install it with:
+
+```{r eval=FALSE}
+install.packages("dendextend")
+```
+
+## Part 1: Load and Explore the Data (5 minutes)
+
+We'll use college data from California and Massachusetts. Limiting to these two states will make the dendrogram readable while still providing interesting diversity in school types.
+
+```{r}
+# Load the college data from CSV
+colleges <- read_csv("https://raw.githubusercontent.com/mgelman/data/master/Colleges.csv")
+
+# Create derived variables and select variables of interest
+college_data <- colleges %>%
+  mutate(
+    avg_sat = (SATM + SATV) / 2,           # Average SAT score
+    adm_rate = AppsAccept / AppsReceive,   # Admission rate
+    cost = Tuition + RoomBoard + Books      # Total cost
+  ) %>%
+  # Select our variables of interest
+  select(College, State, 
+         avg_sat,        # Average SAT score
+         adm_rate,       # Admission rate  
+         HStop10,        # % of students from top 10% of HS class
+         cost,           # Total cost
+         Ratio,          # Student/faculty ratio
+         Donate,         # % of alumni who donate
+         AvgSalary,      # Average alumni salary
+         FullTime        # Number of full-time students
+  ) %>%
+  # Filter for only CA and MA colleges
+  filter(State %in% c("CA", "MA")) %>%
+  # Remove rows with missing data
+  filter(complete.cases(.))
+
+# How many colleges remain after filtering?
+nrow(college_data)
+```
+
+**Q1: Just like in Day 19, filter the data to include only Claremont Colleges (Pomona College, Claremont McKenna College, Harvey Mudd College, Scripps College, and Pitzer College). Display their characteristics. Based on these characteristics, what other schools do you think they would cluster with?**
+
+```{r}
+# Your code here
+# Hint: Use filter() with %in% to select multiple college names
+
+```
+
+**Your answer:**
+
+
+## Part 2: Creating Your First Dendrogram (10 minutes)
+
+For hierarchical clustering, we need the numeric variables only (not school names or state):
+
+```{r}
+# Create a dataset with only the clustering variables
+```
+
+Before we cluster, remember that hierarchical clustering uses distance measures, so we should standardize:
+
+```{r}
+# Standardize the clustering variables
+```
+
+We'll use the `dendextend` package to help us color labels in our dendrograms:
+
+```{r}
+# Load dendextend package for dendrogram customization
+library(dendextend)
+```
+
+**Why color the Claremont Colleges?** By highlighting the Claremont Colleges in red throughout our dendrograms, we can easily track where they appear in the tree structure and verify that they cluster with similar elite institutions.
+
+**Note:** To display college names in dendrograms, we set row names to college names in Q2. We use large figure sizes and margins to prevent label overlap.
+
+**Q2: Use the `dist()` function to compute the distance matrix between all colleges using the scaled data. Then use `hclust()` to perform hierarchical clustering with complete linkage (the default). Store the result as `hc_complete`.**
+
+```{r}
+# IMPORTANT: Set row names to college names so dendrogram shows names not numbers
+rownames(cluster_vars_scaled) <- college_data$College
+
+# Your code here
+
+```
+
+**Q3: Plot the dendrogram using `plot()`. Based on the dendrogram, approximately how many natural clusters do you see? (Don't worry about being exact - just give your initial impression)**
+
+```{r, fig.height=8, fig.width=10}
+# Define which colleges are Claremont Colleges
+claremont_colleges <- c("Pomona College", "Claremont McKenna College", 
+                        "Harvey Mudd College", "Scripps College", "Pitzer College")
+
+# Create color vector (red for Claremont, black for others)
+label_colors <- ifelse(college_data$College %in% claremont_colleges, "red", "black")
+
+# Convert to dendrogram object and apply colors
+dend <- as.dendrogram(hc_complete)
+labels_colors(dend) <- label_colors[order.dendrogram(dend)]
+
+# Plot the dendrogram
+par(mar = c(15, 4, 4, 2))
+plot(dend, main = "Complete Linkage (Claremont Colleges in Red)", 
+     xlab = "", sub = "", cex = 0.7)
+par(mar = c(5, 4, 4, 2))
+```
+
+**Your answer:**
+
+
+## Part 3: Cutting the Tree (10 minutes)
+
+Now let's cut the dendrogram to create specific cluster assignments.
+
+**Q4: Use `cutree()` to cut the dendrogram into K=3 clusters. Add these cluster assignments to your `college_data` dataframe as a new column called `cluster_3`.**
+
+```{r}
+# Your code here
+
+```
+
+**Q5: Create a scatter plot of SAT scores vs. admission rates, colored by your cluster assignments from Q4. Also add labels for the Claremont Colleges.**
+
+```{r}
+# Your code here
+
+```
+
+**Your answer:** Do the clusters make sense based on these two variables?
+
+
+**Q6: Now create another scatter plot of admission rate vs. cost, colored by the same cluster assignments. Does this help explain the cluster patterns?**
+
+```{r}
+# Your code here
+
+```
+
+**Your answer:**
+
+
+## Part 4: Exploring Different Numbers of Clusters (10 minutes)
+
+Unlike K-means where we used the elbow plot, with hierarchical clustering we can visually inspect the dendrogram to decide where to cut.
+
+**Q7: Try cutting the dendrogram at different heights. First, add horizontal lines to your dendrogram plot at heights of 2, 4, and 6. How many clusters would you get at each height?**
+
+```{r, fig.height=8, fig.width=10}
+# Your code here
+# Hint: Use abline(h = ...) to add horizontal lines
+
+```
+
+**Your answer:**
+
+- At height 2: approximately ___ clusters
+- At height 4: approximately ___ clusters  
+- At height 6: approximately ___ clusters
+
+
+**Q8: Based on your dendrogram, choose what you think is the optimal number of clusters and explain your reasoning. Then use `cutree()` to create cluster assignments with your chosen K value. Save this as `cluster_final` in your `college_data` dataframe.**
+
+```{r}
+# Your code here
+
+```
+
+**Your answer (explain your choice):**
+
+
+**Q9: Find which cluster contains the Claremont Colleges, and show 10 other schools in that same cluster. Are these the types of schools you predicted in Q1?**
+
+```{r}
+# Your code here
+
+```
+
+**Your answer:**
+
+
+## Part 5: Comparing Linkage Methods (10 minutes)
+
+Hierarchical clustering can use different linkage methods to compute distances between clusters. Let's compare complete linkage (what we've been using) with average linkage.
+
+**Q10: Perform hierarchical clustering again using average linkage instead of complete linkage. Create the dendrogram and compare it visually to the complete linkage dendrogram.**
+
+```{r, fig.height=8, fig.width=12}
+# Your code here
+# Hint: use method = "average" in hclust()
+
+```
+
+**Your answer:** What differences do you notice between the two dendrograms?
+
+
+**Q11: Cut the average linkage dendrogram into the same number of clusters you chose in Q8. Create a table comparing how many colleges are assigned to each cluster under complete vs. average linkage.**
+
+```{r}
+# Your code here
+
+```
+
+**Your answer:** How similar are the cluster assignments?
+
+
+## Part 6: Reflection Questions
+
+**Q12: What are the main advantages of hierarchical clustering compared to K-means clustering? What are the disadvantages?**
+
+**Your answer:**
+
+**Advantages:**
+
+**Disadvantages:**
+
+
+**Q13: Why is it still important to standardize variables before performing hierarchical clustering, even though it creates a tree structure?**
+
+**Your answer:**
+
+
+**Q14: In hierarchical clustering, you can cut the tree at different heights to get different numbers of clusters. How is this different from running K-means multiple times with different K values? Which approach do you find more intuitive?**
+
+**Your answer:**
+
+
+**Q15: Looking at your final clusters, do you think the hierarchical clustering method captured meaningful groupings of colleges? If you were a prospective student using this analysis, how might it help you identify schools to consider?**
+
+**Your answer:**
+
+
+## Bonus Challenge (Optional)
+
+**Q16: Use the `dendextend` package to create a colored dendrogram where branches are colored by cluster membership. Then create a tanglegram comparing complete and average linkage results.**
+
+```{r, fig.height=8, fig.width=12}
+# Color branches by cluster membership (k=4)
+# Your code here
+# Hint: Use color_branches() function
+
+```
+
+```{r, fig.height=10, fig.width=10}
+# Create a tanglegram
+# Your code here
+# Hint: Use dendlist() and tanglegram()
+
+```
