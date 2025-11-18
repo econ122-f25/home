@@ -1,0 +1,366 @@
+---
+title: "Day 21 Activity: Where in the World Should You Live?"
+author: "ECON 122"
+date: "Your Name Here"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, 
+                      error = FALSE, fig.width = 10, fig.height = 6)
+```
+
+```{r packages, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+```
+
+## Your Mission
+
+You're a data consultant for a career services company that helps recent graduates and young professionals choose where to launch their careers. Your clients are overwhelmed by choices: Should I move to Singapore or Stockholm? Is Lisbon better than Lima?
+
+Your job: Use PCA to simplify the decision! You'll analyze cities across multiple dimensions:
+
+- **Cost of Living**: How expensive is it?
+- **Quality of Life**: Healthcare, environment, infrastructure
+- **Safety**: Crime rates, political stability
+- **Climate**: Temperature, sunshine, weather patterns
+- **Culture**: Arts, entertainment, diversity
+- **Economy**: Job market, salaries, innovation
+
+**Time limit: 40 minutes**
+
+---
+
+## Part 1: Explore the Cities (5 minutes)
+
+```{r load-data}
+# Load world cities data
+cities <- read_csv("https://raw.githubusercontent.com/mgelman/data/master/livable_cities.csv")
+
+# Take a look
+head(cities)
+names(cities)
+```
+
+The dataset includes metrics for major world cities. Key variables include:
+
+- `Purchasing Power Index`: Buying power (higher = better salaries vs costs)
+- `Safety Index`: How safe the city is (higher = safer)
+- `Health Care Index`: Quality of healthcare (higher = better)
+- `Cost of Living Index`: Relative cost (higher = more expensive)
+- `Property Price to Income Ratio`: Housing affordability (lower = more affordable)
+- `Traffic Commute Time Index`: Transportation quality (lower = better)
+- `Pollution Index`: Air quality and environment (lower = cleaner)
+- `Climate Index`: Weather pleasantness (higher = better)
+
+**Question 1.1:** How many cities are in the dataset? Which cities have the highest cost of living? Which cities are the safest?
+
+```{r q1.1}
+# How many cities?
+
+
+# Highest cost of living
+
+
+# Safest cities
+
+
+```
+
+**Your answer:** 
+
+
+**Question 1.2:** Make a quick scatter plot of Cost of Living vs Pollution. What pattern do you see? (Are clean cities more expensive?)
+
+```{r q1.2}
+# Create a scatter plot
+
+```
+
+**Your observation:**
+
+
+---
+
+## Part 2: The PCA Transformation (8 minutes)
+
+Eight different factors to consider is overwhelming! Let's use PCA to simplify.
+
+**Question 2.1:** Run PCA on the 8 quality-of-life metrics. Remember to standardize!
+
+```{r q2.1}
+# Select only the 8 quality metrics using select()
+
+
+# Perform PCA with standardization
+
+
+# Check the summary
+
+
+```
+
+**Question 2.2:** BEFORE looking at the output above, make a prediction: How much variance do you think PC1 will explain? More than 50%? Around 30%?
+
+**Your prediction:** 
+
+**Reality check:** How much does PC1 actually explain? PC1 + PC2 combined?
+
+**Your answer:**
+
+
+**Question 2.3:** Look at the PC1 loadings. What kind of city scores HIGH on PC1?
+
+```{r q2.3}
+# View the loadings for PC1
+
+
+```
+
+**Your interpretation:** 
+
+
+**Question 2.4:** Now look at PC2 loadings. How is PC2 different from PC1?
+
+```{r q2.4}
+# View PC2 loadings
+
+
+```
+
+**Your interpretation:** 
+
+
+---
+
+## Part 3: How Many Dimensions Do We Really Need? (5 minutes)
+
+Your client asks: "Can we simplify this to just 2-3 dimensions for our app?"
+
+**Question 3.1:** Create a scree plot to visualize variance explained.
+
+```{r q3.1}
+# Calculate proportion of variance explained by each PC
+# pca_cities$sdev gives you standard deviations
+
+
+# Create a data frame with PC number and variance explained
+
+
+# Create a scree plot with PC on x-axis and variance on y-axis
+# Use geom_line() and geom_point()
+
+
+```
+
+**Question 3.2:** If you use just the first 2 PCs, what % of the total information do you keep?
+
+```{r q3.2}
+# Look at your data frame or summary output from above
+
+
+```
+
+**Your answer:**
+
+
+**Question 3.3:** Make a business recommendation: Is going from 8 dimensions to 2 worth it? What do you gain? What do you lose?
+
+**Your recommendation:**
+
+
+---
+
+## Part 4: The World City Map! (12 minutes)
+
+Now let's see where different cities fall on the PC map!
+
+**Question 4.1:** Create a biplot showing cities positioned by PC1 and PC2.
+
+```{r q4.1}
+# Extract PC scores (the transformed data)
+
+
+# Get the loadings (how variables contribute to PCs)
+
+
+# Create a biplot using ggplot
+# You need:
+# - geom_point() for the cities (using PC scores)
+# - geom_segment() for arrows (using loadings, scaled up for visibility)
+# - geom_text() to label the variable arrows
+# - reference lines at x=0 and y=0
+
+
+```
+
+**Question 4.2:** Based on the arrows, describe a city that would be in the:
+- **Top-right quadrant** (high PC1, high PC2):
+- **Bottom-right quadrant** (high PC1, low PC2):
+- **Top-left quadrant** (low PC1, high PC2):
+- **Bottom-left quadrant** (low PC1, low PC2):
+
+**Your descriptions:**
+
+
+**Question 4.3:** Let's find specific cities! Label some major cities and see where they fall.
+
+```{r q4.3}
+# Choose some cities you're interested in and filter to them
+
+
+# Recreate your biplot from 4.1 but add city labels
+# Use geom_text() to add labels for your selected cities
+
+
+```
+
+**Your observations:** Pick 3-4 cities from the plot and explain why they landed where they did.
+
+**Your answer:**
+
+
+**Question 4.4:** Find your hometown or a city you've lived in! Where does it fall on the map? Does this match your experience?
+
+```{r q4.4}
+# Search for your city and find its PC1 and PC2 scores
+
+
+```
+
+**Your reflection:**
+
+
+---
+
+## Part 5: Discovering City "Types" (10 minutes)
+
+Your client wants to categorize cities into lifestyle groups. Let's use clustering!
+
+**Question 5.1:** Perform k-means clustering with k=5 on the first two PC scores.
+
+```{r q5.1}
+# Set seed for reproducibility
+set.seed(122)
+
+# Perform k-means clustering on the first 2 PC scores
+
+
+# Add cluster assignments to your data
+
+
+```
+
+**Question 5.2:** Visualize the clusters on the PC map!
+
+```{r q5.2}
+# Create a scatter plot with PC1 and PC2, colored by cluster
+# Add reference lines at 0
+
+
+```
+
+**Question 5.3:** Let's name each cluster! Look at the average characteristics.
+
+```{r q5.3}
+# Look at cluster centers
+
+
+# Calculate average of each index variable by cluster
+
+
+# Look at example cities from each cluster
+
+
+```
+
+**Name the clusters!** Based on the stats above, give each cluster a descriptive name:
+
+- **Cluster 1:** 
+- **Cluster 2:** 
+- **Cluster 3:** 
+- **Cluster 4:** 
+- **Cluster 5:** 
+
+(Examples: "Elite European Capitals", "Affordable Asian Cities", "North American Metros", "Emerging Markets", "Scandinavian Paradise", etc.)
+
+
+**Question 5.4:** Personal decision time! If you were choosing where to work after graduation, which cluster appeals most to you? Pick 2-3 cities from that cluster and explain why.
+
+```{r q5.4}
+# Filter to your preferred cluster and explore cities
+
+
+```
+
+**Your personal choice:**
+
+
+---
+
+## Bonus Challenges (if you finish early!)
+
+**Challenge 1: The Perfect City?** 
+Which city is closest to having high values on ALL positive metrics (high purchasing power, safety, healthcare, climate AND low cost, pollution)? 
+
+```{r bonus1}
+
+
+```
+
+
+**Challenge 2: US Cities Showdown**
+Filter to only US cities and create a new biplot. How do different US cities compare to each other?
+
+```{r bonus2}
+# Filter to US cities and re-run PCA
+
+
+```
+
+
+**Challenge 3: The Budget Traveler**
+Find the 10 cities with the best quality of life (high PC1) that are still relatively affordable (Cost of Living Index < 70).
+
+```{r bonus3}
+
+
+```
+
+
+**Challenge 4: Climate vs Everything Else**
+Does climate actually matter much for overall city quality? Create a scatter plot of Climate Index vs PC1 scores.
+
+```{r bonus4}
+
+
+```
+
+
+**Challenge 5: Your Custom Metric**
+Create your own "ideal city score" based on what YOU value most. Weight the variables however you want. Which city scores the best?
+
+```{r bonus5}
+# Example: my_score = 2*Safety + 1*Healthcare - 1*Cost + ...
+
+
+```
+
+---
+
+## Reflection Questions
+
+**1. Personal Insight:** Based on this analysis, are there any cities you'd now consider living in that you hadn't thought about before?
+
+**2. Missing Variables:** What important factors about cities are NOT in this dataset? 
+
+**3. Limitations:** What are the limitations of reducing 8 dimensions to 2? When might you need to look at the original variables instead?
+
+**4. Decision Making:** If you were actually choosing a city to move to, how would you use this PCA analysis in combination with other factors?
+
+
+**5. Explain to a Friend:** Can you explain in 2-3 sentences what PCA did and why it's useful for this city comparison problem?
+
