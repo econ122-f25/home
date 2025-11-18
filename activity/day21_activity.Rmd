@@ -112,7 +112,7 @@ Eight different factors to consider is overwhelming! Let's use PCA to simplify.
 **Your answer:**
 
 
-**Question 2.3:** Look at the PC1 loadings. What kind of city scores HIGH on PC1?
+**Question 2.3:** Look at the PC1 loadings. How would you interpret them?
 
 ```{r q2.3}
 # View the loadings for PC1
@@ -240,7 +240,7 @@ Now let's see where different cities fall on the PC map!
 
 Your client wants to categorize cities into lifestyle groups. Let's use clustering!
 
-**Question 5.1:** Perform k-means clustering with k=5 on the first two PC scores.
+**Question 5.1:** Perform k-means clustering with k=4 on the first two PC scores.
 
 ```{r q5.1}
 # Set seed for reproducibility
@@ -281,9 +281,9 @@ set.seed(122)
 
 - **Cluster 1:** 
 - **Cluster 2:** 
-- **Cluster 3:** 
+- **Cluster 3:**
 - **Cluster 4:** 
-- **Cluster 5:** 
+
 
 (Examples: "Elite European Capitals", "Affordable Asian Cities", "North American Metros", "Emerging Markets", "Scandinavian Paradise", etc.)
 
@@ -360,7 +360,6 @@ Create your own "ideal city score" based on what YOU value most. Weight the vari
 **3. Limitations:** What are the limitations of reducing 8 dimensions to 2? When might you need to look at the original variables instead?
 
 **4. Decision Making:** If you were actually choosing a city to move to, how would you use this PCA analysis in combination with other factors?
-
 
 **5. Explain to a Friend:** Can you explain in 2-3 sentences what PCA did and why it's useful for this city comparison problem?
 
