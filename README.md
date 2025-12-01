@@ -206,4 +206,8 @@ References:
 
 **Monday** (Ben Thompson Data scientist @ Pinterest will discuss his journey and the evolving data science landscape)
   
-**Wednesday** (work on final projects)
+**Wednesday** (last day of class)
+ -   reveal TP2 leader board
+     - best groups will present their methods
+ -   discuss final project proposals
+     - work on projects
