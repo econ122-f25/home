@@ -197,7 +197,7 @@ References:
 ------------------------------------------------------------------------
 ### Week 14 (11/24)
 
-**Monday** (exam 2)
+**Monday** ([exam 2](MT2_summary.md))
   
 **Wednesday** (thanksgiving -- eat turkey!)
 
